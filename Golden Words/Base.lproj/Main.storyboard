@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8121.17" systemVersion="15A178w" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ecl-kq-N6e">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8121.17" systemVersion="15A216g" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Ecl-kq-N6e">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8101.14"/>
@@ -40,7 +40,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KXC-V8-Rep">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KXC-V8-Rep">
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <animations/>
                             </mapView>
@@ -48,16 +48,17 @@
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="KXC-V8-Rep" firstAttribute="top" secondItem="VGU-cN-khW" secondAttribute="top" id="3kD-Dj-CHU"/>
-                            <constraint firstItem="KXC-V8-Rep" firstAttribute="leading" secondItem="VGU-cN-khW" secondAttribute="leading" id="KWP-W6-A6h"/>
-                            <constraint firstAttribute="trailing" secondItem="KXC-V8-Rep" secondAttribute="trailing" id="LIU-Az-ZvI"/>
-                            <constraint firstItem="KXC-V8-Rep" firstAttribute="bottom" secondItem="xW1-75-S6j" secondAttribute="top" id="arh-CZ-a1B"/>
+                            <constraint firstAttribute="trailing" secondItem="KXC-V8-Rep" secondAttribute="trailing" id="8p6-LR-ona"/>
+                            <constraint firstItem="KXC-V8-Rep" firstAttribute="leading" secondItem="VGU-cN-khW" secondAttribute="leading" id="ABT-J5-7P5"/>
+                            <constraint firstItem="KXC-V8-Rep" firstAttribute="top" secondItem="exJ-R7-zlV" secondAttribute="bottom" id="LOH-xZ-6BE"/>
+                            <constraint firstItem="KXC-V8-Rep" firstAttribute="bottom" secondItem="xW1-75-S6j" secondAttribute="top" id="s7E-oG-e2s"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Find a Paper Issue" id="NKC-v2-4qs">
                         <barButtonItem key="leftBarButtonItem" image="menu" id="q7a-Kh-Dfg"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="mapView" destination="KXC-V8-Rep" id="jQn-vS-NeI"/>
                         <outlet property="menuButton" destination="q7a-Kh-Dfg" id="lSF-st-6zi"/>
                     </connections>
                 </viewController>

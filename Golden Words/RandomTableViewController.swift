@@ -139,9 +139,9 @@ class RandomTableViewController: UITableViewController {
             
             let detailViewController = segue.destinationViewController as! RandomDetailViewController
             let myIndexPath = self.tableView.indexPathForSelectedRow
-            let row = myIndexPath.row
+            let row = myIndexPath!.row
             
-            detailViewController.randomArticleTitleThroughSegue = randomHeadline[row!]
+            detailViewController.randomArticleTitleThroughSegue = randomHeadline[row]
             
         }
         

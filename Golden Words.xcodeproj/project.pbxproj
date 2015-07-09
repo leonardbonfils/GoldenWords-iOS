@@ -34,6 +34,9 @@
 		D746239D1B33531C001F93BC /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D746239C1B33531C001F93BC /* AboutViewController.swift */; };
 		D746239F1B33532D001F93BC /* ContactUsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D746239E1B33532D001F93BC /* ContactUsViewController.swift */; };
 		D757B9191B2F71CA00AACD96 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D757B9181B2F71CA00AACD96 /* UIKit.framework */; };
+		D76583621B4DD57900740DED /* JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76583611B4DD57900740DED /* JSON.swift */; };
+		D76583641B4DE2D800740DED /* IssueLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76583631B4DE2D800740DED /* IssueLocation.swift */; };
+		D76583661B4DE8B000740DED /* VCMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D76583651B4DE8AF00740DED /* VCMapView.swift */; };
 		D7A51BA91B3D96DF001E862A /* EditorialsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A51BA81B3D96DF001E862A /* EditorialsDetailViewController.swift */; };
 		D7A51BAB1B3D98AB001E862A /* EditorialsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A51BAA1B3D98AB001E862A /* EditorialsTableViewCell.swift */; };
 		D7FFC8241B30864800E0CDF2 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D7FFC8231B30864800E0CDF2 /* SWRevealViewController.m */; };
@@ -90,6 +93,9 @@
 		D746239C1B33531C001F93BC /* AboutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		D746239E1B33532D001F93BC /* ContactUsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactUsViewController.swift; sourceTree = "<group>"; };
 		D757B9181B2F71CA00AACD96 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		D76583611B4DD57900740DED /* JSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSON.swift; sourceTree = "<group>"; };
+		D76583631B4DE2D800740DED /* IssueLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IssueLocation.swift; sourceTree = "<group>"; };
+		D76583651B4DE8AF00740DED /* VCMapView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VCMapView.swift; sourceTree = "<group>"; };
 		D7A51BA81B3D96DF001E862A /* EditorialsDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorialsDetailViewController.swift; sourceTree = "<group>"; };
 		D7A51BAA1B3D98AB001E862A /* EditorialsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorialsTableViewCell.swift; sourceTree = "<group>"; };
 		D7FFC8211B30864700E0CDF2 /* Golden Words-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Golden Words-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -250,6 +256,9 @@
 			isa = PBXGroup;
 			children = (
 				D73AAA311B2F89B8001E8933 /* MapViewController.swift */,
+				D76583651B4DE8AF00740DED /* VCMapView.swift */,
+				D76583611B4DD57900740DED /* JSON.swift */,
+				D76583631B4DE2D800740DED /* IssueLocation.swift */,
 			);
 			name = "Map (Find a paper issue)";
 			sourceTree = "<group>";
@@ -436,12 +445,15 @@
 				D73E1FFB1B41EEA300F37AE0 /* NewsDetailViewController.swift in Sources */,
 				D71F23E71B27F3DF00EDF21E /* AppDelegate.swift in Sources */,
 				D74623931B335279001F93BC /* CurrentIssueTableViewController.swift in Sources */,
+				D76583661B4DE8B000740DED /* VCMapView.swift in Sources */,
 				D7A51BA91B3D96DF001E862A /* EditorialsDetailViewController.swift in Sources */,
+				D76583641B4DE2D800740DED /* IssueLocation.swift in Sources */,
 				D746239B1B3352FC001F93BC /* IssueArchiveTableViewController.swift in Sources */,
 				D74623951B335284001F93BC /* EditorialsTableViewController.swift in Sources */,
 				D73E1FFF1B42BF3B00F37AE0 /* RandomTableViewCell.swift in Sources */,
 				D73AAA2D1B2F890D001E8933 /* NewsTableViewController.swift in Sources */,
 				D732A8BF1B40881A007DF6D7 /* CurrentIssueFrontCoverTableViewCell.swift in Sources */,
+				D76583621B4DD57900740DED /* JSON.swift in Sources */,
 				D746239F1B33532D001F93BC /* ContactUsViewController.swift in Sources */,
 				D732A9111B40CE5B007DF6D7 /* CurrentIssueDetailViewController.swift in Sources */,
 				D732A8C11B40884D007DF6D7 /* CurrentIssueArticlesTableViewCell.swift in Sources */,
@@ -594,7 +606,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "Golden Words/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "LB.Golden-Words";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -612,7 +624,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "Golden Words/Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "LB.Golden-Words";
 				PRODUCT_NAME = "$(TARGET_NAME)";

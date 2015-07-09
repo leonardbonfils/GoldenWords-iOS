@@ -102,7 +102,7 @@ class CurrentIssueTableViewController: UITableViewController {
         
         // Populating data in the "Front Cover" type cell(s)
         
-        if indexPath.row <= (currentIssueFrontCoverImages.count - 1) {
+        if indexPath.row == 0 {
             let cell0 = tableView.dequeueReusableCellWithIdentifier("CurrentIssueFrontCoverIdentifier", forIndexPath: indexPath) as! CurrentIssueFrontCoverTableViewCell
             
             cell0.currentIssueFrontCoverImageView.image = UIImage(named: currentIssueFrontCoverImages[row])
@@ -123,7 +123,7 @@ class CurrentIssueTableViewController: UITableViewController {
         
         // Populating data in the "Articles" type cells
         
-        if indexPath.row > (currentIssueArticlesHeadline.count - 1) {
+        if indexPath.row != 0 {
             let cell1 = tableView.dequeueReusableCellWithIdentifier("CurrentIssueArticlesIdentifier", forIndexPath: indexPath) as! CurrentIssueArticlesTableViewCell
             
             cell1.currentIssueArticlesHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
@@ -190,7 +190,7 @@ class CurrentIssueTableViewController: UITableViewController {
             
             let detailViewController = segue.destinationViewController as! CurrentIssueDetailViewController
             let myIndexPath = self.tableView.indexPathForSelectedRow
-            let row = myIndexPath.row
+            let row = myIndexPath!.row
             
                 if row == 0 {
             
