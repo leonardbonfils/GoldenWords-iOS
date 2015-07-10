@@ -375,6 +375,15 @@
                     <view key="view" contentMode="scaleToFill" id="pJU-j7-ZIm">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sJS-8g-Qcr">
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <animations/>
+                                <connections>
+                                    <segue destination="kBv-t5-K8D" kind="embed" id="kTO-j2-Sye"/>
+                                </connections>
+                            </containerView>
+                        </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -383,6 +392,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="menuButton" destination="Mny-9f-spr" id="E0x-aB-IHP"/>
+                        <outlet property="videoPlayer" destination="sJS-8g-Qcr" id="WzV-HY-O9A"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZAz-5r-PRz" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1144,6 +1154,26 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VsR-au-unO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2767" y="4600"/>
+        </scene>
+        <!--You Tube Player View-->
+        <scene sceneID="fxx-aw-umB">
+            <objects>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="kBv-t5-K8D" customClass="YouTubePlayerView" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="9cX-9G-qWK"/>
+                        <viewControllerLayoutGuide type="bottom" id="7CN-lT-Qbp"/>
+                    </layoutGuides>
+                    <view key="view" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="hfh-Lg-kyk">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <toolbarItems/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="I8M-P3-ad9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3568" y="1302"/>
         </scene>
     </scenes>
     <resources>
