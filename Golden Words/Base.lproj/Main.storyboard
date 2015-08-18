@@ -54,7 +54,7 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Find a Paper Issue" id="NKC-v2-4qs">
-                        <barButtonItem key="leftBarButtonItem" image="menu" id="q7a-Kh-Dfg"/>
+                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="q7a-Kh-Dfg"/>
                     </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="KXC-V8-Rep" id="jQn-vS-NeI"/>
@@ -121,7 +121,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Editorials" id="6ZR-qu-kL7">
-                        <barButtonItem key="leftBarButtonItem" image="menu" id="9N8-dn-zZb"/>
+                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="9N8-dn-zZb"/>
                     </navigationItem>
                     <connections>
                         <outlet property="menuButton" destination="9N8-dn-zZb" id="ZfZ-VY-yTg"/>
@@ -233,7 +233,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="News" id="6ui-as-PNj">
-                        <barButtonItem key="leftBarButtonItem" image="menu" id="1mE-Fn-FnI"/>
+                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="1mE-Fn-FnI"/>
                     </navigationItem>
                     <connections>
                         <outlet property="menuButton" destination="1mE-Fn-FnI" id="M3G-7c-Srh"/>
@@ -299,7 +299,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Random" id="Qd6-hd-3xq">
-                        <barButtonItem key="leftBarButtonItem" image="menu" id="k95-TO-wjN"/>
+                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="k95-TO-wjN"/>
                     </navigationItem>
                     <connections>
                         <outlet property="menuButton" destination="k95-TO-wjN" id="KdR-Pe-iJd"/>
@@ -347,7 +347,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Pictures" id="rCF-mb-NOq">
-                        <barButtonItem key="leftBarButtonItem" image="menu" id="3Qx-1L-pNG"/>
+                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="3Qx-1L-pNG"/>
                     </navigationItem>
                     <connections>
                         <outlet property="menuButton" destination="3Qx-1L-pNG" id="92f-ZG-tT0"/>
@@ -381,7 +381,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Videos" id="qDS-zG-5hT">
-                        <barButtonItem key="leftBarButtonItem" image="menu" id="Mny-9f-spr"/>
+                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="Mny-9f-spr"/>
                     </navigationItem>
                     <connections>
                         <outlet property="menuButton" destination="Mny-9f-spr" id="E0x-aB-IHP"/>
@@ -907,7 +907,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Current Issue" id="GvR-At-SLv">
-                        <barButtonItem key="leftBarButtonItem" image="menu" id="8b1-Bx-aFt"/>
+                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="8b1-Bx-aFt"/>
                     </navigationItem>
                     <connections>
                         <outlet property="menuButton" destination="8b1-Bx-aFt" id="1Xm-52-ByJ"/>
@@ -1037,7 +1037,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Issue Archive" id="c6d-lc-jmy">
-                        <barButtonItem key="leftBarButtonItem" image="menu" id="lY1-1C-VSk"/>
+                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="lY1-1C-VSk"/>
                     </navigationItem>
                     <connections>
                         <outlet property="menuButton" destination="lY1-1C-VSk" id="fS8-AT-5ra"/>
@@ -1096,7 +1096,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="About Golden Words" id="Qr9-sS-hX3">
-                        <barButtonItem key="leftBarButtonItem" image="menu" id="X56-Ga-sft"/>
+                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="X56-Ga-sft"/>
                     </navigationItem>
                     <connections>
                         <outlet property="menuButton" destination="X56-Ga-sft" id="hYk-E8-YQE"/>
@@ -1138,7 +1138,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Contact Us" id="V4i-p8-shh">
-                        <barButtonItem key="leftBarButtonItem" image="menu" id="PIk-T3-unW"/>
+                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="PIk-T3-unW"/>
                     </navigationItem>
                     <connections>
                         <outlet property="menuButton" destination="PIk-T3-unW" id="2Wn-aG-tOZ"/>
@@ -1171,7 +1171,7 @@
     </scenes>
     <resources>
         <image name="Front Cover.jpg" width="1550" height="600"/>
-        <image name="menu" width="22" height="22"/>
+        <image name="reveal-icon" width="22" height="17"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="516-cw-sss"/>
