@@ -123,7 +123,7 @@ class CurrentIssueTableViewController: UITableViewController {
         
         // Populating data in the "Articles" type cells
         
-        if indexPath.row != 0 {
+        if indexPath.row > 0 {
             let cell1 = tableView.dequeueReusableCellWithIdentifier("CurrentIssueArticlesIdentifier", forIndexPath: indexPath) as! CurrentIssueArticlesTableViewCell
             
             cell1.currentIssueArticlesHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
