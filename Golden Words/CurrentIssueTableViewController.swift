@@ -8,8 +8,11 @@
 
 import UIKit
 
-class CurrentIssueTableViewController: UITableViewController {
+@IBDesignable
 
+class CurrentIssueTableViewController: UITableViewController {
+    
+    @IBInspectable var someRandomColor = UIColor.redColor()
     var currentIssueFrontCoverImages = [String]()
     var currentIssueFrontCoverHeadline = [String]()
     var currentIssueFrontCoverAuthor = [String]()
@@ -91,56 +94,63 @@ class CurrentIssueTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         
-        return (currentIssueArticlesAuthor.count + 1)
+        return (currentIssueArticlesAuthor.count + 1) // As of 18/08/2015, this returns 5
     }
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        var cell: UITableViewCell!
         let row = indexPath.row
         
         // Populating data in the "Front Cover" type cell(s)
-        
-        if indexPath.row == 0 {
-            let cell0 = tableView.dequeueReusableCellWithIdentifier("CurrentIssueFrontCoverIdentifier", forIndexPath: indexPath) as! CurrentIssueFrontCoverTableViewCell
+        if row == 0 {
+            let cell:CurrentIssueFrontCoverTableViewCell = CurrentIssueFrontCoverTableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "CurrentIssueFrontCoverIdentifier")
             
-            cell0.currentIssueFrontCoverImageView.image = UIImage(named: currentIssueFrontCoverImages[row])
+            if let cIFC_ImageView = cell.currentIssueFrontCoverImageView {
+                cIFC_ImageView.image = UIImage(named: "Test Image 1.jpg")
+            }
             
-            cell0.currentIssueFrontCoverHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
-            cell0.currentIssueFrontCoverHeadlineLabel.text = currentIssueFrontCoverHeadline[row]
+            if let cIFC_HeadlineLabel = cell.currentIssueFrontCoverHeadlineLabel {
+                cIFC_HeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
+                cIFC_HeadlineLabel.text = currentIssueFrontCoverHeadline[row]
+            }
             
-            cell0.currentIssueFrontCoverAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-            cell0.currentIssueFrontCoverAuthorLabel.text = currentIssueFrontCoverAuthor[row]
+            if let cIFC_AuthorLabel = cell.currentIssueFrontCoverAuthorLabel {
+                cIFC_AuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+                cIFC_AuthorLabel.text = currentIssueFrontCoverAuthor[row]
+            }
             
-            cell0.currentIssueFrontCoverPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-            cell0.currentIssueFrontCoverPublishDateLabel.text = currentIssueFrontCoverPublishDate[row]
-        
-            cell = cell0
+            if let cIFC_PublishDateLabel = cell.currentIssueFrontCoverPublishDateLabel {
+                cIFC_PublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+                cIFC_PublishDateLabel.text = currentIssueFrontCoverPublishDate[row]
+            }
             
-            
+            return cell
         }
         
         // Populating data in the "Articles" type cells
-        
-        if indexPath.row > 0 {
-            let cell1 = tableView.dequeueReusableCellWithIdentifier("CurrentIssueArticlesIdentifier", forIndexPath: indexPath) as! CurrentIssueArticlesTableViewCell
+        else {
+            let cell:CurrentIssueArticlesTableViewCell = CurrentIssueArticlesTableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "CurrentIssueArticlesIdentifier")
             
-            cell1.currentIssueArticlesHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
-            cell1.currentIssueArticlesHeadlineLabel.text = currentIssueArticlesHeadline[row]
+            if let cIAHeadlineLabel = cell.currentIssueArticlesHeadlineLabel {
+                cIAHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
+                cIAHeadlineLabel.text = currentIssueArticlesHeadline[row]
+            }
             
-            cell1.currentIssueArticlesAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-            cell1.currentIssueArticlesAuthorLabel.text = currentIssueArticlesAuthor[row]
+            if let cIAAuthorLabel = cell.currentIssueArticlesAuthorLabel {
+                cIAAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+                cIAAuthorLabel.text = currentIssueArticlesAuthor[row]
+            }
             
-            cell1.currentIssueArticlesPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-            cell1.currentIssueArticlesPublishDateLabel.text = currentIssueArticlesPublishDate[row]
-            
-            cell = cell1
+            if let cIAPublishDateLabel = cell.currentIssueArticlesPublishDateLabel {
+                cIAPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+                cIAPublishDateLabel.text = currentIssueArticlesPublishDate[row]
+            }
             
             self.tableView.rowHeight = 80
+            
+            return cell
         }
-        
-        return cell
         
     }
     
