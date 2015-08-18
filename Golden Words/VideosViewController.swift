@@ -8,13 +8,13 @@
 
 
 import UIKit
-import YouTubePlayerView
+// import YouTubePlayer
 
 class VideosViewController: UIViewController {
 
     @IBOutlet weak var menuButton:UIBarButtonItem!
 
-    @IBOutlet var videoPlayer: YoutubePlayerView!
+//    @IBOutlet var videoPlayer: YoutubePlayerView!
     
     override func viewDidLoad() {
         super.viewDidLoad()

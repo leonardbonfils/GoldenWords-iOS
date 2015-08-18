@@ -133,17 +133,17 @@ class EditorialsTableViewController: UITableViewController {
     
     // MARK: - Navigation
 
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
+//     In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
         if segue.identifier == "ShowEditorialDetails" {
          
             let detailViewController = segue.destinationViewController as! EditorialsDetailViewController
-            let myIndexPath? = self.tableView.indexPathForSelectedRow
+            let myIndexPath = self.tableView.indexPathForSelectedRow
             let row = myIndexPath?.row
             
             detailViewController.editorialTitleThroughSegue = editorialHeadline[row!]
-            
+    
             // load any data required for the editorialsDetailViewController to work
             
         }
@@ -153,4 +153,4 @@ class EditorialsTableViewController: UITableViewController {
     }
     
 
-}
+ }

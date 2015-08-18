@@ -31,14 +31,9 @@ class IssueLocation: NSObject, MKAnnotation {
     
     func mapItem() -> MKMapItem {
         
-        if #available(iOS 9.0, *) { // iOS 9.0 and above (Contacts framework)
-            let addressDictionary = [String(CNPostalAddressStreetKey): subtitle]
-        } else {
-            // iOS 8.0 and below (AddressBook framework)
-            let addressDictionary = [String(kABPersonAddressStreetKey): subtitle]
-        }
+        let addressDictionary = [String(CNPostalAddressStreetKey): locationName]
         
-        let placemark = MKPlacemark(coordinate: coordinate, addressDictionary: addressDictionary) // NOTE: Xcode does not find addressDictionary because of the availability checking statement. How to fix ?
+        let placemark = MKPlacemark(coordinate: coordinate, addressDictionary: addressDictionary)
         
         let mapItem = MKMapItem(placemark: placemark)
         mapItem.name = locationName

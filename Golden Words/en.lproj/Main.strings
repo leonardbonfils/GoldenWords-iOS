@@ -1,0 +1,147 @@
+
+/* Class = "UITableViewController"; title = "Issue Archive"; ObjectID = "2Vx-gg-h8I"; */
+"2Vx-gg-h8I.title" = "Issue Archive";
+
+/* Class = "UILabel"; text = "Author"; ObjectID = "377-BR-2YL"; */
+"377-BR-2YL.text" = "Author";
+
+/* Class = "UINavigationItem"; title = "Editorials"; ObjectID = "6ZR-qu-kL7"; */
+"6ZR-qu-kL7.title" = "Editorials";
+
+/* Class = "UINavigationItem"; title = "News"; ObjectID = "6ui-as-PNj"; */
+"6ui-as-PNj.title" = "News";
+
+/* Class = "UILabel"; text = "Headline"; ObjectID = "7Oq-hi-AN9"; */
+"7Oq-hi-AN9.text" = "Headline";
+
+/* Class = "UITableViewController"; title = "Current Issue"; ObjectID = "8mw-6B-rLd"; */
+"8mw-6B-rLd.title" = "Current Issue";
+
+/* Class = "UIViewController"; title = "Videos"; ObjectID = "Clb-CY-HrT"; */
+"Clb-CY-HrT.title" = "Videos";
+
+/* Class = "UILabel"; text = "Headline"; ObjectID = "EN0-mQ-tEF"; */
+"EN0-mQ-tEF.text" = "Headline";
+
+/* Class = "UINavigationItem"; title = "Current Issue"; ObjectID = "GvR-At-SLv"; */
+"GvR-At-SLv.title" = "Current Issue";
+
+/* Class = "UILabel"; text = "Publish Date"; ObjectID = "JqQ-ue-z5Z"; */
+"JqQ-ue-z5Z.text" = "Publish Date";
+
+/* Class = "UIViewController"; title = "Contact Us"; ObjectID = "Kbb-JD-99L"; */
+"Kbb-JD-99L.title" = "Contact Us";
+
+/* Class = "UITableViewController"; title = "Random"; ObjectID = "LVb-Tj-fKk"; */
+"LVb-Tj-fKk.title" = "Random";
+
+/* Class = "UINavigationItem"; title = "News Article Title"; ObjectID = "Llg-Tc-2zv"; */
+"Llg-Tc-2zv.title" = "News Article Title";
+
+/* Class = "UILabel"; text = "Random"; ObjectID = "Mk4-GC-9gU"; */
+"Mk4-GC-9gU.text" = "Random";
+
+/* Class = "UINavigationItem"; title = "(Current Issue) Article Title"; ObjectID = "MpB-2o-AGP"; */
+"MpB-2o-AGP.title" = "(Current Issue) Article Title";
+
+/* Class = "UIViewController"; title = "Find a Paper Issue"; ObjectID = "NGm-NS-ZAl"; */
+"NGm-NS-ZAl.title" = "Find a Paper Issue";
+
+/* Class = "UINavigationItem"; title = "Find a Paper Issue"; ObjectID = "NKC-v2-4qs"; */
+"NKC-v2-4qs.title" = "Find a Paper Issue";
+
+/* Class = "UIViewController"; title = "Pictures"; ObjectID = "Q0U-YS-Fk0"; */
+"Q0U-YS-Fk0.title" = "Pictures";
+
+/* Class = "UINavigationItem"; title = "Random"; ObjectID = "Qd6-hd-3xq"; */
+"Qd6-hd-3xq.title" = "Random";
+
+/* Class = "UINavigationItem"; title = "Editorial Title"; ObjectID = "Qkh-3J-xME"; */
+"Qkh-3J-xME.title" = "Editorial Title";
+
+/* Class = "UINavigationItem"; title = "About Golden Words"; ObjectID = "Qr9-sS-hX3"; */
+"Qr9-sS-hX3.title" = "About Golden Words";
+
+/* Class = "UILabel"; text = "Author"; ObjectID = "Rg5-Lj-ars"; */
+"Rg5-Lj-ars.text" = "Author";
+
+/* Class = "UILabel"; text = "Find a paper issue"; ObjectID = "SuE-oj-LlM"; */
+"SuE-oj-LlM.text" = "Find a paper issue";
+
+/* Class = "UINavigationItem"; title = "Contact Us"; ObjectID = "V4i-p8-shh"; */
+"V4i-p8-shh.title" = "Contact Us";
+
+/* Class = "UILabel"; text = "Golden Words"; ObjectID = "X2P-XK-gED"; */
+"X2P-XK-gED.text" = "Golden Words";
+
+/* Class = "UILabel"; text = "News"; ObjectID = "Ye7-jz-8Ja"; */
+"Ye7-jz-8Ja.text" = "News";
+
+/* Class = "UILabel"; text = "Publish Date"; ObjectID = "ZKd-Vu-S3f"; */
+"ZKd-Vu-S3f.text" = "Publish Date";
+
+/* Class = "UILabel"; text = "Contact Us"; ObjectID = "ZR8-6L-4Ca"; */
+"ZR8-6L-4Ca.text" = "Contact Us";
+
+/* Class = "UILabel"; text = "Headline"; ObjectID = "aEJ-Kw-Tqk"; */
+"aEJ-Kw-Tqk.text" = "Headline";
+
+/* Class = "UILabel"; text = "Editorials"; ObjectID = "b9X-Jl-zhJ"; */
+"b9X-Jl-zhJ.text" = "Editorials";
+
+/* Class = "UINavigationItem"; title = "Issue Archive"; ObjectID = "c6d-lc-jmy"; */
+"c6d-lc-jmy.title" = "Issue Archive";
+
+/* Class = "UILabel"; text = "Author"; ObjectID = "cpc-QC-giP"; */
+"cpc-QC-giP.text" = "Author";
+
+/* Class = "UILabel"; text = "Headline"; ObjectID = "cz6-kt-dv1"; */
+"cz6-kt-dv1.text" = "Headline";
+
+/* Class = "UILabel"; text = "Pictures"; ObjectID = "fLJ-zc-5v0"; */
+"fLJ-zc-5v0.text" = "Pictures";
+
+/* Class = "UILabel"; text = "Issue Archive"; ObjectID = "fRX-J9-zQA"; */
+"fRX-J9-zQA.text" = "Issue Archive";
+
+/* Class = "UILabel"; text = "Videos"; ObjectID = "gIp-i6-jYH"; */
+"gIp-i6-jYH.text" = "Videos";
+
+/* Class = "UILabel"; text = "Publish Date"; ObjectID = "hOn-Ra-hq6"; */
+"hOn-Ra-hq6.text" = "Publish Date";
+
+/* Class = "UILabel"; text = "Author"; ObjectID = "l1E-bk-s5R"; */
+"l1E-bk-s5R.text" = "Author";
+
+/* Class = "UILabel"; text = "About Golden Words"; ObjectID = "l8c-xl-IMk"; */
+"l8c-xl-IMk.text" = "About Golden Words";
+
+/* Class = "UITableViewController"; title = "Editorials"; ObjectID = "nYt-2I-xA5"; */
+"nYt-2I-xA5.title" = "Editorials";
+
+/* Class = "UILabel"; text = "Publish Date"; ObjectID = "olk-mj-FyX"; */
+"olk-mj-FyX.text" = "Publish Date";
+
+/* Class = "UIViewController"; title = "About Golden Words"; ObjectID = "oqs-2z-0hV"; */
+"oqs-2z-0hV.title" = "About Golden Words";
+
+/* Class = "UINavigationItem"; title = "Videos"; ObjectID = "qDS-zG-5hT"; */
+"qDS-zG-5hT.title" = "Videos";
+
+/* Class = "UILabel"; text = "Current issue"; ObjectID = "qdm-Jr-ban"; */
+"qdm-Jr-ban.text" = "Current issue";
+
+/* Class = "UINavigationItem"; title = "Pictures"; ObjectID = "rCF-mb-NOq"; */
+"rCF-mb-NOq.title" = "Pictures";
+
+/* Class = "UILabel"; text = "Headline"; ObjectID = "rD3-9H-HPW"; */
+"rD3-9H-HPW.text" = "Headline";
+
+/* Class = "UILabel"; text = "Publish Date"; ObjectID = "u6u-Xt-9Dg"; */
+"u6u-Xt-9Dg.text" = "Publish Date";
+
+/* Class = "UINavigationItem"; title = "Random Article Title"; ObjectID = "vx4-m6-0Wy"; */
+"vx4-m6-0Wy.title" = "Random Article Title";
+
+/* Class = "UILabel"; text = "Author"; ObjectID = "znK-U3-xl7"; */
+"znK-U3-xl7.text" = "Author";

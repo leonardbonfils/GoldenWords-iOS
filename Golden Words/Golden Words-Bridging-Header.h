@@ -1,5 +1,9 @@
 //
-//  Use this file to import your target's public headers that you would like to expose to Swift.
+//  Golden Words-Bridging-Header.h
+//  Golden Words
+//
+//  Created by Léonard Bonfils on 2015-08-11.
+//  Copyright © 2015 Léonard Bonfils. All rights reserved.
 //
 
 #import "SWRevealViewController.h"

@@ -16,6 +16,7 @@ class ContactUsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Configuring the revealViewcontroller
         if self.revealViewController() != nil {
             menuButton.target = self.revealViewController()
             menuButton.action = "revealToggle:"

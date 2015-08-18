@@ -10,7 +10,6 @@ import UIKit
 
 class RandomTableViewController: UITableViewController {
     
-    
     // Declaring data strings for labels in RandomTableViewController
     
     var randomHeadline = [String]()
@@ -23,7 +22,6 @@ class RandomTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         
         // Hamburger button configuration
         if self.revealViewController() != nil {

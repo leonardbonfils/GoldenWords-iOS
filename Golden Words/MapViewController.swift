@@ -65,63 +65,46 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         // Do any additional setup after loading the view.
     }
     
-    func mapView(mapView: MKMapView!, didUpdateUserLocation userLocation: MKUserLocation!) {
+    func mapView(mapView: MKMapView, didUpdateUserLocation userLocation: MKUserLocation) {
         mapView.centerCoordinate = userLocation.location!.coordinate
     }
     
     func loadInitialData() {
         
         let fileName = NSBundle.mainBundle().pathForResource("IssueLocations", ofType: "json");
-        
         var readError : NSError?
-        
         var data: NSData?
         
         do {
-            
             data = try NSData(contentsOfFile: fileName!, options: NSDataReadingOptions(rawValue: 0))
-            
         } catch _ {
-            
             data = nil
-            
         }
         
         var error: NSError?
-        
-        let jsonObject: AnyObject!
-        
+        var jsonObject: AnyObject! = nil
         if let data = data {
             
             do {
-                
                 jsonObject = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions(rawValue: 0))
-                
             } catch _ {
-                
                 jsonObject = nil
-                
             }
             
-            }
+        }
         
         if let jsonObject = jsonObject as? [String: AnyObject],
-        
             let jsonData = JSONValue.fromObject(jsonObject)?["data"]?.array {
-                
                 for issueLocationJSON in jsonData {
-                    
-                    if let issueLocationJSON = issueLocationJSON.array,
-                    
-                        issueLocation = IssueLocation.fromJSON(issueLocationJSON) {
-                            
+                    let issueLocation = IssueLocation.fromJSON(issueLocationJSON.array!)
                             issueLocations.append(issueLocation)
                             
-                    }
+                    
                     
                 }
                 
         }
+    }
     
     // Checking location authorization status and requesting permission from user if status is not ".AuthorizedWhenInUse"
     func checkLocationAuthorizationStatus() {
@@ -133,12 +116,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
             }
         }
         
-    func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         checkLocationAuthorizationStatus()
         }
         
-     func didReceiveMemoryWarning() {
+    override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
@@ -154,5 +137,4 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     }
     */
     
-}
 }

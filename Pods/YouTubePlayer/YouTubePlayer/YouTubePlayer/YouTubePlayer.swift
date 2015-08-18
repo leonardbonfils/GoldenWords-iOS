@@ -97,7 +97,7 @@ public class YouTubePlayerView: UIView, UIWebViewDelegate {
         buildWebView(playerParameters())
     }
 
-    required public init(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         buildWebView(playerParameters())
     }
@@ -119,7 +119,6 @@ public class YouTubePlayerView: UIView, UIWebViewDelegate {
         webView.allowsInlineMediaPlayback = true
         webView.mediaPlaybackRequiresUserAction = false
         webView.delegate = self
-        webView.scrollView.scrollEnabled = false
     }
 
 
@@ -320,5 +319,5 @@ public class YouTubePlayerView: UIView, UIWebViewDelegate {
 }
 
 private func printLog(str: String) {
-    println("[YouTubePlayer] \(str)")
+    print("[YouTubePlayer] \(str)")
 }

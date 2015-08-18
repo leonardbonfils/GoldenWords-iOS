@@ -194,13 +194,13 @@ class CurrentIssueTableViewController: UITableViewController {
             
                 if row == 0 {
             
-                    detailViewController.currentIssueArticleTitleThroughSegue = currentIssueFrontCoverHeadline[row!]
+                    detailViewController.currentIssueArticleTitleThroughSegue = currentIssueFrontCoverHeadline[row]
                 
                 }
             
                 else {
                     
-                    detailViewController.currentIssueArticleTitleThroughSegue = currentIssueArticlesHeadline[row!-1]
+                    detailViewController.currentIssueArticleTitleThroughSegue = currentIssueArticlesHeadline[row-1]
                     
             }
             

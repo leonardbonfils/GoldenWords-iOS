@@ -23,8 +23,8 @@ class NewsDetailViewController: UIViewController {
         newsDetailNavigationItem.title = newsArticleTitleThroughSegue
         
         // "Swipe from left edge" recognizer
-        var leftSwipe = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipes:"))
-        var rightSwipe = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipes:"))
+        let leftSwipe = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipes:"))
+        let rightSwipe = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipes:"))
         
         leftSwipe.direction = .Left
         rightSwipe.direction = .Right
