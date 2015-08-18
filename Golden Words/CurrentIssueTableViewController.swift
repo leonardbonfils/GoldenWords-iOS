@@ -12,7 +12,6 @@ import UIKit
 
 class CurrentIssueTableViewController: UITableViewController {
     
-    @IBInspectable var someRandomColor = UIColor.redColor()
     var currentIssueFrontCoverImages = [String]()
     var currentIssueFrontCoverHeadline = [String]()
     var currentIssueFrontCoverAuthor = [String]()
@@ -22,12 +21,15 @@ class CurrentIssueTableViewController: UITableViewController {
     var currentIssueArticlesAuthor = [String]()
     var currentIssueArticlesPublishDate = [String]()
     
+    let goldenWordsYellow = UIColor(red: 247.00, green: 192.00, blue: 51.00, alpha: 0.5)
+    
     @IBOutlet weak var menuButton: UIBarButtonItem!
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.navigationController?.navigationBar.barTintColor = goldenWordsYellow
         
         // Hamburger button configuration
         
@@ -37,7 +39,7 @@ class CurrentIssueTableViewController: UITableViewController {
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
         
-        self.revealViewController().rearViewRevealWidth = 260
+        self.revealViewController().rearViewRevealWidth = 280
 
         
         
