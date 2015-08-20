@@ -14,11 +14,10 @@ class NewsDetailViewController: UIViewController {
     @IBOutlet weak var newsDetailNavigationItem: UINavigationItem!
     
     var newsArticleTitleThroughSegue: String?
-    
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         //Inserting the selected news article's title
         newsDetailNavigationItem.title = newsArticleTitleThroughSegue
         

@@ -19,7 +19,6 @@ class RandomTableViewController: UITableViewController {
     // Hamburger button declaration
     @IBOutlet weak var menuButton:UIBarButtonItem!
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         

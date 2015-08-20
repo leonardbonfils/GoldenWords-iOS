@@ -25,7 +25,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         // Hamburger button configuration
     if self.revealViewController() != nil {
         menuButton.target = self.revealViewController()

@@ -55,7 +55,9 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Find a Paper Issue" id="NKC-v2-4qs">
-                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="q7a-Kh-Dfg"/>
+                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="q7a-Kh-Dfg">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="mapView" destination="KXC-V8-Rep" id="jQn-vS-NeI"/>
@@ -122,7 +124,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Editorials" id="6ZR-qu-kL7">
-                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="9N8-dn-zZb"/>
+                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="9N8-dn-zZb">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="menuButton" destination="9N8-dn-zZb" id="ZfZ-VY-yTg"/>
@@ -234,7 +238,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="News" id="6ui-as-PNj">
-                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="1mE-Fn-FnI"/>
+                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="1mE-Fn-FnI">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="menuButton" destination="1mE-Fn-FnI" id="M3G-7c-Srh"/>
@@ -300,7 +306,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Random" id="Qd6-hd-3xq">
-                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="k95-TO-wjN"/>
+                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="k95-TO-wjN">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="menuButton" destination="k95-TO-wjN" id="KdR-Pe-iJd"/>
@@ -348,7 +356,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Pictures" id="rCF-mb-NOq">
-                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="3Qx-1L-pNG"/>
+                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="3Qx-1L-pNG">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="menuButton" destination="3Qx-1L-pNG" id="92f-ZG-tT0"/>
@@ -382,7 +392,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Videos" id="qDS-zG-5hT">
-                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="Mny-9f-spr"/>
+                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="Mny-9f-spr">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="menuButton" destination="Mny-9f-spr" id="E0x-aB-IHP"/>
@@ -437,6 +449,7 @@
                                             </subviews>
                                             <animations/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                             <constraints>
                                                 <constraint firstItem="t2Q-Uc-XiF" firstAttribute="trailing" secondItem="WAE-2T-bSL" secondAttribute="trailingMargin" constant="-60" id="ZgF-SM-9xB"/>
                                                 <constraint firstItem="t2Q-Uc-XiF" firstAttribute="leading" secondItem="WAE-2T-bSL" secondAttribute="leadingMargin" id="fDs-nm-N9J"/>
@@ -726,6 +739,9 @@
                             <outlet property="delegate" destination="BMq-Rv-SgK" id="oPg-Lp-oMe"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <outlet property="mainIconTableViewCell" destination="UOQ-2u-vrc" id="pvh-6N-zfA"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IC4-uP-HJd" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" id="Vvf-Lg-Gjz">
@@ -917,7 +933,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Current Issue" id="GvR-At-SLv">
-                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="8b1-Bx-aFt"/>
+                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="8b1-Bx-aFt">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="menuButton" destination="8b1-Bx-aFt" id="1Xm-52-ByJ"/>
@@ -1047,7 +1065,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Issue Archive" id="c6d-lc-jmy">
-                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="lY1-1C-VSk"/>
+                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="lY1-1C-VSk">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="menuButton" destination="lY1-1C-VSk" id="fS8-AT-5ra"/>
@@ -1106,7 +1126,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="About Golden Words" id="Qr9-sS-hX3">
-                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="X56-Ga-sft"/>
+                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="X56-Ga-sft">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="menuButton" destination="X56-Ga-sft" id="hYk-E8-YQE"/>
@@ -1148,7 +1170,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" title="Contact Us" id="V4i-p8-shh">
-                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="PIk-T3-unW"/>
+                        <barButtonItem key="leftBarButtonItem" image="reveal-icon" id="PIk-T3-unW">
+                            <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="menuButton" destination="PIk-T3-unW" id="2Wn-aG-tOZ"/>
@@ -1190,7 +1214,7 @@
         <image name="picture" width="128" height="128"/>
         <image name="random" width="128" height="128"/>
         <image name="reveal Image" width="1553" height="832"/>
-        <image name="reveal-icon" width="22" height="17"/>
+        <image name="reveal-icon" width="27" height="27"/>
         <image name="video" width="128" height="128"/>
     </resources>
     <inferredMetricsTieBreakers>

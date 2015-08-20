@@ -11,8 +11,26 @@ import UIKit
 
 class MenuController: UITableViewController {
     
+    @IBOutlet weak var mainIconTableViewCell: UITableViewCell!
+    
+    let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        // Defining the easter egg gesture
+        let fiveTapGesture = UITapGestureRecognizer(target: self, action: "cellTappedFiveTimes:")
+        fiveTapGesture.numberOfTapsRequired = 5
+        mainIconTableViewCell.addGestureRecognizer(fiveTapGesture)
+        
+        // Defining a simple one-tap gesture to make sure the highlight colour is white (not gray)
+        let oneTapGesture = UITapGestureRecognizer(target: self, action: "cellTappedOnce:")
+        oneTapGesture.numberOfTapsRequired = 1
+        mainIconTableViewCell.addGestureRecognizer(oneTapGesture)
+        
+        mainIconTableViewCell.userInteractionEnabled = true
+
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -25,6 +43,37 @@ class MenuController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    // One-tap selector
+    func cellTappedOnce(gesture : UIGestureRecognizer) {
+        
+        if let mainIconTableViewCell = gesture.view as? UITableViewCell {
+            self.mainIconTableViewCell.backgroundColor = UIColor.whiteColor()
+        }
+        
+    }
+    
+    // Five-tap easter egg selector
+    func cellTappedFiveTimes(gesture : UIGestureRecognizer) {
+        
+        if let mainIconTableViewCell = gesture.view as? UITableViewCell {
+            print("Image tapped 5 times")
+            
+            // Producing an alert view to notify the user of the easter egg
+            var alertView = UIAlertView()
+            alertView.addButtonWithTitle("My life is useless")
+            alertView.title = "Easter egg unlocked"
+            alertView.message = "Congratulations, you unlocked the Android 5-tap easter egg!"
+            alertView.show()
+            
+            // 
+            
+//            JSSAlertView().success(self, title: "Easter egg unlocked!", text: "Congratulations, you unlocked the Android 5-tap easter egg", buttonText: "My life is useless", cancelButtonText: "So useless")
+//            
+        }
+        
+    }
+    
     
     
     // MARK: - Table view data source

@@ -21,15 +21,10 @@ class CurrentIssueTableViewController: UITableViewController {
     var currentIssueArticlesAuthor = [String]()
     var currentIssueArticlesPublishDate = [String]()
     
-    let goldenWordsYellow = UIColor(red: 247.00, green: 192.00, blue: 51.00, alpha: 0.5)
-    
     @IBOutlet weak var menuButton: UIBarButtonItem!
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.navigationController?.navigationBar.barTintColor = goldenWordsYellow
         
         // Hamburger button configuration
         

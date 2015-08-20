@@ -11,14 +11,14 @@ import UIKit
 // import YouTubePlayer
 
 class VideosViewController: UIViewController {
-
+    
     @IBOutlet weak var menuButton:UIBarButtonItem!
 
 //    @IBOutlet var videoPlayer: YoutubePlayerView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         // Hamburger button configuration
         if self.revealViewController() != nil {
             menuButton.target = self.revealViewController()

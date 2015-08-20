@@ -16,13 +16,12 @@ class EditorialsTableViewController: UITableViewController {
     var editorialHeadline = [String]()
     var editorialAuthor = [String]()
     var editorialPublishDate = [String]()
-
+    
     // Hamburger button declaration
     @IBOutlet weak var menuButton: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
         
         // Hamburger button configuration
         if self.revealViewController() != nil {

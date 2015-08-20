@@ -12,9 +12,12 @@ class ContactUsViewController: UIViewController {
 
     @IBOutlet weak var menuButton:UIBarButtonItem!
 
+    let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.navigationController?.navigationBar.barTintColor = goldenWordsYellow
         
         // Configuring the revealViewcontroller
         if self.revealViewController() != nil {

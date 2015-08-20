@@ -9,13 +9,14 @@
 import UIKit
 
 class IssueArchiveTableViewController: UITableViewController {
-
+    
     @IBOutlet weak var menuButton:UIBarButtonItem!
 
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Hamburger button configuration
         if self.revealViewController() != nil {
             menuButton.target = self.revealViewController()
             menuButton.action = "revealToggle:"
