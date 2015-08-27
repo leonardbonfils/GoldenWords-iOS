@@ -938,12 +938,13 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="currentIssueTableView" destination="bbI-id-3Gh" id="XxR-n3-SMn"/>
                         <outlet property="menuButton" destination="8b1-Bx-aFt" id="1Xm-52-ByJ"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pWd-qH-Y93" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2767" y="-2449"/>
+            <point key="canvasLocation" x="2773" y="-2449"/>
         </scene>
         <!--(Current Issue) Article Title-->
         <scene sceneID="a7D-JQ-Sg9">
