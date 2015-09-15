@@ -12,6 +12,8 @@ import CoreLocation
 
 class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
+    let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
+    
     // Map View outlet declaration
     @IBOutlet weak var mapView: MKMapView!
     
@@ -42,7 +44,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         
         // Set the center of campus as the first location, before we show the actual user location
         let initialLocation = CLLocation(latitude: 44.226397, longitude: -76.495571)
-        let regionRadius: CLLocationDistance = 1000
+        let regionRadius: CLLocationDistance = 100
         
         // Centering map on center of campus
         func centerMapOnLocation(location: CLLocation) {
@@ -67,7 +69,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     
     func mapView(mapView: MKMapView, didUpdateUserLocation userLocation: MKUserLocation) {
         mapView.centerCoordinate = userLocation.location!.coordinate
-    }
+        }
     
     func loadInitialData() {
         

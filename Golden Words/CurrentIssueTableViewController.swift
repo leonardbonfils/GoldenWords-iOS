@@ -8,8 +8,6 @@
 
 import UIKit
 
-@IBDesignable
-
 class CurrentIssueTableViewController: UITableViewController {
     
     let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
@@ -25,6 +23,8 @@ class CurrentIssueTableViewController: UITableViewController {
     
     @IBOutlet weak var menuButton: UIBarButtonItem!
     
+    // Refresh control variables - start
+    
     // Table View outlet used for the refresh control
     @IBOutlet var currentIssueTableView: UITableView!
     
@@ -37,7 +37,6 @@ class CurrentIssueTableViewController: UITableViewController {
     // Declaring refreshControl --> I actually did not need to declare it since it is part of the UITableViewController class by default
 //    var refreshControl: UIRefreshControl!
     
-    
     var customView: UIView!
     
     var labelsArray: [UILabel] = []
@@ -49,6 +48,8 @@ class CurrentIssueTableViewController: UITableViewController {
     var currentLabelIndex = 0
     
     var timer : NSTimer!
+    
+    // Refresh control variables - end
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -134,6 +135,10 @@ class CurrentIssueTableViewController: UITableViewController {
 
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    
+    // To reload the data in the table view with new data from the API, use the reloadData method
+        
+        
         
         let row = indexPath.row
         

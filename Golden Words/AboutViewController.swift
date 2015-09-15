@@ -9,6 +9,8 @@
 import UIKit
 
 class AboutViewController: UIViewController {
+    
+    let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
 
     @IBOutlet weak var menuButton:UIBarButtonItem!
     

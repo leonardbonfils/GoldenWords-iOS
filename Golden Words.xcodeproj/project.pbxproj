@@ -48,6 +48,7 @@
 		D79C98E51B866D7B000669A9 /* PullRefreshViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79C98E41B866D7B000669A9 /* PullRefreshViewController.swift */; };
 		D7A51BA91B3D96DF001E862A /* EditorialsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A51BA81B3D96DF001E862A /* EditorialsDetailViewController.swift */; };
 		D7A51BAB1B3D98AB001E862A /* EditorialsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7A51BAA1B3D98AB001E862A /* EditorialsTableViewCell.swift */; };
+		D7F109471BA848EF00B2B545 /* VideoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F109461BA848EF00B2B545 /* VideoTableViewCell.swift */; settings = {ASSET_TAGS = (); }; };
 		D7F52BE81B7C03960085201D /* RandomDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F52BE71B7C03960085201D /* RandomDetailViewController.swift */; };
 		D7F52BEA1B7C03E10085201D /* RandomTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F52BE91B7C03E10085201D /* RandomTableViewController.swift */; };
 /* End PBXBuildFile section */
@@ -121,6 +122,7 @@
 		D79C98E41B866D7B000669A9 /* PullRefreshViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PullRefreshViewController.swift; sourceTree = "<group>"; };
 		D7A51BA81B3D96DF001E862A /* EditorialsDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorialsDetailViewController.swift; sourceTree = "<group>"; };
 		D7A51BAA1B3D98AB001E862A /* EditorialsTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorialsTableViewCell.swift; sourceTree = "<group>"; };
+		D7F109461BA848EF00B2B545 /* VideoTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoTableViewCell.swift; sourceTree = "<group>"; };
 		D7F52BE71B7C03960085201D /* RandomDetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomDetailViewController.swift; sourceTree = "<group>"; };
 		D7F52BE91B7C03E10085201D /* RandomTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -285,6 +287,7 @@
 			isa = PBXGroup;
 			children = (
 				D74623981B3352DE001F93BC /* VideosViewController.swift */,
+				D7F109461BA848EF00B2B545 /* VideoTableViewCell.swift */,
 			);
 			name = Videos;
 			sourceTree = "<group>";
@@ -654,6 +657,7 @@
 				D79C98E51B866D7B000669A9 /* PullRefreshViewController.swift in Sources */,
 				D746239D1B33531C001F93BC /* AboutViewController.swift in Sources */,
 				D73AAA341B2F89D1001E8933 /* PhotoViewController.swift in Sources */,
+				D7F109471BA848EF00B2B545 /* VideoTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
