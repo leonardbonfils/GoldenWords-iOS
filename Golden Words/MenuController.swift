@@ -8,15 +8,24 @@
 
 
 import UIKit
+import Alamofire
 
 class MenuController: UITableViewController {
     
     @IBOutlet weak var mainIconTableViewCell: UITableViewCell!
     
+    // Defining the right yellow for the application
     let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        // Testing the API
+//        
+//        Alamofire.request(.GET, MyGlobalVariables.baseURL).responseJSON(options: NSJSONReadingOptions){
+//            request, response, data, error in
+//            print (data)
+//        }
         
         
         // Defining the easter egg gesture
@@ -63,7 +72,7 @@ class MenuController: UITableViewController {
             var alertView = UIAlertView()
             alertView.addButtonWithTitle("My life is useless")
             alertView.title = "Easter egg unlocked"
-            alertView.message = "Congratulations, you unlocked the Android 5-tap easter egg!"
+            alertView.message = "Congratulations, you just wasted 3 seconds of your life!"
             alertView.show()
             
             // 
