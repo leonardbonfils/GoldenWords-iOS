@@ -14,6 +14,21 @@ class EditorialsTableViewCell: UITableViewCell {
     @IBOutlet weak var editorialHeadlineLabel: UILabel!
     @IBOutlet weak var editorialAuthorLabel: UILabel!
     @IBOutlet weak var editorialPublishDateLabel: UILabel!
+    @IBOutlet weak var editorialVolumeAndIssueLabel: UILabel!
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    // We are adding the labels as subviews of the cell so we can access them directly as properties
+    func addSubviews(view: UIView) {
+        addSubview(editorialHeadlineLabel)
+        addSubview(editorialAuthorLabel)
+        addSubview(editorialPublishDateLabel)
+        addSubview(editorialVolumeAndIssueLabel)
+    }
     
 
     override func awakeFromNib() {

@@ -66,8 +66,8 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         picturesCollectionView.dataSource = self
         
         // Creating and configuring the refreshControl subview
-// The refresh control has already been declared outside of viewDidLoad()
-//        refreshControl = UIRefreshControl()
+        // The refresh control has already been declared outside of viewDidLoad()
+//      refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = goldenWordsYellow
         refreshControl.tintColor = UIColor.whiteColor()
         picturesCollectionView.addSubview(refreshControl)
@@ -356,7 +356,7 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
                         let lastItem = self.photos.count // getting the index of the lastItem before we add more photos (to facilitate adding more photos at the next populatePhotos() call
                         
                         self.photos.addObject(photoInfos) // adding all the objects to the "photos" set
-
+                        
                     }
                 }
             }
@@ -381,13 +381,13 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
                 
                 dispatch_async(dispatch_get_main_queue()) {
                     self.collectionView!.insertItemsAtIndexPaths(indexPaths)
-                }
+                    }
                 
                 self.currentPage++
             }
-            }
-            self.populatingPhotos = false
         }
+            self.populatingPhotos = false
+    }
     
     
     
@@ -420,10 +420,6 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         refreshControl.endRefreshing()
         
         populatePhotos()
-        
-        
-        
-        
         
     }
 }

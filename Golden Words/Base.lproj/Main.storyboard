@@ -93,7 +93,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Publish Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hOn-Ra-hq6">
-                                            <rect key="frame" x="199" y="60" width="297" height="21"/>
+                                            <rect key="frame" x="205" y="60" width="297" height="21"/>
                                             <animations/>
                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -106,6 +106,13 @@
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Volume X - Issue Y" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aqg-TK-dzu">
+                                            <rect key="frame" x="413" y="60" width="145" height="21"/>
+                                            <animations/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                     <animations/>
                                 </tableViewCellContentView>
@@ -114,6 +121,7 @@
                                     <outlet property="editorialAuthorLabel" destination="znK-U3-xl7" id="HiC-cr-xCP"/>
                                     <outlet property="editorialHeadlineLabel" destination="rD3-9H-HPW" id="FZj-vv-8qO"/>
                                     <outlet property="editorialPublishDateLabel" destination="hOn-Ra-hq6" id="OoJ-E2-Oeu"/>
+                                    <outlet property="editorialVolumeAndIssueLabel" destination="aqg-TK-dzu" id="WK6-fe-Lq4"/>
                                     <segue destination="zSp-Xj-dIL" kind="show" identifier="ShowEditorialDetails" id="kaS-Oy-DWu"/>
                                 </connections>
                             </tableViewCell>
@@ -129,6 +137,7 @@
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="editorialsCell" destination="4oJ-jV-bre" id="acx-zf-Mbw"/>
                         <outlet property="editorialsTableView" destination="Iuk-e9-otq" id="V7b-Zw-c3a"/>
                         <outlet property="menuButton" destination="9N8-dn-zZb" id="ZfZ-VY-yTg"/>
                     </connections>
@@ -148,12 +157,72 @@
                     <view key="view" contentMode="scaleToFill" id="QXJ-6D-own">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CJL-Kk-3t2">
+                                <rect key="frame" x="0.0" y="225" width="600" height="375"/>
+                                <animations/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </webView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Author" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EiO-tk-5md">
+                                <rect key="frame" x="20" y="190" width="171" height="21"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="171" id="7EU-YI-uc8"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Publish Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="WXS-Mp-SG6">
+                                <rect key="frame" x="20" y="115" width="297" height="21"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="297" id="diA-Lu-cl4"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Volume X - Issue Y" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aWG-Gs-QmA">
+                                <rect key="frame" x="20" y="152" width="145" height="21"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Headline" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2oV-3p-4ZN">
+                                <rect key="frame" x="20" y="72" width="560" height="37"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="37" id="kz0-eF-9MR"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="CJL-Kk-3t2" firstAttribute="top" secondItem="EiO-tk-5md" secondAttribute="bottom" constant="14" id="9pj-0X-72e"/>
+                            <constraint firstItem="WXS-Mp-SG6" firstAttribute="top" secondItem="2oV-3p-4ZN" secondAttribute="bottom" constant="6" id="FSJ-fP-qMy"/>
+                            <constraint firstItem="WXS-Mp-SG6" firstAttribute="leading" secondItem="aWG-Gs-QmA" secondAttribute="leading" id="JVX-pC-UpG"/>
+                            <constraint firstItem="2oV-3p-4ZN" firstAttribute="top" secondItem="uHF-Uu-rPv" secondAttribute="bottom" constant="8" symbolic="YES" id="QzY-Ov-bEl"/>
+                            <constraint firstItem="CJL-Kk-3t2" firstAttribute="bottom" secondItem="dEO-h0-b2J" secondAttribute="top" id="Rof-Dp-4zZ"/>
+                            <constraint firstItem="WXS-Mp-SG6" firstAttribute="leading" secondItem="2oV-3p-4ZN" secondAttribute="leading" id="Tj7-Cv-ZF8"/>
+                            <constraint firstItem="aWG-Gs-QmA" firstAttribute="top" secondItem="WXS-Mp-SG6" secondAttribute="bottom" constant="16" id="ch7-r3-Ufa"/>
+                            <constraint firstAttribute="trailing" secondItem="CJL-Kk-3t2" secondAttribute="trailing" id="e7w-vl-RVz"/>
+                            <constraint firstItem="CJL-Kk-3t2" firstAttribute="leading" secondItem="QXJ-6D-own" secondAttribute="leading" id="gUP-0F-TG6"/>
+                            <constraint firstItem="EiO-tk-5md" firstAttribute="top" secondItem="aWG-Gs-QmA" secondAttribute="bottom" constant="17" id="hXz-9t-Nk0"/>
+                            <constraint firstItem="2oV-3p-4ZN" firstAttribute="centerX" secondItem="CJL-Kk-3t2" secondAttribute="centerX" id="hdr-tb-yOq"/>
+                            <constraint firstItem="aWG-Gs-QmA" firstAttribute="leading" secondItem="EiO-tk-5md" secondAttribute="leading" id="iG0-Nu-ODI"/>
+                            <constraint firstItem="2oV-3p-4ZN" firstAttribute="leading" secondItem="QXJ-6D-own" secondAttribute="leadingMargin" id="raj-bq-WPV"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Editorial Title" id="Qkh-3J-xME"/>
                     <connections>
                         <outlet property="editorialDetailNavigationItem" destination="Qkh-3J-xME" id="RpB-Pl-8rI"/>
+                        <outlet property="editorialDetailWebView" destination="CJL-Kk-3t2" id="zoI-7b-N4z"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="B3g-gq-GbA" userLabel="First Responder" sceneMemberID="firstResponder"/>

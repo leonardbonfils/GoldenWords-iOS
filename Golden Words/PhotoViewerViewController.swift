@@ -91,7 +91,7 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate, UIPopov
         return UIModalPresentationStyle.OverCurrentContext
     }
     
-    func presentationController(controller: UIPresentationController, viewControllerForAdaptivePresentationStyle style: UIModalPresentationStyle) -> UIViewController? {
+    func presentationController(controller: UIPresentationController, viewControllerForAdaptivePresentationStyle style:UIModalPresentationStyle) -> UIViewController? {
         let navController = UINavigationController(rootViewController: controller.presentedViewController)
         
         return navController

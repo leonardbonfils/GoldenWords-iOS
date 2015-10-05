@@ -10,10 +10,16 @@ import UIKit
 
 class EditorialsDetailViewController: UIViewController {
     
-        
     @IBOutlet weak var editorialDetailNavigationItem: UINavigationItem!
+
+    @IBOutlet weak var editorialDetailWebView: UIWebView!    
     
     var editorialTitleThroughSegue: String?
+    var editorialPublishDateThroughSegue: String?
+    var editorialVolumeIndexThroughSegue: String?
+    var editorialIssueIndexThroughSegue: String?
+    var editorialAuthorThroughSegue: String?
+    var editorialArticleContentThroughSegue: String?
    
 
     override func viewDidLoad() {
@@ -33,7 +39,15 @@ class EditorialsDetailViewController: UIViewController {
         view.addGestureRecognizer(leftSwipe)
         view.addGestureRecognizer(rightSwipe)
 
-        // Do any additional setup after loading the view.
+        
+        
+////      Version 1.1 feature - 3D Touch Link Preview
+//        editorialDetailWebView.allowsLinkPreview = true
+        
+        editorialDetailWebView.loadHTMLString(editorialArticleContentThroughSegue!, baseURL: nil)
+        
+        
+        
     }
 
     override func didReceiveMemoryWarning() {
