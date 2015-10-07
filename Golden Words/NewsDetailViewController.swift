@@ -14,7 +14,22 @@ class NewsDetailViewController: UIViewController {
     
     @IBOutlet weak var newsDetailNavigationItem: UINavigationItem!
     
+    @IBOutlet weak var newsDetailWebView: UIWebView!
+    
     var newsArticleTitleThroughSegue: String?
+    var newsArticleAuthorThroughSegue: String?
+    var newsArticlePublishDateThroughSegue: String?
+    var newsArticleVolumeIndexThroughSegue: String?
+    var newsArticleIssueIndexThroughSegue: String?
+    var newsArticleArticleContentThroughSegue: String?
+    
+
+    @IBOutlet weak var newsArticleDetailHeadlineLabel: UILabel!
+    @IBOutlet weak var newsArticleDetailAuthorLabel: UILabel!
+    @IBOutlet weak var newsArticleDetailPublishDateLabel: UILabel!
+    @IBOutlet weak var newsArticleDetailVolumeAndIssueLabel: UILabel!
+    
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +37,7 @@ class NewsDetailViewController: UIViewController {
         //Inserting the selected news article's title
         newsDetailNavigationItem.title = newsArticleTitleThroughSegue
         
-        // "Swipe from left edge" recognizer
+        // Swipe recognizers for left and right edges (can be used later).
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipes:"))
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipes:"))
         
@@ -32,6 +47,16 @@ class NewsDetailViewController: UIViewController {
         view.addGestureRecognizer(leftSwipe)
         view.addGestureRecognizer(rightSwipe)
         
+        // Setting the right values for all labels, from values given through the segue
+        newsArticleDetailHeadlineLabel.text = newsArticleTitleThroughSegue
+        newsArticleDetailAuthorLabel.text = newsArticleAuthorThroughSegue
+        newsArticleDetailPublishDateLabel.text = newsArticlePublishDateThroughSegue
+        newsArticleDetailVolumeAndIssueLabel.text = "Volume \(newsArticleVolumeIndexThroughSegue) - Issue \(newsArticleIssueIndexThroughSegue) "
+        
+//        // Version 1.1 feature - 3D Touch Link Preview
+//        newsDetailWebView.allowsLinkPreview = true
+        
+        newsDetailWebView.loadHTMLString(newsArticleArticleContentThroughSegue!, baseURL: nil)
         
         // Do any additional setup after loading the view.
     }

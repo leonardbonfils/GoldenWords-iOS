@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 
 class EditorialsTableViewController: UITableViewController {
-
+    
     let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
 
 //    // Declaring data strings for labels in EditorialsTableViewController
@@ -28,9 +28,7 @@ class EditorialsTableViewController: UITableViewController {
     @IBOutlet var editorialsTableView: UITableView!
     
     var editorialObjects = NSMutableArray()
-    
-    @IBOutlet weak var editorialsCell: EditorialsTableViewCell!
-    
+        
     var customRefreshControl = UIRefreshControl?()
     
     var revealViewControllerIndicator : Int = 0
@@ -50,7 +48,7 @@ class EditorialsTableViewController: UITableViewController {
     var populatingEditorials = false
     var currentPage = 1
     
-    let PhotoBrowserCellIdentifier = "EditorialTableCellIdentifier"
+    let EditorialTableCellIdentifier = "EditorialTableCellIdentifier"
     
     var dateFormatter = NSDateFormatter()
     
@@ -81,7 +79,7 @@ class EditorialsTableViewController: UITableViewController {
         
         // Navigation set up
         navigationController?.setNavigationBarHidden(false, animated: true)
-        navigationItem.title = "Pictures"
+        navigationItem.title = "Editorials"
         
         loadCustomRefreshContents()
         
@@ -275,7 +273,7 @@ class EditorialsTableViewController: UITableViewController {
 //        cell.editorialPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
 //        cell.editorialPublishDateLabel.text = editorialPublishDate[row]
         
-        let cell = tableView.dequeueReusableCellWithIdentifier("EditorialTableCellIdentifier", forIndexPath: indexPath) as! EditorialsTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(EditorialTableCellIdentifier, forIndexPath: indexPath) as! EditorialsTableViewCell
         
         let title = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).title
         let timeStamp = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).timeStamp
@@ -394,6 +392,7 @@ class EditorialsTableViewController: UITableViewController {
             
             if result.error == nil {
                 
+                // Creating objects for every single editorial is long running work, so we put that work on a background queue, to keep the app very responsive.
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
                     
                     // Making an array of all the node IDs from the JSON file
@@ -428,7 +427,7 @@ class EditorialsTableViewController: UITableViewController {
     }
         func handleRefresh() {
             
-            refreshControl?.beginRefreshing()
+            customRefreshControl?.beginRefreshing()
             
             let currentNumberOfPages : Int = self.currentPage
             
@@ -439,8 +438,8 @@ class EditorialsTableViewController: UITableViewController {
             repeat {
             
                 populateEditorials()
-            
-                self.currentPage++
+// I initially thought I would need to add 1 to the currentPage everytime, but this is already done in the populateNewsArticles function, so there is no need to write it again.
+//                self.currentPage++
             
             }
             
@@ -448,8 +447,8 @@ class EditorialsTableViewController: UITableViewController {
             
             self.editorialsTableView!.reloadData()
             
-            refreshControl?.endRefreshing()
+            customRefreshControl?.endRefreshing()
             
-            populateEditorials()
+//            populateEditorials()
         }
  }

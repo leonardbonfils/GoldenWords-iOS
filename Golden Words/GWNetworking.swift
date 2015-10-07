@@ -153,7 +153,7 @@ class IssueElement: NSObject {
 class EditorialElement: NSObject {
     
     var title: String           // title
-    let nodeID: Int          // nid
+    let nodeID: Int             // nid
     let timeStamp: String       // revision_timestamp
     let imageURL: String?       // image_url
     let author: String          // author

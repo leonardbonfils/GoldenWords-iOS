@@ -10,18 +10,25 @@ import UIKit
 
 class EditorialsDetailViewController: UIViewController {
     
+    let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
+    
     @IBOutlet weak var editorialDetailNavigationItem: UINavigationItem!
 
-    @IBOutlet weak var editorialDetailWebView: UIWebView!    
+    @IBOutlet weak var editorialDetailWebView: UIWebView!
     
     var editorialTitleThroughSegue: String?
+    var editorialAuthorThroughSegue: String?
     var editorialPublishDateThroughSegue: String?
     var editorialVolumeIndexThroughSegue: String?
     var editorialIssueIndexThroughSegue: String?
-    var editorialAuthorThroughSegue: String?
     var editorialArticleContentThroughSegue: String?
    
 
+    @IBOutlet weak var editorialDetailHeadlineLabel: UILabel!
+    @IBOutlet weak var editorialDetailAuthorLabel: UILabel!
+    @IBOutlet weak var editorialDetailPublishDateLabel: UILabel!
+    @IBOutlet weak var editorialDetailVolumeAndIssueLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -29,7 +36,7 @@ class EditorialsDetailViewController: UIViewController {
         editorialDetailNavigationItem.title = editorialTitleThroughSegue
         
         
-        // "Swipe from left edge" recognizer
+        // Swipe recognizers for left and right edges (can be used later).
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipes:"))
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipes:"))
         
@@ -38,6 +45,12 @@ class EditorialsDetailViewController: UIViewController {
         
         view.addGestureRecognizer(leftSwipe)
         view.addGestureRecognizer(rightSwipe)
+        
+        // Setting the right values for all labels, from values given through the segue
+        editorialDetailHeadlineLabel.text = editorialTitleThroughSegue
+        editorialDetailAuthorLabel.text = editorialAuthorThroughSegue
+        editorialDetailPublishDateLabel.text = editorialPublishDateThroughSegue
+        editorialDetailVolumeAndIssueLabel.text = "Volume \(editorialVolumeIndexThroughSegue) - Issue \(editorialIssueIndexThroughSegue)"
 
         
         
