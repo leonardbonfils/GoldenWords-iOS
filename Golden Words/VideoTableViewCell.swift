@@ -10,14 +10,19 @@ import UIKit
 
 class VideoTableViewCell: UITableViewCell {
     
-    @IBOutlet weak var videoHeadlineLabel: UILabel!
-    @IBOutlet weak var videoAuthorLabel: UILabel!
-    @IBOutlet weak var videoPublishDateLabel: UILabel!
-    
+    @IBOutlet weak var videoThumbnail: UIImageView!
+    @IBOutlet weak var videoHeadline: UILabel!
+    @IBOutlet weak var videoPublishDate: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+    }
+    
+    func addSubviews(view: UIView) {
+        addSubview(videoThumbnail)
+        addSubview(videoHeadline)
+        addSubview(videoPublishDate)
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

@@ -46,6 +46,7 @@ class EditorialsTableViewController: UITableViewController {
     var timer : NSTimer!
     
     var populatingEditorials = false
+    
     var currentPage = 0
     
     let EditorialTableCellIdentifier = "EditorialTableCellIdentifier"
@@ -303,10 +304,7 @@ class EditorialsTableViewController: UITableViewController {
 //        var editorialPublishDate = NSDate()
 //        editorialPublishDate = NSDate(timeIntervalSince1970: timeStamp)
 //        cell.editorialPublishDateLabel.text = dateFormatter.stringFromDate(editorialPublishDate)
-        
-        
-        // var date = NSDate(timeIntervalSince1970: timeStamp)
-
+// var date = NSDate(timeIntervalSince1970: timeStamp)
         
         cell.editorialVolumeAndIssueLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
         cell.editorialVolumeAndIssueLabel.text = "Volume \(volumeNumber) - Issue \(issueNumber)"
@@ -369,6 +367,7 @@ class EditorialsTableViewController: UITableViewController {
             let detailViewController = segue.destinationViewController as! EditorialsDetailViewController
             let myIndexPath = self.tableView.indexPathForSelectedRow
             let row = myIndexPath?.row
+            
             
             // Passing the article information through the segue
             detailViewController.editorialTitleThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).title
@@ -449,7 +448,8 @@ class EditorialsTableViewController: UITableViewController {
                     let indexPaths = (lastItem..<self.editorialObjects.count).map { NSIndexPath(forItem: $0, inSection: 0) }
                     
                     dispatch_async(dispatch_get_main_queue()) {
-                                self.editorialsTableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: UITableViewRowAnimation.Automatic) // Animation implemented for testing, to be removed for version 1.0
+                                self.editorialsTableView.reloadData()
+//                                self.editorialsTableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: UITableViewRowAnimation.Automatic) // Animation implemented for testing, to be removed for version 1.0
                             }
                             
                     
@@ -486,7 +486,7 @@ class EditorialsTableViewController: UITableViewController {
         }
         
     }
-    }
+}
         func handleRefresh() {
             
             customRefreshControl.beginRefreshing()
