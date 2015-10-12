@@ -16,9 +16,9 @@ class EditorialsTableViewCell: UITableViewCell {
     @IBOutlet weak var editorialPublishDateLabel: UILabel!
     @IBOutlet weak var editorialVolumeAndIssueLabel: UILabel!
     
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder!) {
         super.init(coder: aDecoder)
-        fatalError("init(coder:) has not been implemented")
+//        fatalError("init(coder:) could not be initialized")
     }
     
     

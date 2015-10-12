@@ -30,30 +30,32 @@ import Alamofire
 //    }
 //}
 
-extension Alamofire.Request {
-    
-    class func imageResponseSerializer() -> GenericResponseSerializer<UIImage> {
-        return GenericResponseSerializer { request, response, data in
-            
-            guard let validData = data else {
-                let failureReason = "Data could not be serialized. Input data was nil."
-                let error = Error.errorWithCode(.DataSerializationFailed, failureReason: failureReason)
-                return .Failure(data, error)
-            }
-            
-            if let image = UIImage(data: validData, scale: UIScreen.mainScreen().scale) {
-                return Result<UIImage>.Success(image)
-            } else {
-                return .Failure(data, Error.errorWithCode(.DataSerializationFailed, failureReason: "Unable to create image"))
-            }
-        
-        }
-    }
-        
-        func responseImage(completionHandler: (NSURLRequest?, NSHTTPURLResponse?, Result<UIImage>) -> Void) -> Self {
-            return response(responseSerializer: Request.imageResponseSerializer(), completionHandler: completionHandler)
-        }
-}
+//extension Alamofire.Request {
+
+//    class func imageResponseSerializer() -> GenericResponseSerializer<UIImage> {
+//        return GenericResponseSerializer { request, response, data in
+//            
+//            guard let validData = data else {
+//                let failureReason = "Data could not be serialized. Input data was nil."
+//                let error = Error.errorWithCode(.DataSerializationFailed, failureReason: failureReason)
+//                return .Failure(data, error)
+//            }
+//            
+//            if let image = UIImage(data: validData, scale: UIScreen.mainScreen().scale) {
+//                return Result<UIImage>.Success(image)
+//            } else {
+//                return .Failure(data, Error.errorWithCode(.DataSerializationFailed, failureReason: "Unable to create image"))
+//            }
+//        
+//        }
+//    }
+//    
+//    
+//        
+//        func responseImage(completionHandler: (NSURLRequest?, NSHTTPURLResponse?, Result<UIImage>) -> Void) -> Self {
+//            return response(responseSerializer: Request.imageResponseSerializer(), completionHandler: completionHandler)
+//        }
+//}
 
 struct GWNetworking {
     enum ImageSize: Int {
@@ -78,15 +80,14 @@ enum Router : URLRequestConvertible {
     var URLRequest: NSMutableURLRequest {
         let path : String
         let parameters: [String: AnyObject]
-//        (path, parameters) = {
         (path) = {
             switch self {
-//            case .Issue (let volume, let issue):
-//                return ("/issue/\(volume)/\(issue)")
+/*            case .Issue (let volume, let issue):
+               return ("/issue/\(volume)/\(issue)") */
             case .Issue:
                 return ("/issue")
-            case .Editorials (let editorialsSection): // If section == 0, this will return the first ten editorials. If section == 1, then section * 10 = 10, and we will get the ten editorials after that.
-                return ("/list/editorials/\(editorialsSection * 10)")
+            case .Editorials (let editorialsSection): /* If section == 0, this will return the first ten editorials. If section == 1, then section * 10 = 10, and we will get the ten editorials after that. */
+                return ("/list/editorials/\(editorialsSection * 20)")
             case .News (let newsSection):
                 return ("/list/news/\(newsSection * 10)")
             case .Random (let randomSection):
@@ -97,12 +98,12 @@ enum Router : URLRequestConvertible {
         }()
         
         let URL = NSURL(string: Router.baseURLString)
-        let GoldenWordsURLRequest = NSURLRequest(URL: URL!.URLByAppendingPathComponent(path))
-        let encoding = Alamofire.ParameterEncoding.URL
+        let GoldenWordsURLRequest = NSMutableURLRequest(URL: URL!.URLByAppendingPathComponent(path))
+/*        let encoding = Alamofire.ParameterEncoding.URL */
         
-        return GoldenWordsURLRequest as! NSMutableURLRequest
+        return GoldenWordsURLRequest
 
-//        return encoding.encode(URLRequest, parameters: parameters).0
+/*        return encoding.encode(URLRequest, parameters: parameters).0 */
         }
     }
 }
@@ -110,11 +111,11 @@ enum Router : URLRequestConvertible {
 
 class IssueElement: NSObject {
     
-    // All JSON variable name equivalents are commented to the right of each Swift variable
+    /* All JSON variable name equivalents are commented to the right of each Swift variable */
     
     var title: String           // title
-    let nodeID: Int          // nid
-    let timeStamp: String       // revision_timestamp
+    let nodeID: Int             // nid
+    let timeStamp: Int          // revision_timestamp
     let imageURL: String?       // image_url
     let author: String          // author
     
@@ -125,10 +126,10 @@ class IssueElement: NSObject {
     
     let coverImage: String // Variable that indicates whether this is the cover page or not (1 for cover, 0 for everything else)
     
-    // To get an NSDate objec from Unix timestamp
-    // var date = NSDate(timeIntervalSince1970: timeStamp)
+    /* To get an NSDate objec from Unix timestamp
+     var date = NSDate(timeIntervalSince1970: timeStamp) */
     
-    init(title: String, nodeID: Int, timeStamp: String, imageURL: String?, author: String, issueNumber: String, volumeNumber: String, articleContent: String, coverImage: String) {
+    init(title: String, nodeID: Int, timeStamp: Int, imageURL: String?, author: String, issueNumber: String, volumeNumber: String, articleContent: String, coverImage: String) {
         self.title = title
         self.nodeID = nodeID
         self.timeStamp = timeStamp
@@ -153,20 +154,20 @@ class IssueElement: NSObject {
 class EditorialElement: NSObject {
     
     var title: String           // title
-    let nodeID: Int             // nid
-    let timeStamp: String       // revision_timestamp
-    let imageURL: String?       // image_url
-    let author: String          // author
+    var nodeID: Int?             // nid
+    var timeStamp: Int       // revision_timestamp
+    var imageURL: String?       // image_url
+    var author: String?          // author
     
-    let issueNumber: String     // issue_int
-    let volumeNumber: String    // volume_int
+    var issueNumber: String     // issue_int
+    var volumeNumber: String    // volume_int
     
-    let articleContent: String // html_content
+    var articleContent: String // html_content
     
-    // To get an NSDate objec from Unix timestamp
-    // var date = NSDate(timeIntervalSince1970: timeStamp)
+    /* To get an NSDate objec from Unix timestamp
+    var date = NSDate(timeIntervalSince1970: timeStamp) */
     
-    init(title: String, nodeID: Int, timeStamp: String, imageURL: String, author: String, issueNumber: String, volumeNumber: String, articleContent: String) {
+    init(title: String, nodeID: Int, timeStamp: Int, imageURL: String, author: String, issueNumber: String, volumeNumber: String, articleContent: String) {
         self.title = title
         self.nodeID = nodeID
         self.timeStamp = timeStamp
@@ -182,7 +183,7 @@ class EditorialElement: NSObject {
     }
     
     override var hash: Int {
-        return (self as EditorialElement).nodeID
+        return (self as EditorialElement).nodeID!
     }
     
 }
@@ -191,7 +192,7 @@ class NewsElement: NSObject {
     
     var title: String           // title
     let nodeID: Int          // nid
-    let timeStamp: String       // revision_timestamp
+    let timeStamp: Int       // revision_timestamp
     let imageURL: String?       // image_url
     let author: String          // author
     
@@ -203,7 +204,7 @@ class NewsElement: NSObject {
     // To get an NSDate objec from Unix timestamp
     // var date = NSDate(timeIntervalSince1970: timeStamp)
     
-    init(title: String, nodeID: Int, timeStamp: String, imageURL: String, author: String, issueNumber: String, volumeNumber: String, articleContent: String) {
+    init(title: String, nodeID: Int, timeStamp: Int, imageURL: String, author: String, issueNumber: String, volumeNumber: String, articleContent: String) {
         self.title = title
         self.nodeID = nodeID
         self.timeStamp = timeStamp
@@ -228,7 +229,7 @@ class RandomElement: NSObject {
     
     var title: String           // title
     let nodeID: Int             // nid
-    let timeStamp: String       // revision_timestamp
+    let timeStamp: Int       // revision_timestamp
     let imageURL: String?       // image_url
     let author: String          // author
     
@@ -240,7 +241,7 @@ class RandomElement: NSObject {
     // To get an NSDate objec from Unix timestamp
     // var date = NSDate(timeIntervalSince1970: timeStamp)
     
-    init(title: String, nodeID: Int, timeStamp: String, imageURL: String, author: String, issueNumber: String, volumeNumber: String, articleContent: String) {
+    init(title: String, nodeID: Int, timeStamp: Int, imageURL: String, author: String, issueNumber: String, volumeNumber: String, articleContent: String) {
         self.title = title
         self.nodeID = nodeID
         self.timeStamp = timeStamp
@@ -267,7 +268,7 @@ class PictureElement: NSObject {
     
     var title: String           // title
     let nodeID: Int             // nid
-    let timeStamp: String       // revision_timestamp
+    let timeStamp: Int      // revision_timestamp
     let imageURL: String        // image_url
     let author: String          // author
     
@@ -279,7 +280,7 @@ class PictureElement: NSObject {
     // To get an NSDate objec from Unix timestamp
     // var date = NSDate(timeIntervalSince1970: timeStamp)
     
-    init(title: String, nodeID: Int, timeStamp: String, imageURL: String,  author: String, issueNumber: String, volumeNumber: String) {
+    init(title: String, nodeID: Int, timeStamp: Int, imageURL: String,  author: String, issueNumber: String, volumeNumber: String) {
         self.title = title
         self.nodeID = nodeID
         self.timeStamp = timeStamp

@@ -76,7 +76,7 @@ class NewsTableViewController: UITableViewController {
 //        customRefreshControl = UIRefreshControl()
         customRefreshControl!.backgroundColor = goldenWordsYellow
         customRefreshControl!.tintColor = UIColor.whiteColor()
-        customRefreshControl!.addTarget(self, action: "handleRefresh:", forControlEvents: .ValueChanged)
+        customRefreshControl!.addTarget(self, action: "handleRefresh", forControlEvents: .ValueChanged)
         newsTableView.addSubview(customRefreshControl!)
         
         // Navigation set up
@@ -298,7 +298,7 @@ class NewsTableViewController: UITableViewController {
         cell.newsAuthorLabel.text = author
         
         cell.newsPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-        cell.newsPublishDateLabel.text = timeStamp
+        cell.newsPublishDateLabel.text = String(timeStamp)
         
         cell.newsVolumeAndIssueLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
         cell.newsVolumeAndIssueLabel.text = "Volume \(volumeNumber) - Issue \(issueNumber)"
@@ -360,7 +360,7 @@ class NewsTableViewController: UITableViewController {
             
             // Passing the article information through the segue
             detailViewController.newsArticleTitleThroughSegue = newsObjects.objectAtIndex((myIndexPath?.row)!).title
-            detailViewController.newsArticlePublishDateThroughSegue = newsObjects.objectAtIndex((myIndexPath?.row)!).timeStamp
+            detailViewController.newsArticlePublishDateThroughSegue = String(newsObjects.objectAtIndex((myIndexPath?.row)!).timeStamp)
             detailViewController.newsArticleVolumeIndexThroughSegue = newsObjects.objectAtIndex((myIndexPath?.row)!).volumeNumber
             detailViewController.newsArticleIssueIndexThroughSegue = newsObjects.objectAtIndex((myIndexPath?.row)!).issueNumber
             detailViewController.newsArticleAuthorThroughSegue = newsObjects.objectAtIndex((myIndexPath?.row)!).author
@@ -392,10 +392,10 @@ class NewsTableViewController: UITableViewController {
         populatingNewsArticle = true
         
         
-        Alamofire.request(GWNetworking.Router.News(self.currentPage)).responseJSON() {
-            (request, response, result) in
+        Alamofire.request(GWNetworking.Router.News(self.currentPage)).responseJSON() { response in
+            if let JSON = response.result.value {
             
-            if result.error == nil {
+            if response.result.error == nil {
                 
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
                     
@@ -404,16 +404,19 @@ class NewsTableViewController: UITableViewController {
                     var nodeCounter : Int = 0
                     for nodeCounter in 0..<9 {
                         
-                        if let jsonValue = result.value {
+                        if let jsonValue = response.result.value {
                             
-                            nodeIDArray[nodeCounter] = jsonValue{nodeCounter}.string
-                            let newsArticleInfos : NewsElement = ((jsonValue as! NSDictionary).valueForKey("\(nodeIDArray[nodeCounter])") as! [NSDictionary]).map { NewsElement(title: $0["title"] as! String, nodeID: $0["nid"] as! Int, timeStamp: $0["revision_timestamp"] as! Int, imageURL: $0["image_url"] as! String, author: $0["author"], issueNumber: $0["issue_int"] as! Int, volumeNumber: $0["volume_int"] as! Int, articleContent: $0["html_content"] as! String) // I am going to try to break this line down to simplify it and fix the build errors
-                                
-                                let lastItem = self.newsObjects.count
+//                            nodeIDArray[nodeCounter] = jsonValue{nodeCounter}.string
+//                            let newsArticleInfos : NewsElement = ((jsonValue as! NSDictionary).valueForKey("\(nodeIDArray[nodeCounter])") as! [NSDictionary]).map { NewsElement(title: $0["title"] as! String, nodeID: $0["nid"] as! Int, timeStamp: $0["revision_timestamp"] as! Int, imageURL: $0["image_url"] as! String, author: $0["author"], issueNumber: $0["issue_int"] as! Int, volumeNumber: $0["volume_int"] as! Int, articleContent: $0["html_content"] as! String) // I am going to try to break this line down to simplify it and fix the build errors
+                            
                             }
                         }
                     }
-                    
+                
+                
+                    let lastItem = self.newsObjects.count
+
+                
                     let indexPaths = (lastItem..<self.newsObjects.count).map { NSIndexPath(forItem: $0, inSection: $0) }
                     
                     dispatch_async(dispatch_get_main_queue()) {

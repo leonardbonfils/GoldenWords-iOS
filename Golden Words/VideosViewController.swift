@@ -8,25 +8,20 @@
 
 
 import UIKit
-// import YouTubePlayer
-
+//import YouTubePlayer
 
 class VideosViewController: UITableViewController {
     
     let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
     
     var videoHeadline = [String]()
-    var videoAuthor = [String]()
     var videoPublishDate = [String]()
+    
+    @IBOutlet var videosTableView: UITableView!
     
     @IBOutlet weak var menuButton: UIBarButtonItem!
     
-    // @IBOutlet var videoPlayer: YoutubePlayerView!
-
-    
     // Variables for refresh control - start
-    
-    @IBOutlet var videosTableView: UITableView!
     
     var revealViewControllerIndicator : Int = 0
     
@@ -69,9 +64,7 @@ class VideosViewController: UITableViewController {
         // Static data to test my table view controller
         
         videoHeadline = ["Video 1", "Video 2", "Video 3", "Video 4"]
-        
-        videoAuthor = ["Author 1", "Author 2", "Author 3", "Author 4"]
-        
+            
         videoPublishDate = ["Date 1", "Date 2", "Date 3", "Date 4"]
         
         tableView.estimatedRowHeight = 50
@@ -101,14 +94,10 @@ class VideosViewController: UITableViewController {
         let cell = self.tableView.dequeueReusableCellWithIdentifier("VideoTableCellIdentifier", forIndexPath: indexPath) as! VideoTableViewCell
         
         let row = indexPath.row
-        cell.videoHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
-        cell.videoHeadlineLabel.text = videoHeadline[row]
+
         
-        cell.videoAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-        cell.videoAuthorLabel.text = videoAuthor[row]
         
-        cell.videoPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-        cell.videoPublishDateLabel.text = videoPublishDate[row]
+        
         
         return cell
     }

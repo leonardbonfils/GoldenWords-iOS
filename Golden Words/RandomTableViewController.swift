@@ -72,7 +72,7 @@ class RandomTableViewController: UITableViewController {
 //        customRefreshControl = UIRefreshControl()
         customRefreshControl!.backgroundColor = goldenWordsYellow
         customRefreshControl!.tintColor = UIColor.whiteColor()
-        customRefreshControl!.addTarget(self, action: "handleRefresh:", forControlEvents: .ValueChanged)
+        customRefreshControl!.addTarget(self, action: "handleRefresh", forControlEvents: .ValueChanged)
         randomTableView.addSubview(customRefreshControl!)
         
         // Navigation set up
@@ -291,7 +291,7 @@ class RandomTableViewController: UITableViewController {
         cell.randomAuthorLabel.text = author
         
         cell.randomPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-        cell.randomPublishDateLabel.text = timeStamp
+        cell.randomPublishDateLabel.text = String(timeStamp)
         
         cell.randomVolumeAndIssueLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
         cell.randomVolumeAndIssueLabel.text = "Volume \(volumeNumber) - Issue \(issueNumber)"
@@ -350,7 +350,7 @@ class RandomTableViewController: UITableViewController {
             
             // Passing the article information through the segue
             detailViewController.randomArticleTitleThroughSegue = randomObjects.objectAtIndex((myIndexPath?.row)!).title
-            detailViewController.randomArticlePublishDateThroughSegue = randomObjects.objectAtIndex((myIndexPath?.row)!).timeStamp
+            detailViewController.randomArticlePublishDateThroughSegue = String(randomObjects.objectAtIndex((myIndexPath?.row)!).timeStamp)
             detailViewController.randomArticleVolumeIndexThroughSegue = randomObjects.objectAtIndex((myIndexPath?.row)!).volumeNumber
             detailViewController.randomArticleIssueIndexThroughSegue = randomObjects.objectAtIndex((myIndexPath?.row)!).issueNumber
             detailViewController.randomArticleAuthorThroughSegue = randomObjects.objectAtIndex((myIndexPath?.row)!).author
@@ -378,10 +378,9 @@ class RandomTableViewController: UITableViewController {
         
         populatingRandomArticles = true
         
-        Alamofire.request(GWNetworking.Router.Random(self.currentPage)).responseJSON() {
-            (request, response, result) in
+        Alamofire.request(GWNetworking.Router.Random(self.currentPage)).responseJSON() { response in
             
-            if result.error == nil {
+            if response.result.error == nil {
                 
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
                     
@@ -390,17 +389,18 @@ class RandomTableViewController: UITableViewController {
                     var nodeCounter : Int = 0
                     for nodeCounter in 0..<9 {
                         
-                        if let jsonValue = result.value {
+                        if let jsonValue = response.result.value {
                             
-                            nodeIDArray[nodeCounter] = jsonValue{nodeCounter}.string
-                            let randomArticleInfos : RandomElement = ((jsonValue as! NSDictionary).valueForKey("\(nodeIDArray[nodeCounter])") as! [NSDictionary]).map { RandomElement(title: $0["title"] as! String, nodeID: $0["nid"] as! Int, timeStamp: $0["revision_timestamp"] as! Int, imageURL: $0["image_url"] as! String, author: $0["author"], issueNumber: $0["issue_int"] as! Int, volumeNumber: $0["volume_int"] as! Int, articleContent: $0["html_content"] as! String) // I am going to try to break this line down to simplify it and fix the build errors
-                                
-                                let lastItem = self.randomObjects.count
+//                            nodeIDArray[nodeCounter] = jsonValue{nodeCounter}.string
+//                            let randomArticleInfos : RandomElement = ((jsonValue as! NSDictionary).valueForKey("\(nodeIDArray[nodeCounter])") as! [NSDictionary]).map { RandomElement(title: $0["title"] as! String, nodeID: $0["nid"] as! Int, timeStamp: $0["revision_timestamp"] as! Int, imageURL: $0["image_url"] as! String, author: $0["author"], issueNumber: $0["issue_int"] as! Int, volumeNumber: $0["volume_int"] as! Int, articleContent: $0["html_content"] as! String) // I am going to try to break this line down to simplify it and fix the build errors
+                            
                             }
                         }
                     }
-                    
-                    let indexPaths = (lastItem..<self.editorialObjects.count).map { NSIndexPath(forItem: $0, inSection: $0) }
+                
+                    let lastItem = self.randomObjects.count
+                
+                    let indexPaths = (lastItem..<self.randomObjects.count).map { NSIndexPath(forItem: $0, inSection: $0) }
                     
                     dispatch_async(dispatch_get_main_queue()) {
                         self.randomTableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: UITableViewRowAnimation.Fade) // Animation implemented for testing, to be removed for version 1.0
@@ -414,7 +414,7 @@ class RandomTableViewController: UITableViewController {
             
         }
         
-    }
+    
     func handleRefresh() {
         
         customRefreshControl?.beginRefreshing()
@@ -441,4 +441,5 @@ class RandomTableViewController: UITableViewController {
         
         //            populateEditorials()
     }
+
 }

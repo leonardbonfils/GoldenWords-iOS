@@ -9,6 +9,7 @@
 
 import UIKit
 import Alamofire
+import AlamofireImage
 
 class PhotoBrowserCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
@@ -18,6 +19,7 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
     
     // Collection view outlet used for the refresh control
     @IBOutlet weak var picturesCollectionView: UICollectionView!
+
     
     var photos = NSMutableArray()
     
@@ -62,15 +64,15 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         
         self.revealViewController().rearViewRevealWidth = 280
 
-        picturesCollectionView.delegate = self
-        picturesCollectionView.dataSource = self
+        picturesCollectionView!.delegate = self
+        picturesCollectionView!.dataSource = self
         
         // Creating and configuring the refreshControl subview
         // The refresh control has already been declared outside of viewDidLoad()
 //      refreshControl = UIRefreshControl()
         refreshControl.backgroundColor = goldenWordsYellow
         refreshControl.tintColor = UIColor.whiteColor()
-        picturesCollectionView.addSubview(refreshControl)
+        picturesCollectionView!.addSubview(refreshControl)
         
         loadCustomRefreshContents()
         
@@ -257,17 +259,39 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
             
             cell.imageView.image = nil
             
-            cell.request = Alamofire.request(.GET, imageURL).validate(contentType: ["image/*"]).responseImage() {
-                (request, _, result) in
-                if result.error == nil && result.value != nil {
+            
+            cell.request = Alamofire.request(.GET, imageURL).responseImage { response in
+                debugPrint(response)
+                
+                print(response.request)
+                print(response.response)
+                debugPrint(response.result)
+                
+                if let image = response.result.value {
                     
-                    self.imageCache.setObject(result.value!, forKey: request!.URLString)
-                    
-                    cell.imageView.image = result.value
+                    self.imageCache.setObject(response.result.value!, forKey: response.request!.URLString)
+                    cell.imageView.image = image
                 } else {
                     
                 }
+                
+                
             }
+            
+            
+            
+            
+//            cell.request = Alamofire.request(.GET, imageURL).validate(contentType: ["image/*"]).responseImage() {
+//                (request, _, result) in
+//                if result.error == nil && result.value != nil {
+//                    
+//                    self.imageCache.setObject(result.value!, forKey: request!.URLString)
+//                    
+//                    cell.imageView.image = result.value
+//                } else {
+//                    
+//                }
+//            }
             
         }
         
@@ -302,7 +326,7 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
 //        collectionView!.registerClass(PhotoBrowserCollectionViewLoadingCell.classForCoder(), forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: PhotoBrowserFooterViewIdentifier)
         
         refreshControl.tintColor = UIColor.whiteColor()
-        refreshControl.addTarget(self, action: "handleRefresh:", forControlEvents: .ValueChanged)
+        refreshControl.addTarget(self, action: "handleRefresh", forControlEvents: .ValueChanged)
         collectionView!.addSubview(refreshControl)
     }
     
@@ -335,10 +359,9 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         populatingPhotos = true
         
         // Check the "Photos" part
-        Alamofire.request(GWNetworking.Router.Pictures(self.currentPage)).responseJSON() {
-            (request, response, result) in
+        Alamofire.request(GWNetworking.Router.Pictures(self.currentPage)).responseJSON() { response in
             
-            if result.error == nil {
+            if response.result.error == nil {
             
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
                 
@@ -348,18 +371,20 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
                 var nodeCounter : Int = 0
                 for  nodeCounter in 0..<9 {
                     
-                    if let jsonValue = result.value {
-                    
-                        nodeIDArray[nodeCounter] = jsonValue{nodeCounter}.string // I am not sure what function to use to retrieve all the node IDs here. If I found an equivalent of valueForKey that just used the index position in the Dictionary, that would be perfect. I'm just using SwiftyJSON here.
-                        let photoInfos : PictureElement = ((jsonValue as! NSDictionary).valueForKey("\(nodeIDArray[nodeCounter])") as! [NSDictionary]).map { PictureElement(title: $0["title"] as! String, nodeID: $0["nid"] as! Int, timeStamp: $0["revision_timestamp"] as! Int, imageURL: $0["image_url"] as! String, author: $0["author"] as! String, issueNumber: $0["issue_int"] as! Int, volumeNumber: $0["volume_int"] as! Int )} // Create objects of the class PictureElement that contain all the info from the JSON
+                    if let jsonValue = response.result.value {
+//                    
+//                        nodeIDArray[nodeCounter] = jsonValue{nodeCounter}.string // I am not sure what function to use to retrieve all the node IDs here. If I found an equivalent of valueForKey that just used the index position in the Dictionary, that would be perfect. I'm just using SwiftyJSON here.
+//                        let photoInfos : PictureElement = ((jsonValue as! NSDictionary).valueForKey("\(nodeIDArray[nodeCounter])") as! [NSDictionary]).map { PictureElement(title: $0["title"] as! String, nodeID: $0["nid"] as! Int, timeStamp: $0["revision_timestamp"] as! Int, imageURL: $0["image_url"] as! String, author: $0["author"] as! String, issueNumber: $0["issue_int"] as! Int, volumeNumber: $0["volume_int"] as! Int )} // Create objects of the class PictureElement that contain all the info from the JSON
                         
-                        let lastItem = self.photos.count // getting the index of the lastItem before we add more photos (to facilitate adding more photos at the next populatePhotos() call
                         
-                        self.photos.addObject(photoInfos) // adding all the objects to the "photos" set
+//                        self.photos.addObject(photoInfos) // adding all the objects to the "photos" set
                         
                     }
                 }
             }
+                
+                let lastItem = self.photos.count // getting the index of the lastItem before we add more photos (to facilitate adding more photos at the next populatePhotos() call
+
                 
                 let indexPaths = (lastItem..<self.photos.count).map { NSIndexPath(forItem: $0, inSection: $0) }
 
