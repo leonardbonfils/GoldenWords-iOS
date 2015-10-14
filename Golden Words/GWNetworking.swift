@@ -153,16 +153,16 @@ class IssueElement: NSObject {
 
 class EditorialElement: NSObject {
     
-    var title: String           // title
+    var title: String!           // title
     var nodeID: Int?             // nid
     var timeStamp: Int       // revision_timestamp
     var imageURL: String?       // image_url
     var author: String?          // author
     
-    var issueNumber: String     // issue_int
-    var volumeNumber: String    // volume_int
+    var issueNumber: String!     // issue_int
+    var volumeNumber: String!    // volume_int
     
-    var articleContent: String // html_content
+    var articleContent: String! // html_content
     
     /* To get an NSDate objec from Unix timestamp
     var date = NSDate(timeIntervalSince1970: timeStamp) */

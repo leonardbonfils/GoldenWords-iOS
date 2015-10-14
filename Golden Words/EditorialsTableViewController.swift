@@ -22,12 +22,10 @@ class EditorialsTableViewController: UITableViewController {
     // Hamburger button declaration
     @IBOutlet weak var menuButton: UIBarButtonItem!
     
-    // Refresh control variables - start
-    
     // Table View Outlet used for the refresh control
     @IBOutlet var editorialsTableView: UITableView!
     
-    var editorialObjects = NSMutableArray()
+    var editorialObjects = NSMutableOrderedSet(capacity: 1000)
     
     var customRefreshControl = UIRefreshControl()
     
@@ -55,16 +53,18 @@ class EditorialsTableViewController: UITableViewController {
     
     var nodeIDArray = NSMutableArray()
     
-    // Refresh control variables - end
+    var timeStampDateString : String!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         // Hamburger button configuration
         if self.revealViewController() != nil {
+            revealViewControllerIndicator = 1
             menuButton.target = self.revealViewController()
             menuButton.action = "revealToggle:"
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+            
         }
         
         self.revealViewController().rearViewRevealWidth = 280
@@ -74,7 +74,7 @@ class EditorialsTableViewController: UITableViewController {
         editorialsTableView.dataSource = self
         
         // Creating and configuring the customRefreshControl subview
-//        customRefreshControl = UIRefreshControl()
+//        var customRefreshControl = UIRefreshControl()
         customRefreshControl.backgroundColor = goldenWordsYellow
         customRefreshControl.tintColor = UIColor.whiteColor()
         customRefreshControl.addTarget(self, action: "handleRefresh", forControlEvents: .ValueChanged)
@@ -88,9 +88,11 @@ class EditorialsTableViewController: UITableViewController {
         
         populateEditorials()
         
+        self.dateFormatter.dateFormat = "dd/MM/yy"
+//        
 //        self.dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
 //        self.dateFormatter.timeStyle = NSDateFormatterStyle.ShortStyle
-//        
+//
 //        let currentDateAndTime = NSDate()
 //        let updateString = "Last updated at " + self.dateFormatter.stringFromDate(currentDateAndTime]
 //        self.customRefreshControl.attributedTitle = NSAttributedString(string: updateString]
@@ -242,13 +244,13 @@ class EditorialsTableViewController: UITableViewController {
 //    func doSomething() {
 //        timer = NSTimer.scheduledTimerWithTimeInterval(4.0, target: self, selector: "endOfWork", userInfo: nil, repeats: true]
 //    }
-    
-    func endOfWork() {
-        customRefreshControl.endRefreshing()
-        
-        timer.invalidate()
-        timer = nil
-    }
+//    
+//    func endOfWork() {
+//        customRefreshControl.endRefreshing()
+//        
+//        timer.invalidate()
+//        timer = nil
+//    }
     
     // MARK: - Table view data source
     
@@ -259,37 +261,44 @@ class EditorialsTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return (nodeIDArray.count)
+        return (editorialObjects.count)
     }
     
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-//        let cell = self.tableView.dequeueReusableCellWithIdentifier("EditorialTableCellIdentifier", forIndexPath: indexPath] as! EditorialsTableViewCell
         
         let row = indexPath.row
+        /*
+        cell.editorialHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline]
+        cell.editorialHeadlineLabel.text = editorialHeadline[row]
         
-//        cell.editorialHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline]
-//        cell.editorialHeadlineLabel.text = editorialHeadline[row]
-//        
-//        cell.editorialAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline]
-//        cell.editorialAuthorLabel.text = editorialAuthor[row]
-//        
-//        cell.editorialPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline]
-//        cell.editorialPublishDateLabel.text = editorialPublishDate[row]
+        cell.editorialAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline]
+        cell.editorialAuthorLabel.text = editorialAuthor[row]
+        
+        cell.editorialPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline]
+        cell.editorialPublishDateLabel.text = editorialPublishDate[row]
+        */
         
         let cell = tableView.dequeueReusableCellWithIdentifier(EditorialTableCellIdentifier, forIndexPath: indexPath) as! EditorialsTableViewCell
         
         let title = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).title
+        
         let timeStamp = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).timeStamp
+        let timeStampDateObject = NSDate(timeIntervalSince1970: NSTimeInterval(Int((editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).timeStamp)))
+        timeStampDateString = dateFormatter.stringFromDate(timeStampDateObject)
+        
         let imageURL = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).imageURL
-        let author = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).author
+        
+        let author : String! = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).author!
         
         let issueNumber = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).issueNumber
         let volumeNumber = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).volumeNumber
         
         let articleContent = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).articleContent
         
-        // Unlike the Pictures Collection View, there is no need to create another Alamofire request here, since we already have all the content we want from the JSON we downloaded. There is no URL that we wish to place a request to to get extra content.
+        let nodeID = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).nodeID
+        
+        /* Unlike the Pictures Collection View, there is no need to create another Alamofire request here, since we already have all the content we want from the JSON we downloaded. There is no URL that we wish to place a request to to get extra content. */
         
         cell.editorialHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
         cell.editorialHeadlineLabel.text = title
@@ -298,16 +307,19 @@ class EditorialsTableViewController: UITableViewController {
         cell.editorialAuthorLabel.text = author
         
         cell.editorialPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-        cell.editorialPublishDateLabel.text = String(timeStamp)
-//        dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
-//        dateFormatter.timeStyle = NSDateFormatterStyle.ShortStyle
-//        var editorialPublishDate = NSDate()
-//        editorialPublishDate = NSDate(timeIntervalSince1970: timeStamp)
-//        cell.editorialPublishDateLabel.text = dateFormatter.stringFromDate(editorialPublishDate)
-// var date = NSDate(timeIntervalSince1970: timeStamp)
+        cell.editorialPublishDateLabel.text = timeStampDateString
         
-        cell.editorialVolumeAndIssueLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-        cell.editorialVolumeAndIssueLabel.text = "Volume \(volumeNumber) - Issue \(issueNumber)"
+        /*
+        dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
+        dateFormatter.timeStyle = NSDateFormatterStyle.ShortStyle
+        var editorialPublishDate = NSDate()
+        editorialPublishDate = NSDate(timeIntervalSince1970: timeStamp)
+        cell.editorialPublishDateLabel.text = dateFormatter.stringFromDate(editorialPublishDate)
+ var date = NSDate(timeIntervalSince1970: timeStamp)
+        */
+        
+//        cell.editorialVolumeAndIssueLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+//        cell.editorialVolumeAndIssueLabel.text = "Volume \(volumeNumber) - Issue \(issueNumber)"
         
         return cell
     }
@@ -366,12 +378,12 @@ class EditorialsTableViewController: UITableViewController {
          
             let detailViewController = segue.destinationViewController as! EditorialsDetailViewController
             let myIndexPath = self.tableView.indexPathForSelectedRow
-            let row = myIndexPath?.row
+            _ = myIndexPath?.row
             
             
             // Passing the article information through the segue
             detailViewController.editorialTitleThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).title
-            detailViewController.editorialPublishDateThroughSegue = String(editorialObjects.objectAtIndex((myIndexPath?.row)!).timeStamp)
+            detailViewController.editorialPublishDateThroughSegue = timeStampDateString
             detailViewController.editorialVolumeIndexThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).volumeNumber
             detailViewController.editorialIssueIndexThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).issueNumber
             detailViewController.editorialAuthorThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).author
@@ -414,16 +426,18 @@ class EditorialsTableViewController: UITableViewController {
                     /* var nodeCounter : Int = 0 */
                     
                     
-                    for node in JSON as! Dictionary<String, AnyObject> {
+                    if (JSON .isKindOfClass(NSDictionary)) {
+                    
+                        for node in JSON as! Dictionary<String, AnyObject> {
                         
 //                        var node = JSON.1[String(node]]
                         
-                        var nodeIDValue = node.0
+                        let nodeIDValue = node.0
                         var lastItem : Int = 0
                         
                         self.nodeIDArray.addObject(nodeIDValue)
                         
-                        if var editorialElement : EditorialElement = EditorialElement(title: "init", nodeID: 0, timeStamp: 0, imageURL: "init", author: "init", issueNumber: "init", volumeNumber: "init", articleContent: "init") {
+                        if let editorialElement : EditorialElement = EditorialElement(title: "init", nodeID: 0, timeStamp: 0, imageURL: "init", author: "init", issueNumber: "init", volumeNumber: "init", articleContent: "init") {
                         
                     editorialElement.title = node.1["title"] as! String
                     editorialElement.nodeID = Int(nodeIDValue)
@@ -440,19 +454,23 @@ class EditorialsTableViewController: UITableViewController {
                     
                     lastItem = self.editorialObjects.count
                     
+                    print (editorialElement.nodeID)
+                            
+                            
                     self.editorialObjects.addObject(editorialElement)
                             
+                            
                     /* Sorting the elements in order of newest to oldest (as the array index increases] */
-                    self.editorialObjects.sort({ $0.timeStamp > $1.timeStamp })
+                            
+                    let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
+                    self.editorialObjects.sortUsingDescriptors([timestampSortDescriptor])
+                        
+                    
+//                    self.editorialObjects.sort({ $0.timeStamp > $1.timeStamp })
                             
                     let indexPaths = (lastItem..<self.editorialObjects.count).map { NSIndexPath(forItem: $0, inSection: 0) }
                     
-                    dispatch_async(dispatch_get_main_queue()) {
-                                self.editorialsTableView.reloadData()
-//                                self.editorialsTableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: UITableViewRowAnimation.Automatic) // Animation implemented for testing, to be removed for version 1.0
-                            }
-                            
-                    
+                 
                    /*
                         
                             nodeIDArray[nodeCounter] = jsonValue{nodeCounter}.string
@@ -460,25 +478,32 @@ class EditorialsTableViewController: UITableViewController {
 */
                     }
                     
-                    print(self.editorialObjects)
+                    print(self.editorialObjects.count)
+                    
                     
                 }
+            }
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.editorialsTableView.reloadData()
+                        //                                self.editorialsTableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: UITableViewRowAnimation.Automatic) // Animation implemented for testing, to be removed for version 1.0
+                    }
                 
                 
                 /* Sorting the elements in order of newest to oldest (as the array index increases] */
-//                self.editorialObjects.sort({ $0.timeStamp > $1.timeStamp })
+/*                self.editorialObjects.sort({ $0.timeStamp > $1.timeStamp })
                 
                     
-//                    let lastItem = self.editorialObjects.count
+                   let lastItem = self.editorialObjects.count
                     
-//                    let indexPaths = (lastItem..<self.editorialObjects.count).map { NSIndexPath(forItem: $0, inSection: $0) }
+                    let indexPaths = (lastItem..<self.editorialObjects.count).map { NSIndexPath(forItem: $0, inSection: $0) }
                     
-//                    dispatch_async(dispatch_get_main_queue()) {
-//                        self.editorialsTableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: UITableViewRowAnimation.Automatic) // Animation implemented for testing, to be removed for version 1.0
-//                    }
+                dispatch_async(dispatch_get_main_queue()) {
+                       self.editorialsTableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: UITableViewRowAnimation.Automatic) // Animation implemented for testing, to be removed for version 1.0
+                    } */
                     
                     self.currentPage++
-/*                } */
+                }
             }
             
             self.populatingEditorials = false
@@ -486,12 +511,12 @@ class EditorialsTableViewController: UITableViewController {
         }
         
     }
-}
+
         func handleRefresh() {
             
             customRefreshControl.beginRefreshing()
             
-            let currentNumberOfPages : Int = self.currentPage
+            let currentNumberOfPages = self.currentPage
             
             self.editorialObjects.removeAllObjects()
             

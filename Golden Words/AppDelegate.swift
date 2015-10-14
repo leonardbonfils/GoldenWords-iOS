@@ -23,6 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         application.statusBarStyle = .LightContent
         
+        
+        
         // Override point for customization after application launch.
         return true
     }

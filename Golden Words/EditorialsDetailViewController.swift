@@ -33,7 +33,7 @@ class EditorialsDetailViewController: UIViewController {
         super.viewDidLoad()
         
         // Inserting the selected editorial's title
-        editorialDetailNavigationItem.title = editorialTitleThroughSegue
+        editorialDetailNavigationItem.title = "Article"
         
         
         // Swipe recognizers for left and right edges (can be used later).
@@ -58,6 +58,7 @@ class EditorialsDetailViewController: UIViewController {
 //        editorialDetailWebView.allowsLinkPreview = true
         
         editorialDetailWebView.loadHTMLString(editorialArticleContentThroughSegue!, baseURL: nil)
+
         
         
         

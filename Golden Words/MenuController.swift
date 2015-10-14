@@ -19,6 +19,7 @@ class MenuController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
         
 //        // Testing the API
 //        
@@ -26,6 +27,8 @@ class MenuController: UITableViewController {
 //            request, response, data, error in
 //            print (data)
 //        }
+        
+        
         
         
         // Defining the easter egg gesture

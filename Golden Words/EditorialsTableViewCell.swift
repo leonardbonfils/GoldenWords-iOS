@@ -18,16 +18,16 @@ class EditorialsTableViewCell: UITableViewCell {
     
     required init?(coder aDecoder: NSCoder!) {
         super.init(coder: aDecoder)
-//        fatalError("init(coder:) could not be initialized")
+/*        fatalError("init(coder:) could not be initialized") */
     }
     
     
-    // We are adding the labels as subviews of the cell so we can access them directly as properties
+    /* We are adding the labels as subviews of the cell so we can access them directly as properties */
     func addSubviews(view: UIView) {
         addSubview(editorialHeadlineLabel)
         addSubview(editorialAuthorLabel)
         addSubview(editorialPublishDateLabel)
-        addSubview(editorialVolumeAndIssueLabel)
+//        addSubview(editorialVolumeAndIssueLabel)
     }
     
 
@@ -39,7 +39,7 @@ class EditorialsTableViewCell: UITableViewCell {
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
-        // Configure the view for the selected state
+        /* Configure the view for the selected state */
     }
 
 }
