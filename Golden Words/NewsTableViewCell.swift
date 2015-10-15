@@ -14,18 +14,18 @@ class NewsTableViewCell: UITableViewCell {
     @IBOutlet weak var newsHeadlineLabel: UILabel!
     @IBOutlet weak var newsAuthorLabel: UILabel!
     @IBOutlet weak var newsPublishDateLabel: UILabel!
-    @IBOutlet weak var newsVolumeAndIssueLabel: UILabel!
+//    @IBOutlet weak var newsVolumeAndIssueLabel: UILabel!
     
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder!) {
         super.init(coder: aDecoder)
-        fatalError("init(coder:) has not been implemented")
+//        fatalError("init(coder:) has not been implemented")
     }
     
     func addSubviews(view: UIView) {
         addSubview(newsHeadlineLabel)
         addSubview(newsAuthorLabel)
         addSubview(newsPublishDateLabel)
-        addSubview(newsVolumeAndIssueLabel)
+//        addSubview(newsVolumeAndIssueLabel)
     }
     
     override func awakeFromNib() {

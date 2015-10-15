@@ -19,9 +19,8 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
     
     // Collection view outlet used for the refresh control
     @IBOutlet weak var picturesCollectionView: UICollectionView!
-
     
-    var photos = NSMutableArray()
+    var photos = NSMutableOrderedSet(capacity: 1000)
     
     @IBOutlet weak var PhotoBrowserCell: PhotoBrowserCollectionViewCell!
     
@@ -45,7 +44,7 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
     var timer : NSTimer!
     
     var populatingPhotos = false
-    var currentPage = 1
+    var currentPage = 0
     
     let PhotoBrowserCellIdentifier = "PhotoBrowserCell"
 //    let PhotoBrowserFooterViewIdentifier = "PhotoBrowserFooterView" // Identifier used for the footer view (with Featured and Downloads)
@@ -80,12 +79,14 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         
         populatePhotos()
         
+        /*
         self.dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
         self.dateFormatter.timeStyle = NSDateFormatterStyle.ShortStyle
         
         let currentDateAndTime = NSDate()
         let updateString = "Last updated at " + self.dateFormatter.stringFromDate(currentDateAndTime)
         self.refreshControl.attributedTitle = NSAttributedString(string: updateString)
+        */
         
         // Do any additional setup after loading the view.
     }

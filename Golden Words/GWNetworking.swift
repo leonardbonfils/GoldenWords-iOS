@@ -79,7 +79,7 @@ enum Router : URLRequestConvertible {
     
     var URLRequest: NSMutableURLRequest {
         let path : String
-        let parameters: [String: AnyObject]
+//        let parameters: [String: AnyObject]
         (path) = {
             switch self {
 /*            case .Issue (let volume, let issue):
@@ -87,7 +87,7 @@ enum Router : URLRequestConvertible {
             case .Issue:
                 return ("/issue")
             case .Editorials (let editorialsSection): /* If section == 0, this will return the first ten editorials. If section == 1, then section * 10 = 10, and we will get the ten editorials after that. */
-                return ("/list/editorials/\(editorialsSection * 20)")
+                return ("/list/editorials/\(editorialsSection * 10)")
             case .News (let newsSection):
                 return ("/list/news/\(newsSection * 10)")
             case .Random (let randomSection):
@@ -114,17 +114,17 @@ class IssueElement: NSObject {
     /* All JSON variable name equivalents are commented to the right of each Swift variable */
     
     var title: String           // title
-    let nodeID: Int             // nid
-    let timeStamp: Int          // revision_timestamp
-    let imageURL: String?       // image_url
-    let author: String          // author
+    var nodeID: Int             // nid
+    var timeStamp: Int          // revision_timestamp
+    var imageURL: String?       // image_url
+    var author: String          // author
     
-    let issueNumber: String     // issue_int
-    let volumeNumber: String    // volume_int
+    var issueNumber: String     // issue_int
+    var volumeNumber: String    // volume_int
     
-    let articleContent: String? // html_content
+    var articleContent: String? // html_content
     
-    let coverImage: String // Variable that indicates whether this is the cover page or not (1 for cover, 0 for everything else)
+    var coverImage: String // Variable that indicates whether this is the cover page or not (1 for cover, 0 for everything else)
     
     /* To get an NSDate objec from Unix timestamp
      var date = NSDate(timeIntervalSince1970: timeStamp) */
@@ -153,16 +153,16 @@ class IssueElement: NSObject {
 
 class EditorialElement: NSObject {
     
-    var title: String!           // title
-    var nodeID: Int?             // nid
+    var title: String           // title
+    var nodeID: Int             // nid
     var timeStamp: Int       // revision_timestamp
-    var imageURL: String?       // image_url
-    var author: String?          // author
+    var imageURL: String       // image_url
+    var author: String       // author
     
-    var issueNumber: String!     // issue_int
-    var volumeNumber: String!    // volume_int
+    var issueNumber: String     // issue_int
+    var volumeNumber: String    // volume_int
     
-    var articleContent: String! // html_content
+    var articleContent: String // html_content
     
     /* To get an NSDate objec from Unix timestamp
     var date = NSDate(timeIntervalSince1970: timeStamp) */
@@ -183,7 +183,7 @@ class EditorialElement: NSObject {
     }
     
     override var hash: Int {
-        return (self as EditorialElement).nodeID!
+        return (self as EditorialElement).nodeID
     }
     
 }
@@ -191,15 +191,15 @@ class EditorialElement: NSObject {
 class NewsElement: NSObject {
     
     var title: String           // title
-    let nodeID: Int          // nid
-    let timeStamp: Int       // revision_timestamp
-    let imageURL: String?       // image_url
-    let author: String          // author
+    var nodeID: Int          // nid
+    var timeStamp: Int       // revision_timestamp
+    var imageURL: String       // image_url
+    var author: String          // author
     
-    let issueNumber: String     // issue_int
-    let volumeNumber: String    // volume_int
+    var issueNumber: String     // issue_int
+    var volumeNumber: String    // volume_int
     
-    let articleContent: String // html_content
+    var articleContent: String // html_content
     
     // To get an NSDate objec from Unix timestamp
     // var date = NSDate(timeIntervalSince1970: timeStamp)
@@ -228,15 +228,15 @@ class NewsElement: NSObject {
 class RandomElement: NSObject {
     
     var title: String           // title
-    let nodeID: Int             // nid
-    let timeStamp: Int       // revision_timestamp
-    let imageURL: String?       // image_url
-    let author: String          // author
+    var nodeID: Int             // nid
+    var timeStamp: Int       // revision_timestamp
+    var imageURL: String       // image_url
+    var author: String          // author
     
-    let issueNumber: String     // issue_int
-    let volumeNumber: String    // volume_int
+    var issueNumber: String     // issue_int
+    var volumeNumber: String    // volume_int
     
-    let articleContent: String // html_content
+    var articleContent: String // html_content
     
     // To get an NSDate objec from Unix timestamp
     // var date = NSDate(timeIntervalSince1970: timeStamp)
@@ -267,13 +267,13 @@ class PictureElement: NSObject {
     
     
     var title: String           // title
-    let nodeID: Int             // nid
-    let timeStamp: Int      // revision_timestamp
-    let imageURL: String        // image_url
-    let author: String          // author
+    var nodeID: Int             // nid
+    var timeStamp: Int      // revision_timestamp
+    var imageURL: String        // image_url
+    var author: String          // author
     
-    let issueNumber: String     // issue_int
-    let volumeNumber: String    // volume_int
+    var issueNumber: String     // issue_int
+    var volumeNumber: String    // volume_int
     
 //    let articleContent: String? // html_content
     

@@ -55,6 +55,8 @@ class EditorialsTableViewController: UITableViewController {
     
     var timeStampDateString : String!
     
+//    var editorialLoadingIndicator = UIActivityIndicatorView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -74,10 +76,10 @@ class EditorialsTableViewController: UITableViewController {
         editorialsTableView.dataSource = self
         
         // Creating and configuring the customRefreshControl subview
-//        var customRefreshControl = UIRefreshControl()
+        customRefreshControl = UIRefreshControl()
         customRefreshControl.backgroundColor = goldenWordsYellow
         customRefreshControl.tintColor = UIColor.whiteColor()
-        customRefreshControl.addTarget(self, action: "handleRefresh", forControlEvents: .ValueChanged)
+//        customRefreshControl.addTarget(self, action: "handleRefresh", forControlEvents: .ValueChanged)
         editorialsTableView.addSubview(customRefreshControl)
         
         // Navigation set up
@@ -97,32 +99,22 @@ class EditorialsTableViewController: UITableViewController {
 //        let updateString = "Last updated at " + self.dateFormatter.stringFromDate(currentDateAndTime]
 //        self.customRefreshControl.attributedTitle = NSAttributedString(string: updateString]
         
-//        // Static data to test my table view controller
-//        
-//        editorialHeadline =  ["Article about Paris",
-//                              "Article about London",
-//                              "Article about New York",
-//                              "Article about San Francisco"]
-//        
-//        editorialAuthor = ["Mark",
-//                           "Alexander",
-//                           "Alexandra",
-//                           "Giorgio"]
-//        
-//        editorialPublishDate = ["September 27th",
-//                                "September 28th",
-//                                "September 29th",
-//                                "September 30th"]
-        
         tableView.estimatedRowHeight = 50
-        
-        
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+//        self.editorialLoadingIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 80, 80))
+//        self.editorialLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+//        self.editorialLoadingIndicator.color = UIColor.magentaColor()
+//        self.editorialLoadingIndicator.center = self.editorialsTableView.center
+//        self.editorialsTableView.addSubview(editorialLoadingIndicator)
+//        self.editorialLoadingIndicator.bringSubviewToFront(self.editorialsTableView)
+        
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -222,8 +214,10 @@ class EditorialsTableViewController: UITableViewController {
     override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         if customRefreshControl.refreshing {
             if !isAnimating {
-                handleRefresh()
+//                handleRefresh()
+                holdRefreshControl()
                 animateRefreshStep1()
+                
             }
         }
     }
@@ -241,10 +235,10 @@ class EditorialsTableViewController: UITableViewController {
         return returnColor
     }
     
-//    func doSomething() {
-//        timer = NSTimer.scheduledTimerWithTimeInterval(4.0, target: self, selector: "endOfWork", userInfo: nil, repeats: true]
-//    }
-//    
+    func holdRefreshControl() {
+        timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
+    }
+    
 //    func endOfWork() {
 //        customRefreshControl.endRefreshing()
 //        
@@ -268,18 +262,47 @@ class EditorialsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let row = indexPath.row
+        
+        guard let cell = tableView.dequeueReusableCellWithIdentifier(EditorialTableCellIdentifier, forIndexPath: indexPath) as? EditorialsTableViewCell else {
+            print ("error: editorialsTableView cell is not of class EditorialsTableViewCell, we will use RandomTableViewCell instead")
+            return tableView.dequeueReusableCellWithIdentifier(EditorialTableCellIdentifier, forIndexPath: indexPath) as! RandomTableViewCell
+        }
+        
+        if let editorialObject = editorialObjects.objectAtIndex(indexPath.row) as? EditorialElement {
+            // we just unwrapped editorialObject
+            
+            let title = editorialObject.title ?? "" // if editorialObject.title == nil, then we return an empty string.
+            
+            let timeStampDateObject = NSDate(timeIntervalSince1970: NSTimeInterval(editorialObject.timeStamp))
+            let timeStampDateString = dateFormatter.stringFromDate(timeStampDateObject)
+            
+            let author = editorialObject.author ?? ""
+          
+            let issueNumber = editorialObject.issueNumber ?? ""
+            let volumeNumber = editorialObject.volumeNumber ?? ""
+            
+            let articleContent = editorialObject.articleContent ?? ""
+            
+            let nodeID = editorialObject.nodeID ?? 0
+            
+            
+            cell.editorialHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
+            cell.editorialHeadlineLabel.text = title
+            
+            cell.editorialAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+            cell.editorialAuthorLabel.text = String(author)
+            
+            cell.editorialPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+            cell.editorialPublishDateLabel.text = timeStampDateString
+            
+        } else {
+            
+            
+        
+        }
+        
+        
         /*
-        cell.editorialHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline]
-        cell.editorialHeadlineLabel.text = editorialHeadline[row]
-        
-        cell.editorialAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline]
-        cell.editorialAuthorLabel.text = editorialAuthor[row]
-        
-        cell.editorialPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline]
-        cell.editorialPublishDateLabel.text = editorialPublishDate[row]
-        */
-        
-        let cell = tableView.dequeueReusableCellWithIdentifier(EditorialTableCellIdentifier, forIndexPath: indexPath) as! EditorialsTableViewCell
         
         let title = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).title
         
@@ -287,7 +310,7 @@ class EditorialsTableViewController: UITableViewController {
         let timeStampDateObject = NSDate(timeIntervalSince1970: NSTimeInterval(Int((editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).timeStamp)))
         timeStampDateString = dateFormatter.stringFromDate(timeStampDateObject)
         
-        let imageURL = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).imageURL
+/*        let imageURL = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).imageURL */
         
         let author : String! = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).author!
         
@@ -307,19 +330,10 @@ class EditorialsTableViewController: UITableViewController {
         cell.editorialAuthorLabel.text = author
         
         cell.editorialPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-        cell.editorialPublishDateLabel.text = timeStampDateString
+        cell.editorialPublishDateLabel.text = timeStampDateString */
         
-        /*
-        dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
-        dateFormatter.timeStyle = NSDateFormatterStyle.ShortStyle
-        var editorialPublishDate = NSDate()
-        editorialPublishDate = NSDate(timeIntervalSince1970: timeStamp)
-        cell.editorialPublishDateLabel.text = dateFormatter.stringFromDate(editorialPublishDate)
- var date = NSDate(timeIntervalSince1970: timeStamp)
-        */
-        
-//        cell.editorialVolumeAndIssueLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-//        cell.editorialVolumeAndIssueLabel.text = "Volume \(volumeNumber) - Issue \(issueNumber)"
+/*        cell.editorialVolumeAndIssueLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+        cell.editorialVoluameAndIssueLabel.text = "Volume \(volumeNumber) - Issue \(issueNumber)" */
         
         return cell
     }
@@ -378,7 +392,7 @@ class EditorialsTableViewController: UITableViewController {
          
             let detailViewController = segue.destinationViewController as! EditorialsDetailViewController
             let myIndexPath = self.tableView.indexPathForSelectedRow
-            _ = myIndexPath?.row
+            let row = myIndexPath?.row
             
             
             // Passing the article information through the segue
@@ -398,18 +412,20 @@ class EditorialsTableViewController: UITableViewController {
     }
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
-        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.8) {
+        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.5) {
             populateEditorials()
         }
     }
     
     func populateEditorials() {
+        
         if populatingEditorials {
             return
         }
-        
         populatingEditorials = true
         
+//        self.editorialLoadingIndicator.backgroundColor = UIColor.whiteColor()
+//        self.editorialLoadingIndicator.startAnimating()
         
         Alamofire.request(GWNetworking.Router.Editorials(self.currentPage)).responseJSON() { response in
             if let JSON = response.result.value {
@@ -421,17 +437,14 @@ class EditorialsTableViewController: UITableViewController {
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
                     
                     
-                    // Making an array of all the node IDs from the JSON file
+                    /* Making an array of all the node IDs from the JSON file */
                     var nodeIDArray : [Int]
-                    /* var nodeCounter : Int = 0 */
                     
                     
                     if (JSON .isKindOfClass(NSDictionary)) {
                     
                         for node in JSON as! Dictionary<String, AnyObject> {
-                        
-//                        var node = JSON.1[String(node]]
-                        
+                            
                         let nodeIDValue = node.0
                         var lastItem : Int = 0
                         
@@ -440,14 +453,13 @@ class EditorialsTableViewController: UITableViewController {
                         if let editorialElement : EditorialElement = EditorialElement(title: "init", nodeID: 0, timeStamp: 0, imageURL: "init", author: "init", issueNumber: "init", volumeNumber: "init", articleContent: "init") {
                         
                     editorialElement.title = node.1["title"] as! String
-                    editorialElement.nodeID = Int(nodeIDValue)
+                    editorialElement.nodeID = Int(nodeIDValue)!
+                            
                     let timeStampString = node.1["revision_timestamp"] as! String
                     editorialElement.timeStamp = Int(timeStampString)!
-//                    editorialElement.timeStamp = Int(node.1["revision_timestamp"])
-//                    editorialElement.timeStamp = node.1["revision_timestamp"] as! Int
-                    
+                            
                     editorialElement.imageURL = String(node.1["image_url"])
-                    editorialElement.author = String(node.1["author"])
+                    editorialElement.author = String(node.1["author"]) as! String
                     editorialElement.issueNumber = String(node.1["issue_int"])
                     editorialElement.volumeNumber = String(node.1["volume_int"])
                     editorialElement.articleContent = String(node.1["html_content"])
@@ -461,81 +473,78 @@ class EditorialsTableViewController: UITableViewController {
                             
                             
                     /* Sorting the elements in order of newest to oldest (as the array index increases] */
-                            
                     let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
                     self.editorialObjects.sortUsingDescriptors([timestampSortDescriptor])
                         
-                    
-//                    self.editorialObjects.sort({ $0.timeStamp > $1.timeStamp })
-                            
                     let indexPaths = (lastItem..<self.editorialObjects.count).map { NSIndexPath(forItem: $0, inSection: 0) }
                     
                  
                    /*
                         
                             nodeIDArray[nodeCounter] = jsonValue{nodeCounter}.string
-                            let editorialInfos : EditorialElement = ((jsonValue as! NSDictionary].1["\(nodeIDArray[nodeCounter]]"] as! [NSDictionary]].map { EditorialElement(title: $0["title"] as! String, nodeID: $0["nid"] as! Int, timeStamp: $0["revision_timestamp"] as! Int, imageURL: $0["image_url"] as! String, author: $0["author"], issueNumber: $0["issue_int"] as! Int, volumeNumber: $0["volume_int"] as! Int, articleContent: $0["html_content"] as! String] // I am going to try to break this line down to simplify it and fix the build errors
-*/
+                            let editorialInfos : EditorialElement = ((jsonValue as! NSDictionary].1["\(nodeIDArray[nodeCounter]]"] as! [NSDictionary]].map { EditorialElement(title: $0["title"] as! String, nodeID: $0["nid"] as! Int, timeStamp: $0["revision_timestamp"] as! Int, imageURL: $0["image_url"] as! String, author: $0["author"], issueNumber: $0["issue_int"] as! Int, volumeNumber: $0["volume_int"] as! Int, articleContent: $0["html_content"] as! String] // I am going to try to break this line down to simplify it and fix the build errors */
                     }
                     
                     print(self.editorialObjects.count)
-                    
                     
                 }
             }
                     
                     dispatch_async(dispatch_get_main_queue()) {
                         self.editorialsTableView.reloadData()
-                        //                                self.editorialsTableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: UITableViewRowAnimation.Automatic) // Animation implemented for testing, to be removed for version 1.0
                     }
-                
-                
-                /* Sorting the elements in order of newest to oldest (as the array index increases] */
-/*                self.editorialObjects.sort({ $0.timeStamp > $1.timeStamp })
-                
-                    
-                   let lastItem = self.editorialObjects.count
-                    
-                    let indexPaths = (lastItem..<self.editorialObjects.count).map { NSIndexPath(forItem: $0, inSection: $0) }
-                    
-                dispatch_async(dispatch_get_main_queue()) {
-                       self.editorialsTableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: UITableViewRowAnimation.Automatic) // Animation implemented for testing, to be removed for version 1.0
-                    } */
                     
                     self.currentPage++
-                }
             }
+        }
+            
+//            self.editorialLoadingIndicator.stopAnimating()
+//            self.editorialLoadingIndicator.hidesWhenStopped = true
             
             self.populatingEditorials = false
-            
-        }
-        
     }
+}
 
         func handleRefresh() {
             
             customRefreshControl.beginRefreshing()
             
-            let currentNumberOfPages = self.currentPage
+/*            let currentNumberOfPages = self.currentPage
             
-            self.editorialObjects.removeAllObjects()
+            self.editorialObjects.removeAllObjects() */
             
-            self.currentPage = 1
+            self.currentPage = 0 // switched from 1
             
+           /* 
             repeat {
             
                 populateEditorials()
-// I initially thought I would need to add 1 to the currentPage everytime, but this is already done in the populateNewsArticles function, so there is no need to write it again.
-//                self.currentPage++
+// I initially thought I would need to add 1 to the currentPage everytime, but this is already done in the populateEditorials function.
             
             }
             
-                while self.currentPage <= currentNumberOfPages
+                while (self.currentPage < currentNumberOfPages) // the program runs through the "repeat" statement before even considering the "while" condition.
+*/
             
-            self.editorialsTableView!.reloadData()
+            self.populatingEditorials = false
+            populateEditorials()
+            
+            print(editorialObjects.count)
+            
+/*            self.editorialsTableView!.reloadData() */
             
             customRefreshControl.endRefreshing()
             
-//            populateEditorials()
+/*            populateEditorials() */
         }
+    
+//    func activityIndicator() {
+//        
+//        self.editorialLoadingIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 40, 40))
+//        self.editorialLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+//        self.editorialLoadingIndicator.color = goldenWordsYellow
+//        self.editorialLoadingIndicator.center = self.tableView.center
+//        self.tableView.addSubview(editorialLoadingIndicator)
+//        self.editorialLoadingIndicator.bringSubviewToFront(self.tableView)
+//    }
  }

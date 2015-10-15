@@ -13,12 +13,12 @@ class RandomTableViewCell: UITableViewCell {
     @IBOutlet weak var randomHeadlineLabel: UILabel!
     @IBOutlet weak var randomAuthorLabel: UILabel!
     @IBOutlet weak var randomPublishDateLabel: UILabel!
-    @IBOutlet weak var randomVolumeAndIssueLabel: UILabel!
+//    @IBOutlet weak var randomVolumeAndIssueLabel: UILabel!
     
     
-    required init?(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder!) {
         super.init(coder: aDecoder)
-        fatalError("init(coder:) has not been implemented")
+//        fatalError("init(coder:) has not been implemented")
     }
     
     // Adding labels as subviews of the cell so we can access them directly as properties
@@ -26,7 +26,7 @@ class RandomTableViewCell: UITableViewCell {
         addSubview(randomHeadlineLabel)
         addSubview(randomAuthorLabel)
         addSubview(randomPublishDateLabel)
-        addSubview(randomVolumeAndIssueLabel)
+//        addSubview(randomVolumeAndIssueLabel)
     }
     
     override func awakeFromNib() {

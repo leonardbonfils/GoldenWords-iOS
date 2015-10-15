@@ -21,16 +21,13 @@ class NewsTableViewController: UITableViewController {
     
     // Hamburger button declaration
     @IBOutlet weak var menuButton:UIBarButtonItem!
-    
-    
-    // Refresh control variables - start
-    
+
     // Table View Outlet used for the refresh control
     @IBOutlet var newsTableView: UITableView!
     
-    var newsObjects = NSMutableArray()
+    var newsObjects = NSMutableOrderedSet(capacity: 1000)
         
-    var customRefreshControl = UIRefreshControl?()
+    var customRefreshControl: UIRefreshControl! = UIRefreshControl()
     
     var revealViewControllerIndicator : Int = 0
     
@@ -46,12 +43,17 @@ class NewsTableViewController: UITableViewController {
     
     var timer : NSTimer!
     
-    var populatingNewsArticle = false
-    var currentPage = 1
+    var populatingNewsArticles = false
+    
+    var currentPage = 0
     
     let newsArticleTableCellIdentifier = "NewsTableCellIdentifier"
     
     var dateFormatter = NSDateFormatter()
+    
+    var nodeIDArray = NSMutableArray()
+    
+    var timeStampDateString : String!
     
     // Refresh control variables - end
     
@@ -73,10 +75,10 @@ class NewsTableViewController: UITableViewController {
         newsTableView.dataSource = self
         
         // Creating and configuring the customRefreshControl subview
-//        customRefreshControl = UIRefreshControl()
-        customRefreshControl!.backgroundColor = goldenWordsYellow
-        customRefreshControl!.tintColor = UIColor.whiteColor()
-        customRefreshControl!.addTarget(self, action: "handleRefresh", forControlEvents: .ValueChanged)
+        customRefreshControl = UIRefreshControl()
+        customRefreshControl.backgroundColor = goldenWordsYellow
+        customRefreshControl.tintColor = UIColor.whiteColor()
+//        customRefreshControl.addTarget(self, action: "handleRefresh", forControlEvents: .ValueChanged)
         newsTableView.addSubview(customRefreshControl!)
         
         // Navigation set up
@@ -86,35 +88,16 @@ class NewsTableViewController: UITableViewController {
         loadCustomRefreshContents()
         
         populateNewsArticles()
-        
+/*
         // Formatting the date for the "last updated on..." string
         self.dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
         self.dateFormatter.timeStyle = NSDateFormatterStyle.ShortStyle
         
         let currentDateAndTime = NSDate()
         let updateString = "Last updated at " + self.dateFormatter.stringFromDate(currentDateAndTime)
-        self.customRefreshControl!.attributedTitle = NSAttributedString(string: updateString)
-        
-        
-//        // static data to test my table view controller
-//        
-//        newsHeadline = ["News Paris",
-//                        "News London",
-//                        "News New York",
-//                        "News San Francisco"]
-//        
-//        newsAuthor = ["Caesar",
-//                      "Lucius Fox",
-//                      "Steve Jobs",
-//                      "Sundar Pichai"]
-//        
-//        newsPublishDate = ["August 1st",
-//                           "August 2nd",
-//                           "August 3rd",
-//                           "August 4th"]
+        self.customRefreshControl!.attributedTitle = NSAttributedString(string: updateString) */
         
         tableView.estimatedRowHeight = 50
-        
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -222,7 +205,7 @@ class NewsTableViewController: UITableViewController {
     override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         if customRefreshControl!.refreshing {
             if !isAnimating {
-                doSomething()
+                holdRefreshControl()
                 animateRefreshStep1()
             }
         }
@@ -241,16 +224,17 @@ class NewsTableViewController: UITableViewController {
         return returnColor
     }
     
-    func doSomething() {
-        timer = NSTimer.scheduledTimerWithTimeInterval(4.0, target: self, selector: "endOfWork", userInfo: nil, repeats: true)
+    func holdRefreshControl() {
+        timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
     }
     
+    /*
     func endOfWork() {
         customRefreshControl!.endRefreshing()
         
         timer.invalidate()
         timer = nil
-    }
+    } */
 
     // MARK: - Table view data source
     
@@ -261,7 +245,7 @@ class NewsTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Return the number of rows in the section.
-        return newsObjects.count
+        return (newsObjects.count)
     }
     
     
@@ -269,16 +253,46 @@ class NewsTableViewController: UITableViewController {
 //        let cell = self.tableView.dequeueReusableCellWithIdentifier("NewsTableCellIdentifier", forIndexPath: indexPath) as! NewsTableViewCell
 //        
         let row = indexPath.row
-//        cell.newsHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
-//        cell.newsHeadlineLabel.text = newsHeadline[row]
-//        
-//        cell.newsAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-//        cell.newsAuthorLabel.text = newsAuthor[row]
-//        
-//        cell.newsPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-//        cell.newsPublishDateLabel.text = newsPublishDate[row]
 
-            let cell = tableView.dequeueReusableCellWithIdentifier(newsArticleTableCellIdentifier, forIndexPath: indexPath) as! NewsTableViewCell
+        guard let cell = tableView.dequeueReusableCellWithIdentifier(newsArticleTableCellIdentifier, forIndexPath: indexPath) as? NewsTableViewCell else {
+                print ("error: newsArticleTableview cell is not of class NewsTableViewCell, we will use RandomTableViewCell instead")
+            return tableView.dequeueReusableCellWithIdentifier(newsArticleTableCellIdentifier, forIndexPath: indexPath) as! RandomTableViewCell
+        }
+        
+        if let newsObject = newsObjects.objectAtIndex(indexPath.row) as? NewsElement {
+            // we just unwrapped newsObject
+            
+            let title = newsObject.title ?? "" // if newsObject.title == nil, we will return an empty string.
+            
+            let timeStampDateObject = NSDate(timeIntervalSince1970: NSTimeInterval(newsObject.timeStamp))
+            let timeStampDateString = dateFormatter.stringFromDate(timeStampDateObject)
+            
+            let author = newsObject.author ?? ""
+            
+            let issueNumber = newsObject.issueNumber ?? ""
+            let volumeNumber = newsObject.volumeNumber ?? ""
+            
+            let articleContent = newsObject.articleContent ?? ""
+            
+            let nodeID = newsObject.nodeID ?? 0
+            
+            
+            cell.newsHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
+            cell.newsHeadlineLabel.text = title
+            
+            cell.newsAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+            cell.newsAuthorLabel.text = String(author)
+            
+            cell.newsPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+            cell.newsPublishDateLabel.text = timeStampDateString
+            
+        } else {
+            
+            
+            
+        }
+        
+        /*
         
         let title = (newsObjects.objectAtIndex(indexPath.row) as! NewsElement).title
         let timeStamp = (newsObjects.objectAtIndex(indexPath.row) as! NewsElement).timeStamp
@@ -303,8 +317,11 @@ class NewsTableViewController: UITableViewController {
         cell.newsVolumeAndIssueLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
         cell.newsVolumeAndIssueLabel.text = "Volume \(volumeNumber) - Issue \(issueNumber)"
         
+        */
         
         return cell
+
+
     }
 
 
@@ -360,7 +377,7 @@ class NewsTableViewController: UITableViewController {
             
             // Passing the article information through the segue
             detailViewController.newsArticleTitleThroughSegue = newsObjects.objectAtIndex((myIndexPath?.row)!).title
-            detailViewController.newsArticlePublishDateThroughSegue = String(newsObjects.objectAtIndex((myIndexPath?.row)!).timeStamp)
+            detailViewController.newsArticlePublishDateThroughSegue = timeStampDateString
             detailViewController.newsArticleVolumeIndexThroughSegue = newsObjects.objectAtIndex((myIndexPath?.row)!).volumeNumber
             detailViewController.newsArticleIssueIndexThroughSegue = newsObjects.objectAtIndex((myIndexPath?.row)!).issueNumber
             detailViewController.newsArticleAuthorThroughSegue = newsObjects.objectAtIndex((myIndexPath?.row)!).author
@@ -379,86 +396,124 @@ class NewsTableViewController: UITableViewController {
     
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
-        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.8) {
+        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.5) {
         populateNewsArticles()
         }
     }
     
     func populateNewsArticles() {
-        if populatingNewsArticle {
+        
+        if populatingNewsArticles {
             return
         }
-        
-        populatingNewsArticle = true
-        
+        populatingNewsArticles = true
         
         Alamofire.request(GWNetworking.Router.News(self.currentPage)).responseJSON() { response in
             if let JSON = response.result.value {
-            
-            if response.result.error == nil {
+                /*
+                if response.result.error == nil {
+                */
                 
+                /* Creating objects for every single editorial is long running work, so we put that work on a background queue, to keep the app very responsive. */
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
                     
-                    // Making an array of all the node IDs from the JSON file
-                    let nodeIDArray : [String]
-                    var nodeCounter : Int = 0
-                    for nodeCounter in 0..<9 {
+                    
+                    /* Making an array of all the node IDs from the JSON file */
+                    var nodeIDArray : [Int]
+                    
+                    
+                    if (JSON .isKindOfClass(NSDictionary)) {
                         
-                        if let jsonValue = response.result.value {
+                        for node in JSON as! Dictionary<String, AnyObject> {
                             
-//                            nodeIDArray[nodeCounter] = jsonValue{nodeCounter}.string
-//                            let newsArticleInfos : NewsElement = ((jsonValue as! NSDictionary).valueForKey("\(nodeIDArray[nodeCounter])") as! [NSDictionary]).map { NewsElement(title: $0["title"] as! String, nodeID: $0["nid"] as! Int, timeStamp: $0["revision_timestamp"] as! Int, imageURL: $0["image_url"] as! String, author: $0["author"], issueNumber: $0["issue_int"] as! Int, volumeNumber: $0["volume_int"] as! Int, articleContent: $0["html_content"] as! String) // I am going to try to break this line down to simplify it and fix the build errors
+                            let nodeIDValue = node.0
+                            var lastItem : Int = 0
                             
+                            self.nodeIDArray.addObject(nodeIDValue)
+                            
+                            if let newsArticleElement : NewsElement = NewsElement(title: "init", nodeID: 0, timeStamp: 0, imageURL: "init", author: "init", issueNumber: "init", volumeNumber: "init", articleContent: "init") {
+                                
+                                newsArticleElement.title = node.1["title"] as! String
+                                newsArticleElement.nodeID = Int(nodeIDValue)!
+                                
+                                let timeStampString = node.1["revision_timestamp"] as! String
+                                newsArticleElement.timeStamp = Int(timeStampString)!
+                                
+                                newsArticleElement.imageURL = String(node.1["image_url"])
+                                newsArticleElement.author = String(node.1["author"]) as! String
+                                newsArticleElement.issueNumber = String(node.1["issue_int"])
+                                newsArticleElement.volumeNumber = String(node.1["volume_int"])
+                                newsArticleElement.articleContent = String(node.1["html_content"])
+                                
+                                lastItem = self.newsObjects.count
+                                
+                                print (newsArticleElement.nodeID)
+                                
+                                
+                                self.newsObjects.addObject(newsArticleElement)
+                                
+                                
+                                /* Sorting the elements in order of newest to oldest (as the array index increases] */
+                                let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
+                                self.newsObjects.sortUsingDescriptors([timestampSortDescriptor])
+                                
+                                let indexPaths = (lastItem..<self.newsObjects.count).map { NSIndexPath(forItem: $0, inSection: 0) }
+                                
+                                
+                                /*
+                                
+                                nodeIDArray[nodeCounter] = jsonValue{nodeCounter}.string
+                                let editorialInfos : EditorialElement = ((jsonValue as! NSDictionary].1["\(nodeIDArray[nodeCounter]]"] as! [NSDictionary]].map { EditorialElement(title: $0["title"] as! String, nodeID: $0["nid"] as! Int, timeStamp: $0["revision_timestamp"] as! Int, imageURL: $0["image_url"] as! String, author: $0["author"], issueNumber: $0["issue_int"] as! Int, volumeNumber: $0["volume_int"] as! Int, articleContent: $0["html_content"] as! String] // I am going to try to break this line down to simplify it and fix the build errors */
                             }
+                            
+                            print(self.newsObjects.count)
+                            
                         }
                     }
-                
-                
-                    let lastItem = self.newsObjects.count
-
-                
-                    let indexPaths = (lastItem..<self.newsObjects.count).map { NSIndexPath(forItem: $0, inSection: $0) }
                     
                     dispatch_async(dispatch_get_main_queue()) {
-                        self.newsTableView.insertRowsAtIndexPaths(indexPaths, withRowAnimation: UITableViewRowAnimation.Fade) // Animation implemented for testing, to be removed for version 1.0
+                        self.newsTableView.reloadData()
                     }
                     
                     self.currentPage++
                 }
             }
             
-            self.populatingNewsArticle = false
-            
+            self.populatingNewsArticles = false
         }
-        
     }
     
     func handleRefresh() {
         
-        customRefreshControl?.beginRefreshing()
+        customRefreshControl.beginRefreshing()
         
-        let currentNumberOfPages : Int = self.currentPage
+        //            let currentNumberOfPages = self.currentPage
         
-        self.newsObjects.removeAllObjects()
+        //            self.newsObjects.removeAllObjects()
         
-        self.currentPage = 1
+        self.currentPage = 0
         
+        /*
         repeat {
         
-            populateNewsArticles()
-// I initially thought I would need to add 1 to the currentPage everytime, but this is already done in the populateNewsArticles function, so there is no need to write it again.
-//            self.currentPage++
+        populateNewsArticles()
+        // I initially thought I would need to add 1 to the currentPage everytime, but this is already done in the populateNewsArticles function.
         
         }
         
-            while self.currentPage <= currentNumberOfPages
+        while (self.currentPage < currentNumberOfPages) // the program runs through the "repeat" statement before even considering the "while" condition.
+        */
         
-        self.newsTableView!.reloadData()
+        self.populatingNewsArticles = false
         
-        customRefreshControl?.endRefreshing()
+        populateNewsArticles()
         
-//      populateEditorials()
+        print(newsObjects.count)
         
+        /*            self.editorialsTableView!.reloadData() */
+        
+        customRefreshControl.endRefreshing()
+        
+        /*            populateNewsArticles() */
     }
-    
 }

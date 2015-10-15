@@ -35,7 +35,7 @@ class NewsDetailViewController: UIViewController {
         super.viewDidLoad()
         
         //Inserting the selected news article's title
-        newsDetailNavigationItem.title = newsArticleTitleThroughSegue
+        newsDetailNavigationItem.title = "Article"
         
         // Swipe recognizers for left and right edges (can be used later).
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipes:"))

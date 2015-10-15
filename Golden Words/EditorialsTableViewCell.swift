@@ -10,11 +10,10 @@ import UIKit
 
 class EditorialsTableViewCell: UITableViewCell {
     
-    
     @IBOutlet weak var editorialHeadlineLabel: UILabel!
     @IBOutlet weak var editorialAuthorLabel: UILabel!
     @IBOutlet weak var editorialPublishDateLabel: UILabel!
-    @IBOutlet weak var editorialVolumeAndIssueLabel: UILabel!
+//    @IBOutlet weak var editorialVolumeAndIssueLabel: UILabel!
     
     required init?(coder aDecoder: NSCoder!) {
         super.init(coder: aDecoder)
