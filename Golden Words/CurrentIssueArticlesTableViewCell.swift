@@ -7,14 +7,30 @@
 //
 
 import UIKit
+import Alamofire
 
 class CurrentIssueArticlesTableViewCell: UITableViewCell {
     
     @IBOutlet weak var currentIssueArticlesHeadlineLabel: UILabel!
     @IBOutlet weak var currentIssueArticlesAuthorLabel: UILabel!
     @IBOutlet weak var currentIssueArticlesPublishDateLabel: UILabel!
+    @IBOutlet weak var currentIssueArticlesBackgroundImageView: UIImageView!
+    var request: Alamofire.Request?
     
-
+    required init?(coder aDecoder: NSCoder!) {
+        super.init(coder: aDecoder)
+        /*        fatalError("init(coder:) could not be initialized") */
+    }
+    
+    func addSubviews(view: UIView) {
+        addSubview(currentIssueArticlesHeadlineLabel)
+        addSubview(currentIssueArticlesAuthorLabel)
+        addSubview(currentIssueArticlesPublishDateLabel)
+        addSubview(currentIssueArticlesBackgroundImageView)
+        
+        bringSubviewToFront(currentIssueArticlesBackgroundImageView)
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -25,5 +41,4 @@ class CurrentIssueArticlesTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
 }

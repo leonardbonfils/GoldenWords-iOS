@@ -29,6 +29,10 @@ class IssueLocation: NSObject, MKAnnotation {
         return locationName
     }
     
+    var title: String? {
+        return locationName
+    }
+    
     func mapItem() -> MKMapItem {
         
         let addressDictionary = [String(CNPostalAddressStreetKey): locationName]
@@ -41,18 +45,18 @@ class IssueLocation: NSObject, MKAnnotation {
         return mapItem
     }
     
-    class func fromJSON(json: [JSONValue]) -> IssueLocation {
-        
-        let locationName = json[12].string // NOTE: replace "12" with the actual index of the locationName in each array of our .JSON file
-        
-        let latitude = (json[18].string! as NSString).doubleValue // NOTE: replace "18" with the actual index of the latitude in each array of our .JSON file
-        let longitude = (json[19].string! as NSString).doubleValue // NOTE: replace "19" with the actual index of the latitude in each array of our .JSON file
-        let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
-        
-        // Returning an "IssueLocation" object with properties: "locationName" and "coordinate"
-        return IssueLocation(locationName: locationName!, coordinate: coordinate)
-        
-    }
+//    class func fromJSON(json: [JSONValue]) -> IssueLocation {
+//        
+//        let locationName = json[12].string // NOTE: replace "12" with the actual index of the locationName in each array of our .JSON file
+//        
+//        let latitude = (json[18].string! as NSString).doubleValue // NOTE: replace "18" with the actual index of the latitude in each array of our .JSON file
+//        let longitude = (json[19].string! as NSString).doubleValue // NOTE: replace "19" with the actual index of the latitude in each array of our .JSON file
+//        let coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+//        
+//        // Returning an "IssueLocation" object with properties: "locationName" and "coordinate"
+//        return IssueLocation(locationName: locationName!, coordinate: coordinate)
+//        
+//    }
     
 //    // Configuring the colour of each annotation pin. We would need to add another property for each object, in the JSON array (here it is called "discpline")
 //    func pinColor() -> MKPinAnnotationColor {

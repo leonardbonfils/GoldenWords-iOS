@@ -7,19 +7,12 @@
 //
 
 import UIKit
+import Alamofire
+import AlamofireImage
 
 class CurrentIssueTableViewController: UITableViewController {
     
     let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
-    
-    var currentIssueFrontCoverImages = [String]()
-    var currentIssueFrontCoverHeadline = [String]()
-    var currentIssueFrontCoverAuthor = [String]()
-    var currentIssueFrontCoverPublishDate = [String]()
-    
-    var currentIssueArticlesHeadline = [String]()
-    var currentIssueArticlesAuthor = [String]()
-    var currentIssueArticlesPublishDate = [String]()
     
     @IBOutlet weak var menuButton: UIBarButtonItem!
     
@@ -28,14 +21,11 @@ class CurrentIssueTableViewController: UITableViewController {
     // Table View outlet used for the refresh control
     @IBOutlet var currentIssueTableView: UITableView!
     
-    // Declaring fake data to test the table view
-//    var dataArray: [String] = ["One", "Two", "Three", "Four", "Five"]
+    var currentIssueObjects = NSMutableOrderedSet(capacity: 1000)
     
-    // an indicator used to know if the reveal view controller is currently shown (i.e. to know if the hamburger menu is open)
+    var customRefreshControl = UIRefreshControl()
+    
     var revealViewControllerIndicator : Int = 0
-    
-    // Declaring refreshControl --> I actually did not need to declare it since it is part of the UITableViewController class by default
-//    var refreshControl: UIRefreshControl!
     
     var customView: UIView!
     
@@ -48,6 +38,22 @@ class CurrentIssueTableViewController: UITableViewController {
     var currentLabelIndex = 0
     
     var timer : NSTimer!
+    
+    var populatingCurrentIssue = false
+    
+    var currentPage = 0
+    
+    let CurrentIssueArticlesTableCellIdentifier = "CurrentIssueArticlesIdentifier"
+    
+    var dateFormatter = NSDateFormatter()
+    
+    var nodeIDArray = NSMutableArray()
+    
+    var timeStampDateString : String!
+    
+    var imageCache = NSCache()
+    
+    var cellLoadingIndicator = UIActivityIndicatorView()
     
     // Refresh control variables - end
     
@@ -69,45 +75,32 @@ class CurrentIssueTableViewController: UITableViewController {
         currentIssueTableView.delegate = self
         currentIssueTableView.dataSource = self
         
-        // Creating and configuring the refreshControl subview
-        refreshControl = UIRefreshControl()
-        refreshControl!.backgroundColor = goldenWordsYellow
-        refreshControl!.tintColor = UIColor.whiteColor()
-        currentIssueTableView.addSubview(refreshControl!)
+        // Creating and configuring the customRefreshControl subview
+        customRefreshControl = UIRefreshControl()
+        customRefreshControl.backgroundColor = goldenWordsYellow
+        customRefreshControl.tintColor = UIColor.whiteColor()
+        currentIssueTableView.addSubview(customRefreshControl)
+        
+        // Navigation set up
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationItem.title = "Current Issue"
         
         loadCustomRefreshContents()
-    
-        // Static data - Front Cover
         
-        currentIssueFrontCoverImages = ["Test image 1"]
+        populateCurrentIssue()
         
-        currentIssueFrontCoverHeadline = ["Front Cover Headline 1"]
+//        currentIssueTableView.estimatedRowHeight = 80
         
-        currentIssueFrontCoverAuthor = ["Front Cover Author 1"]
+        self.dateFormatter.dateFormat = "dd/MM/yy"
         
-        currentIssueFrontCoverPublishDate = ["FC April 1st"]
+        self.cellLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        self.cellLoadingIndicator.color = goldenWordsYellow
+        let indicatorCenter = CGPoint(x: self.currentIssueTableView.center.x, y: self.currentIssueTableView.center.y - 130)
+        self.cellLoadingIndicator.center = indicatorCenter
+        self.currentIssueTableView.addSubview(cellLoadingIndicator)
+        self.currentIssueTableView.bringSubviewToFront(cellLoadingIndicator)
+//        self.cellLoadingIndicator.
         
-        tableView.estimatedRowHeight = 50
-        
-        
-        // Static data - Articles
-        
-        currentIssueArticlesHeadline = ["Headline 1",
-                                        "Headline 2",
-                                        "Headline 3",
-                                        "Headline 4"]
-        
-        currentIssueArticlesAuthor = ["Author 1",
-                                      "Author 2",
-                                      "Author 3",
-                                      "Author 4"]
-        
-        currentIssueArticlesPublishDate = ["May 1st",
-                                           "May 2nd",
-                                           "May 3rd",
-                                           "May 4th"]
-        
-
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -119,91 +112,17 @@ class CurrentIssueTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    // MARK: - Table view data source
-
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 1
-    }
-
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        
-        return (currentIssueArticlesAuthor.count + 1) // As of 18/08/2015, this returns 5
-    }
-
-    
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    
-    // To reload the data in the table view with new data from the API, use the reloadData method
-        
-        
-        
-        let row = indexPath.row
-        
-        // Populating data in the "Front Cover" type cell(s)
-        if row == 0 {
-            let cell:CurrentIssueFrontCoverTableViewCell = CurrentIssueFrontCoverTableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "CurrentIssueFrontCoverIdentifier")
-            
-            if let cIFC_ImageView = cell.currentIssueFrontCoverImageView {
-                cIFC_ImageView.image = UIImage(named: "Test Image 1.jpg")
-            }
-            
-            if let cIFC_HeadlineLabel = cell.currentIssueFrontCoverHeadlineLabel {
-                cIFC_HeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
-                cIFC_HeadlineLabel.text = currentIssueFrontCoverHeadline[row]
-            }
-            
-            if let cIFC_AuthorLabel = cell.currentIssueFrontCoverAuthorLabel {
-                cIFC_AuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-                cIFC_AuthorLabel.text = currentIssueFrontCoverAuthor[row]
-            }
-            
-            if let cIFC_PublishDateLabel = cell.currentIssueFrontCoverPublishDateLabel {
-                cIFC_PublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-                cIFC_PublishDateLabel.text = currentIssueFrontCoverPublishDate[row]
-            }
-            
-            return cell
-        }
-        
-        // Populating data in the "Articles" type cells
-        else {
-            let cell:CurrentIssueArticlesTableViewCell = CurrentIssueArticlesTableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "CurrentIssueArticlesIdentifier")
-            
-            if let cIAHeadlineLabel = cell.currentIssueArticlesHeadlineLabel {
-                cIAHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
-                cIAHeadlineLabel.text = currentIssueArticlesHeadline[row]
-            }
-            
-            if let cIAAuthorLabel = cell.currentIssueArticlesAuthorLabel {
-                cIAAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-                cIAAuthorLabel.text = currentIssueArticlesAuthor[row]
-            }
-            
-            if let cIAPublishDateLabel = cell.currentIssueArticlesPublishDateLabel {
-                cIAPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-                cIAPublishDateLabel.text = currentIssueArticlesPublishDate[row]
-            }
-            
-            self.tableView.rowHeight = 80
-            
-            return cell
-        }
-        
-    }
     
     func loadCustomRefreshContents() {
         let refreshContents = NSBundle.mainBundle().loadNibNamed("RefreshContents", owner: self, options: nil)
         
         customView = refreshContents[0] as! UIView
-        customView.frame = refreshControl!.bounds
+        customView.frame = customRefreshControl.bounds
         
         for (var i=0; i < customView.subviews.count; i++) {
             labelsArray.append(customView.viewWithTag(i+1) as! UILabel)
             
-        refreshControl!.addSubview(customView)
+            customRefreshControl.addSubview(customView)
         }
     }
     
@@ -233,11 +152,8 @@ class CurrentIssueTableViewController: UITableViewController {
                             self.animateRefreshStep2()
                         }
                 })
-                
         })
-        
     }
-
     
     func animateRefreshStep2() {
         UIView.animateWithDuration(0.35, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: { () -> Void in
@@ -252,7 +168,7 @@ class CurrentIssueTableViewController: UITableViewController {
             self.labelsArray[8].transform = CGAffineTransformMakeScale(1.5, 1.5)
             self.labelsArray[9].transform = CGAffineTransformMakeScale(1.5, 1.5)
             self.labelsArray[10].transform = CGAffineTransformMakeScale(1.5, 1.5)
-
+            
             
             }, completion: { (finished) -> Void in
                 UIView.animateWithDuration(0.25, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: { () -> Void in
@@ -267,10 +183,10 @@ class CurrentIssueTableViewController: UITableViewController {
                     self.labelsArray[8].transform = CGAffineTransformIdentity
                     self.labelsArray[9].transform = CGAffineTransformIdentity
                     self.labelsArray[10].transform = CGAffineTransformIdentity
-
+                    
                     
                     }, completion: { (finished) -> Void in
-                        if self.refreshControl!.refreshing {
+                        if self.customRefreshControl.refreshing {
                             self.currentLabelIndex = 0
                             self.animateRefreshStep1()
                         } else {
@@ -285,16 +201,18 @@ class CurrentIssueTableViewController: UITableViewController {
         })
         
     }
-    
+
     override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        if refreshControl!.refreshing {
+        if customRefreshControl.refreshing {
             if !isAnimating {
-                doSomething()
+                //                handleRefresh()
+                holdRefreshControl()
                 animateRefreshStep1()
+                
             }
         }
     }
-    
+
     func getNextColor() -> UIColor {
         var colorsArray: [UIColor] = [goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow]
         
@@ -308,16 +226,223 @@ class CurrentIssueTableViewController: UITableViewController {
         return returnColor
     }
     
-    func doSomething() {
-        timer = NSTimer.scheduledTimerWithTimeInterval(4.0, target: self, selector: "endOfWork", userInfo: nil, repeats: true)
+    func holdRefreshControl() {
+        timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
     }
-    
-    func endOfWork() {
-        refreshControl!.endRefreshing()
+
+    // MARK: - Table view data source
+
+    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        // #warning Incomplete implementation, return the number of sections
+        return 1
+    }
+
+    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // #warning Incomplete implementation, return the number of rows
+//        return (currentIssueArticlesAuthor.count + 1) // As of 18/08/2015, this returns 5
         
-        timer.invalidate()
-        timer = nil
+        return (currentIssueObjects.count)
     }
+
+    
+    override func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell {
+    
+        let row = indexPath.row
+        
+        guard let cell = tableView.dequeueReusableCellWithIdentifier(CurrentIssueArticlesTableCellIdentifier, forIndexPath: indexPath) as? CurrentIssueArticlesTableViewCell else {
+            
+            print ("error: currentIssueTableView cell is not of class CurrentIssueArticlesTableViewCell, we will use EditorialsTableViewCell instead")
+            return tableView.dequeueReusableCellWithIdentifier(CurrentIssueArticlesTableCellIdentifier, forIndexPath: indexPath) as! EditorialsTableViewCell
+        }
+        
+        if let currentIssueObject = currentIssueObjects.objectAtIndex(indexPath.row) as? IssueElement {
+            
+            let title = currentIssueObject.title ?? ""
+            
+            let timeStampDateObject = NSDate(timeIntervalSince1970: NSTimeInterval(currentIssueObject.timeStamp))
+            let timeStampDateString = dateFormatter.stringFromDate(timeStampDateObject) ?? "Date unknown"
+            
+            let author = currentIssueObject.author
+            
+            let issueNumber = currentIssueObject.issueNumber ?? ""
+            let volumeNumber = currentIssueObject.volumeNumber ?? ""
+            
+            let articleContent = currentIssueObject.articleContent ?? ""
+            
+            let nodeID = currentIssueObject.nodeID ?? 0
+            
+            cell.currentIssueArticlesHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
+            cell.currentIssueArticlesHeadlineLabel.text = title
+            
+            cell.currentIssueArticlesAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+            cell.currentIssueArticlesAuthorLabel.text = author as! String
+            
+            cell.currentIssueArticlesPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+            cell.currentIssueArticlesPublishDateLabel.text = timeStampDateString
+            
+            if row == 0 {
+                
+                cell.userInteractionEnabled = false
+                
+                let imageURL = (currentIssueObjects.objectAtIndex(row) as! IssueElement).imageURL
+                
+                cell.currentIssueArticlesHeadlineLabel.textColor = UIColor.clearColor()
+                cell.currentIssueArticlesAuthorLabel.textColor = UIColor.clearColor()
+                cell.currentIssueArticlesPublishDateLabel.textColor = UIColor.clearColor()
+                
+                cell.request?.cancel()
+                
+                if let image = self.imageCache.objectForKey(imageURL!) as? UIImage {
+                    cell.currentIssueArticlesBackgroundImageView.image = image
+                } else {
+                    cell.currentIssueArticlesBackgroundImageView.image = UIImage(named: "reveal Image")
+                    cell.request = Alamofire.request(.GET, imageURL!).responseImage() { response in
+                        if response.result.error == nil && response.result.value != nil {
+                            
+                            self.imageCache.setObject(response.result.value!, forKey: response.request!.URLString)
+                            
+                            cell.currentIssueArticlesBackgroundImageView.image = response.result.value
+                        } else {
+                            
+                        }
+                        
+                    }
+                }
+                
+//                cell.currentIssueArticlesBackgroundImageView.image = currentIssueObject.
+                cell.currentIssueArticlesBackgroundImageView.hidden = false
+            }
+            
+            else {
+                
+//                cell.currentIssueArticlesBackgroundImageView.image = currentIssueObject.
+                cell.currentIssueArticlesBackgroundImageView.hidden = true
+                
+            }
+            
+        }
+        
+        return cell
+    }
+        
+        
+//        switch(row) {
+//            
+//            
+//        case 0:
+//            
+//            let cellWithCoverImage = tableView.dequeueReusableCellWithIdentifier(CurrentIssueFrontCoverTableCellIdentifier, forIndexPath: indexPath) as! CurrentIssueFrontCoverTableViewCell
+//            
+//            if let currentIssueFrontCoverObject = currentIssueObjects.objectAtIndex(indexPath.row) as? IssueElement {
+//                
+//                let title = currentIssueFrontCoverObject.title ?? ""
+//                
+//                let timeStampDateObject = NSDate(timeIntervalSince1970: NSTimeInterval(currentIssueFrontCoverObject.timeStamp))
+//                let timeStampDateString = dateFormatter.stringFromDate(timeStampDateObject)
+//                
+//                let issueNumber = currentIssueFrontCoverObject.issueNumber ?? ""
+//                let volumeNumber = currentIssueFrontCoverObject.volumeNumber ?? ""
+//                
+//                let nodeID = currentIssueFrontCoverObject.nodeID ?? 0
+//                
+//                let imageURL = currentIssueFrontCoverObject.imageURL ?? ""
+//                
+//                
+//                cellWithCoverImage.request?.cancel()
+//                
+//                if let coverImage = self.imageCache.objectForKey(imageURL) as? UIImage {
+//                    cellWithCoverImage.currentIssueFrontCoverImageView.image = coverImage
+//                } else {
+//                    cellWithCoverImage.currentIssueFrontCoverImageView.image = nil
+//                    cellWithCoverImage.request = Alamofire.request(.GET, imageURL).responseImage() { response in
+//                        if let coverImage = response.result.value {
+//                            self.imageCache.setObject(response.result.value!, forKey: imageURL)
+//                            cellWithCoverImage.currentIssueFrontCoverImageView.image = coverImage
+//                            
+//                        } else {
+//                            
+//                            return
+//                            
+//                        }
+//                    }
+//                }
+//            } else {
+//                
+//                break
+//            }
+//            
+//            return cellWithCoverImage
+//            
+//            // Populating data in the "Articles" type cells
+//            
+//            
+//        
+//        default:
+//            
+//            let cellWithoutCoverImage = tableView.dequeueReusableCellWithIdentifier(CurrentIssueArticlesTableCellIdentifier, forIndexPath: indexPath) as! CurrentIssueArticlesTableViewCell
+//            
+//            if let currentIssueArticleObject = currentIssueObjects.objectAtIndex(indexPath.row) as? IssueElement {
+//                
+//                let title = currentIssueArticleObject.title ?? ""
+//                
+//                let timeStampDateObject = NSDate(timeIntervalSince1970: NSTimeInterval(currentIssueArticleObject.timeStamp))
+//                let timeStampDateString = dateFormatter.stringFromDate(timeStampDateObject)
+//                
+//                let author = currentIssueArticleObject.author ?? ""
+//                
+//                let issueNumber = currentIssueArticleObject.issueNumber ?? ""
+//                let volumeNumber = currentIssueArticleObject.volumeNumber ?? ""
+//                
+//                let articleContent = currentIssueArticleObject.articleContent ?? ""
+//                
+//                let nodeID = currentIssueArticleObject.nodeID ?? 0
+//                
+//                
+//                cellWithoutCoverImage.currentIssueArticlesHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
+//                cellWithoutCoverImage.currentIssueArticlesHeadlineLabel.text = title
+//                
+//                cellWithoutCoverImage.currentIssueArticlesAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+//                cellWithoutCoverImage.currentIssueArticlesAuthorLabel.text = author
+//                
+//                cellWithoutCoverImage.currentIssueArticlesPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+//                cellWithoutCoverImage.currentIssueArticlesPublishDateLabel.text = timeStampDateString
+//                
+//                return cellWithoutCoverImage
+//                
+//            } else {
+//                
+//                let emptyCell = UITableViewCell()
+//                
+//                return emptyCell
+//            }
+//        }
+//        
+//        let emptyCell = UITableViewCell()
+//        
+//        return emptyCell
+//        
+//    }
+    
+    
+    
+/*
+            let cell:CurrentIssueArticlesTableViewCell = CurrentIssueArticlesTableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: "CurrentIssueArticlesIdentifier")
+            
+            if let cIAHeadlineLabel = cell.currentIssueArticlesHeadlineLabel {
+                cIAHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
+                cIAHeadlineLabel.text = currentIssueArticlesHeadline[row]
+            }
+            
+            if let cIAAuthorLabel = cell.currentIssueArticlesAuthorLabel {
+                cIAAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+                cIAAuthorLabel.text = currentIssueArticlesAuthor[row]
+            }
+            
+            if let cIAPublishDateLabel = cell.currentIssueArticlesPublishDateLabel {
+                cIAPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+                cIAPublishDateLabel.text = currentIssueArticlesPublishDate[row]
+            }
+*/
     
 
     /*
@@ -362,34 +487,121 @@ class CurrentIssueTableViewController: UITableViewController {
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
-        if revealViewControllerIndicator == 0 {
-        
-            if (segue.identifier == "ShowCurrentIssueArticleDetailsFromFrontCover") || (segue.identifier == "ShowCurrentIssueArticleDetailsNotFromFrontCover") {
-                
-                let detailViewController = segue.destinationViewController as! CurrentIssueDetailViewController
-                let myIndexPath = self.tableView.indexPathForSelectedRow
-                let row = myIndexPath!.row
-                
-                    if row == 0 {
-                
-                        detailViewController.currentIssueArticleTitleThroughSegue = currentIssueFrontCoverHeadline[row]
-                    
-                    }
-                
-                    else {
-                        
-                        detailViewController.currentIssueArticleTitleThroughSegue = currentIssueArticlesHeadline[row-1]
-                        
-                }
-                
-            }
+        if segue.identifier == "ShowCurrentIssueArticleDetail" {
+            
+            let detailViewController = segue.destinationViewController as! CurrentIssueDetailViewController
+            let myIndexPath = self.tableView.indexPathForSelectedRow
+            let row = myIndexPath?.row
+            
+            detailViewController.currentIssueArticleTitleThroughSegue = currentIssueObjects.objectAtIndex((myIndexPath?.row)!).title
+            detailViewController.currentIssuePublishDateThroughSegue = timeStampDateString
+            detailViewController.currentIssueAuthorThroughSegue = currentIssueObjects.objectAtIndex((myIndexPath?.row)!).author
+            detailViewController.currentIssueArticleContentThroughSegue = currentIssueObjects.objectAtIndex((myIndexPath?.row)!).articleContent
+            
         }
-        
-        
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+  
     }
     
-
+    func populateCurrentIssue() {
+        if populatingCurrentIssue {
+            return
+        }
+        
+        populatingCurrentIssue = true
+        
+        self.cellLoadingIndicator.backgroundColor = UIColor.yellowColor()
+        self.cellLoadingIndicator.startAnimating()
+        
+        Alamofire.request(GWNetworking.Router.Issue).responseJSON() { response in
+            if let JSON = response.result.value {
+                
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
+                    
+                    var nodeIDArray : [Int]
+                    
+                    if (JSON .isKindOfClass(NSDictionary)) {
+                        
+                        for node in JSON as! Dictionary<String, AnyObject> {
+                            
+                            let nodeIDValue = node.0
+                            var lastItem : Int = 0
+                            
+                            if let issueElement : IssueElement = IssueElement(title: "init", nodeID: 0, timeStamp: 0, imageURL: "init", author: "init", issueNumber: "init", volumeNumber: "init", articleContent: "init", coverImageInteger: "init", coverImage: UIImage()) {
+                                
+                                issueElement.title = node.1["title"] as! String
+                                issueElement.nodeID = Int(nodeIDValue)!
+                                
+                                let timeStampString = node.1["revision_timestamp"] as! String
+                                issueElement.timeStamp = Int(timeStampString)!
+                                
+                                issueElement.imageURL = String(node.1["image_url"])
+                                issueElement.author = String(node.1["author"])
+                                issueElement.issueNumber = String(node.1["issue_int"])
+                                issueElement.volumeNumber = String(node.1["volume_int"])
+                                issueElement.articleContent = String(node.1["html_content"])
+                                issueElement.coverImageInteger = String(node.1["cover_image"]) // addition specific to the Current Issue View Controller
+                                
+                                lastItem = self.currentIssueObjects.count
+                                
+                                print(issueElement.nodeID)
+                                
+                                self.currentIssueObjects.addObject(issueElement)
+                                
+                                // Sorting with decreasing timestamp from top to bottom.
+                                let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
+                                self.currentIssueObjects.sortUsingDescriptors([timestampSortDescriptor])
+                                
+                                print(self.currentIssueObjects)
+                                
+                                // Placing the object with coverImage
+                                
+                                let coverImageSortDescriptor = NSSortDescriptor(key: "coverImageInteger", ascending: false)
+                                self.currentIssueObjects.sortUsingDescriptors([coverImageSortDescriptor])
+                                
+                                print(self.currentIssueObjects)
+                                
+                                let indexPaths = (lastItem..<self.currentIssueObjects.count).map {
+                                    NSIndexPath(forItem: $0, inSection: 0) }
+                                }
+                            
+                            }
+                        
+                        }
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        self.currentIssueTableView.reloadData()
+                
+                        self.cellLoadingIndicator.stopAnimating()
+                        self.cellLoadingIndicator.hidesWhenStopped = true
+                        
+                    }
+                            
+                }
+                        
+            }
+            
+            self.populatingCurrentIssue = false
+    }
 }
-
+   
+    func handleRefresh() {
+        
+        customRefreshControl.beginRefreshing()
+        
+        self.cellLoadingIndicator.startAnimating()
+        self.currentIssueTableView.bringSubviewToFront(cellLoadingIndicator)
+        
+        self.populatingCurrentIssue = false
+        
+        populateCurrentIssue()
+        
+        print(currentIssueObjects.count)
+        
+        self.cellLoadingIndicator.stopAnimating()
+        self.cellLoadingIndicator.hidesWhenStopped = true
+        
+        customRefreshControl.endRefreshing()
+        
+    }
+    
+}

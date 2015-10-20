@@ -16,13 +16,14 @@ class EditorialsDetailViewController: UIViewController {
 
     @IBOutlet weak var editorialDetailWebView: UIWebView!
     
+    @IBOutlet weak var editorialDetailScrollView: UIScrollView!
+    
     var editorialTitleThroughSegue: String?
     var editorialAuthorThroughSegue: String?
     var editorialPublishDateThroughSegue: String?
     var editorialVolumeIndexThroughSegue: String?
     var editorialIssueIndexThroughSegue: String?
     var editorialArticleContentThroughSegue: String?
-   
 
     @IBOutlet weak var editorialDetailHeadlineLabel: UILabel!
     @IBOutlet weak var editorialDetailAuthorLabel: UILabel!
@@ -32,11 +33,7 @@ class EditorialsDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Inserting the selected editorial's title
-        editorialDetailNavigationItem.title = "Article"
-        
-        
-        // Swipe recognizers for left and right edges (can be used later).
+        /* Swipe recognizers for left and right edges (can be used later). */
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipes:"))
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipes:"))
         
@@ -46,21 +43,58 @@ class EditorialsDetailViewController: UIViewController {
         view.addGestureRecognizer(leftSwipe)
         view.addGestureRecognizer(rightSwipe)
         
-        // Setting the right values for all labels, from values given through the segue
         editorialDetailHeadlineLabel.text = editorialTitleThroughSegue
         editorialDetailAuthorLabel.text = editorialAuthorThroughSegue
         editorialDetailPublishDateLabel.text = editorialPublishDateThroughSegue
         editorialDetailVolumeAndIssueLabel.text = "Volume \(editorialVolumeIndexThroughSegue) - Issue \(editorialIssueIndexThroughSegue)"
+        
+        
 
+        /*
         
-        
-////      Version 1.1 feature - 3D Touch Link Preview
-//        editorialDetailWebView.allowsLinkPreview = true
-        
-        editorialDetailWebView.loadHTMLString(editorialArticleContentThroughSegue!, baseURL: nil)
+        Version 1.1 feature - 3D Touch Link Preview
+        editorialDetailWebView.allowsLinkPreview = true
 
+        */
         
+        /*
+        let justifiedArticleContent = "<p style=\"text-align:justify\"> \(editorialArticleContentThroughSegue) </p>"
+        */
         
+        self.editorialDetailWebView.loadHTMLString(editorialArticleContentThroughSegue!, baseURL: nil)
+        
+        self.editorialDetailScrollView.addSubview(editorialDetailWebView)
+        self.editorialDetailScrollView.addSubview(editorialDetailHeadlineLabel)
+        self.editorialDetailScrollView.addSubview(editorialDetailAuthorLabel)
+        self.editorialDetailScrollView.addSubview(editorialDetailPublishDateLabel)
+        self.editorialDetailScrollView.addSubview(editorialDetailVolumeAndIssueLabel)
+        
+        self.editorialDetailScrollView.contentSize = CGSize(width: self.view.frame.width, height: self.editorialDetailWebView.scrollView.frame.height)
+        
+/*        editorialDetailWebView.sizeToFit()
+*/
+        
+
+    }
+/*
+    func webViewDidFinishLoad(webView: UIWebView!) {
+        
+        var webViewFrame: CGRect = editorialDetailWebView.frame
+        webViewFrame.size.height = 1
+        editorialDetailWebView.frame = webViewFrame
+        var fittingSize: CGSize = (editorialDetailWebView.sizeThatFits(CGSizeZero))
+        webViewFrame.size = fittingSize
+        
+        editorialDetailWebView.frame = webViewFrame
+        
+        var webViewHeight = editorialDetailWebView.frame.size.height
+
+    }
+*/
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        editorialDetailScrollView.contentSize = CGSize(width: self.view.frame.size.width, height: self.view.frame.size.height * 2.0)
         
     }
 

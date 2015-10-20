@@ -10,15 +10,25 @@ import UIKit
 
 class CurrentIssueDetailViewController: UIViewController {
     
+    let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
     
     @IBOutlet weak var currentIssueNavigationItem: UINavigationItem!
     
-    var currentIssueArticleTitleThroughSegue: String?
+    @IBOutlet weak var currentIssueDetailWebView: UIWebView!
 
+    var currentIssueArticleTitleThroughSegue: String?
+    var currentIssueAuthorThroughSegue: String?
+    var currentIssuePublishDateThroughSegue: String?
+    var currentIssueArticleContentThroughSegue: String?
+
+    @IBOutlet weak var currentIssueDetailHeadlineLabel: UILabel!
+    @IBOutlet weak var currentIssueDetailAuthorLabel: UILabel!
+    @IBOutlet weak var currentIssueDetailPublishDateLabel: UILabel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Inserting the selected editorial's title
+        // Inserting the selected currentIssue's title
         currentIssueNavigationItem.title = currentIssueArticleTitleThroughSegue
         
         // "Swipe from left edge" recognizer
@@ -31,7 +41,19 @@ class CurrentIssueDetailViewController: UIViewController {
         view.addGestureRecognizer(leftSwipe)
         view.addGestureRecognizer(rightSwipe)
         
-
+        currentIssueDetailHeadlineLabel.text = currentIssueArticleTitleThroughSegue
+        currentIssueDetailAuthorLabel.text = currentIssueAuthorThroughSegue
+        currentIssueDetailPublishDateLabel.text = currentIssuePublishDateThroughSegue
+        
+        /*
+        
+        Version 1.1 feature - 3D Touch Link Preview
+        editorialDetailWebView.allowsLinkPreview = true
+        
+        */
+        
+        self.currentIssueDetailWebView.loadHTMLString(currentIssueArticleContentThroughSegue!, baseURL: nil)
+        
         // Do any additional setup after loading the view.
     }
 

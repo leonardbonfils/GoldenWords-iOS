@@ -12,12 +12,6 @@ import Alamofire
 class EditorialsTableViewController: UITableViewController {
     
     let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
-
-//    // Declaring data strings for labels in EditorialsTableViewController
-//    
-//    var editorialHeadline = [String]()
-//    var editorialAuthor = [String]()
-//    var editorialPublishDate = [String]()
     
     // Hamburger button declaration
     @IBOutlet weak var menuButton: UIBarButtonItem!
@@ -55,7 +49,7 @@ class EditorialsTableViewController: UITableViewController {
     
     var timeStampDateString : String!
     
-//    var editorialLoadingIndicator = UIActivityIndicatorView()
+    var cellLoadingIndicator = UIActivityIndicatorView()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -100,6 +94,14 @@ class EditorialsTableViewController: UITableViewController {
 //        self.customRefreshControl.attributedTitle = NSAttributedString(string: updateString]
         
         tableView.estimatedRowHeight = 50
+        
+        self.cellLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        self.cellLoadingIndicator.color = goldenWordsYellow
+        let indicatorCenter = CGPoint(x: self.editorialsTableView.center.x, y: self.editorialsTableView.center.y - 130)
+        self.cellLoadingIndicator.center = indicatorCenter
+        self.editorialsTableView.addSubview(cellLoadingIndicator)
+        self.editorialsTableView.bringSubviewToFront(cellLoadingIndicator)
+        
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -107,12 +109,7 @@ class EditorialsTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
-//        self.editorialLoadingIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 80, 80))
-//        self.editorialLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
-//        self.editorialLoadingIndicator.color = UIColor.magentaColor()
-//        self.editorialLoadingIndicator.center = self.editorialsTableView.center
-//        self.editorialsTableView.addSubview(editorialLoadingIndicator)
-//        self.editorialLoadingIndicator.bringSubviewToFront(self.editorialsTableView)
+
         
         
     }
@@ -297,6 +294,9 @@ class EditorialsTableViewController: UITableViewController {
             
         } else {
             
+//            var noInternetConnectionAlert = UIAlertController(title: "No Internet Connection", message: "Could not retrieve data from Golden Words servers", preferredStyle: UIAlertControllerStyle.Alert)
+//            noInternetConnectionAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+//            self.presentViewController(noInternetConnectionAlert, animated: true, completion: nil)
             
         
         }
@@ -412,7 +412,7 @@ class EditorialsTableViewController: UITableViewController {
     }
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
-        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.5) {
+        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.25) {
             populateEditorials()
         }
     }
@@ -424,8 +424,8 @@ class EditorialsTableViewController: UITableViewController {
         }
         populatingEditorials = true
         
-//        self.editorialLoadingIndicator.backgroundColor = UIColor.whiteColor()
-//        self.editorialLoadingIndicator.startAnimating()
+        self.cellLoadingIndicator.backgroundColor = UIColor.yellowColor()
+        self.cellLoadingIndicator.startAnimating()
         
         Alamofire.request(GWNetworking.Router.Editorials(self.currentPage)).responseJSON() { response in
             if let JSON = response.result.value {
@@ -438,12 +438,12 @@ class EditorialsTableViewController: UITableViewController {
                     
                     
                     /* Making an array of all the node IDs from the JSON file */
-                    var nodeIDArray : [Int]
+                var nodeIDArray : [Int]
                     
                     
-                    if (JSON .isKindOfClass(NSDictionary)) {
+                if (JSON .isKindOfClass(NSDictionary)) {
                     
-                        for node in JSON as! Dictionary<String, AnyObject> {
+                    for node in JSON as! Dictionary<String, AnyObject> {
                             
                         let nodeIDValue = node.0
                         var lastItem : Int = 0
@@ -452,38 +452,38 @@ class EditorialsTableViewController: UITableViewController {
                         
                         if let editorialElement : EditorialElement = EditorialElement(title: "init", nodeID: 0, timeStamp: 0, imageURL: "init", author: "init", issueNumber: "init", volumeNumber: "init", articleContent: "init") {
                         
-                    editorialElement.title = node.1["title"] as! String
-                    editorialElement.nodeID = Int(nodeIDValue)!
-                            
-                    let timeStampString = node.1["revision_timestamp"] as! String
-                    editorialElement.timeStamp = Int(timeStampString)!
-                            
-                    editorialElement.imageURL = String(node.1["image_url"])
-                    editorialElement.author = String(node.1["author"]) as! String
-                    editorialElement.issueNumber = String(node.1["issue_int"])
-                    editorialElement.volumeNumber = String(node.1["volume_int"])
-                    editorialElement.articleContent = String(node.1["html_content"])
-                    
-                    lastItem = self.editorialObjects.count
-                    
-                    print (editorialElement.nodeID)
-                            
-                            
-                    self.editorialObjects.addObject(editorialElement)
-                            
-                            
-                    /* Sorting the elements in order of newest to oldest (as the array index increases] */
-                    let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
-                    self.editorialObjects.sortUsingDescriptors([timestampSortDescriptor])
-                        
-                    let indexPaths = (lastItem..<self.editorialObjects.count).map { NSIndexPath(forItem: $0, inSection: 0) }
-                    
-                 
-                   /*
-                        
-                            nodeIDArray[nodeCounter] = jsonValue{nodeCounter}.string
-                            let editorialInfos : EditorialElement = ((jsonValue as! NSDictionary].1["\(nodeIDArray[nodeCounter]]"] as! [NSDictionary]].map { EditorialElement(title: $0["title"] as! String, nodeID: $0["nid"] as! Int, timeStamp: $0["revision_timestamp"] as! Int, imageURL: $0["image_url"] as! String, author: $0["author"], issueNumber: $0["issue_int"] as! Int, volumeNumber: $0["volume_int"] as! Int, articleContent: $0["html_content"] as! String] // I am going to try to break this line down to simplify it and fix the build errors */
-                    }
+                                editorialElement.title = node.1["title"] as! String
+                                editorialElement.nodeID = Int(nodeIDValue)!
+                                        
+                                let timeStampString = node.1["revision_timestamp"] as! String
+                                editorialElement.timeStamp = Int(timeStampString)!
+                                        
+                                editorialElement.imageURL = String(node.1["image_url"])
+                                editorialElement.author = String(node.1["author"]) as! String
+                                editorialElement.issueNumber = String(node.1["issue_int"])
+                                editorialElement.volumeNumber = String(node.1["volume_int"])
+                                editorialElement.articleContent = String(node.1["html_content"])
+                                
+                                lastItem = self.editorialObjects.count
+                                
+                                print(editorialElement.nodeID)
+                                        
+                                        
+                                self.editorialObjects.addObject(editorialElement)
+                                        
+                                        
+                                /* Sorting the elements in order of newest to oldest (as the array index increases] */
+                                let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
+                                self.editorialObjects.sortUsingDescriptors([timestampSortDescriptor])
+                                    
+                                let indexPaths = (lastItem..<self.editorialObjects.count).map { NSIndexPath(forItem: $0, inSection: 0) }
+                                
+                             
+                               /*
+                                    
+                                        nodeIDArray[nodeCounter] = jsonValue{nodeCounter}.string
+                                        let editorialInfos : EditorialElement = ((jsonValue as! NSDictionary].1["\(nodeIDArray[nodeCounter]]"] as! [NSDictionary]].map { EditorialElement(title: $0["title"] as! String, nodeID: $0["nid"] as! Int, timeStamp: $0["revision_timestamp"] as! Int, imageURL: $0["image_url"] as! String, author: $0["author"], issueNumber: $0["issue_int"] as! Int, volumeNumber: $0["volume_int"] as! Int, articleContent: $0["html_content"] as! String] // I am going to try to break this line down to simplify it and fix the build errors */
+                                }
                     
                     print(self.editorialObjects.count)
                     
@@ -492,14 +492,16 @@ class EditorialsTableViewController: UITableViewController {
                     
                     dispatch_async(dispatch_get_main_queue()) {
                         self.editorialsTableView.reloadData()
+                        
+                        self.cellLoadingIndicator.stopAnimating()
+                        self.cellLoadingIndicator.hidesWhenStopped = true
+                        
                     }
                     
                     self.currentPage++
             }
         }
             
-//            self.editorialLoadingIndicator.stopAnimating()
-//            self.editorialLoadingIndicator.hidesWhenStopped = true
             
             self.populatingEditorials = false
     }
@@ -514,6 +516,9 @@ class EditorialsTableViewController: UITableViewController {
             self.editorialObjects.removeAllObjects() */
             
             self.currentPage = 0 // switched from 1
+            
+            self.cellLoadingIndicator.startAnimating()
+            self.editorialsTableView.bringSubviewToFront(cellLoadingIndicator)
             
            /* 
             repeat {
@@ -532,6 +537,9 @@ class EditorialsTableViewController: UITableViewController {
             print(editorialObjects.count)
             
 /*            self.editorialsTableView!.reloadData() */
+            
+            self.cellLoadingIndicator.stopAnimating()
+            self.cellLoadingIndicator.hidesWhenStopped = true
             
             customRefreshControl.endRefreshing()
             

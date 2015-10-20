@@ -56,6 +56,8 @@ class RandomTableViewController: UITableViewController {
     var nodeIDArray = NSMutableArray()
     
     var timeStampDateString : String!
+    
+    var cellLoadingIndicator = UIActivityIndicatorView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,20 +103,25 @@ class RandomTableViewController: UITableViewController {
         
         tableView.estimatedRowHeight = 50
         
+        self.cellLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        self.cellLoadingIndicator.color = goldenWordsYellow
+        let indicatorCenter = CGPoint(x: self.randomTableView.center.x, y: self.randomTableView.center.y - 130)
+        self.cellLoadingIndicator.center = indicatorCenter
+        self.randomTableView.addSubview(cellLoadingIndicator)
+        self.randomTableView.bringSubviewToFront(cellLoadingIndicator)
+        
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-        
-        
-
+     
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        // Dispose of any resources that can be recraeated.
     }
 
     // MARK: - Table view data source
@@ -393,7 +400,7 @@ class RandomTableViewController: UITableViewController {
     
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
-        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.5) {
+        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.25) {
             populateRandomArticles()
         }
     }
@@ -404,6 +411,9 @@ class RandomTableViewController: UITableViewController {
             return
         }
         populatingRandomArticles = true
+        
+        self.cellLoadingIndicator.backgroundColor = UIColor.yellowColor()
+        self.cellLoadingIndicator.startAnimating()
         
         Alamofire.request(GWNetworking.Router.Random(self.currentPage)).responseJSON() { response in
             if let JSON = response.result.value {
@@ -470,6 +480,9 @@ class RandomTableViewController: UITableViewController {
                     
                     dispatch_async(dispatch_get_main_queue()) {
                         self.randomTableView.reloadData()
+                        
+                        self.cellLoadingIndicator.stopAnimating()
+                        self.cellLoadingIndicator.hidesWhenStopped = true
                     }
                     
                     self.currentPage++
@@ -478,12 +491,7 @@ class RandomTableViewController: UITableViewController {
             
             self.populatingRandomArticles = false
         }
-
-        
-    
-    
     }
-        
     
     func handleRefresh() {
         
@@ -494,6 +502,9 @@ class RandomTableViewController: UITableViewController {
 //        self.randomObjects.removeAllObjects()
         
         self.currentPage = 0
+        
+        self.cellLoadingIndicator.startAnimating()
+        self.randomTableView.bringSubviewToFront(cellLoadingIndicator)
         
         /*
         repeat {
@@ -511,6 +522,9 @@ class RandomTableViewController: UITableViewController {
         populateRandomArticles()
         
         print(randomObjects.count)
+        
+        self.cellLoadingIndicator.stopAnimating()
+        self.cellLoadingIndicator.hidesWhenStopped = true
         
 /*        self.randomTableView!.reloadData() */
         

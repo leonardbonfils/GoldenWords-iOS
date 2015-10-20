@@ -58,6 +58,9 @@ import Alamofire
 //}
 
 struct GWNetworking {
+    
+    /*
+    
     enum ImageSize: Int {
         case Tiny = 1
         case Small = 2
@@ -65,7 +68,8 @@ struct GWNetworking {
         case Large = 4
         case XLarge = 5
     }
-
+    
+        */
 
 
 enum Router : URLRequestConvertible {
@@ -116,20 +120,22 @@ class IssueElement: NSObject {
     var title: String           // title
     var nodeID: Int             // nid
     var timeStamp: Int          // revision_timestamp
-    var imageURL: String?       // image_url
+    var imageURL: String?      // image_url
     var author: String          // author
     
     var issueNumber: String     // issue_int
     var volumeNumber: String    // volume_int
     
-    var articleContent: String? // html_content
+    var articleContent: String // html_content
     
-    var coverImage: String // Variable that indicates whether this is the cover page or not (1 for cover, 0 for everything else)
+    var coverImageInteger: String // Variable that indicates whether this is the cover page or not (1 for cover, 0 for everything else)
+    
+    var coverImage: UIImage
     
     /* To get an NSDate objec from Unix timestamp
      var date = NSDate(timeIntervalSince1970: timeStamp) */
     
-    init(title: String, nodeID: Int, timeStamp: Int, imageURL: String?, author: String, issueNumber: String, volumeNumber: String, articleContent: String, coverImage: String) {
+    init(title: String, nodeID: Int, timeStamp: Int, imageURL: String?, author: String, issueNumber: String, volumeNumber: String, articleContent: String, coverImageInteger: String, coverImage: UIImage) {
         self.title = title
         self.nodeID = nodeID
         self.timeStamp = timeStamp
@@ -138,6 +144,7 @@ class IssueElement: NSObject {
         self.issueNumber = issueNumber
         self.volumeNumber = volumeNumber
         self.articleContent = articleContent
+        self.coverImageInteger = coverImageInteger
         self.coverImage = coverImage
     }
     

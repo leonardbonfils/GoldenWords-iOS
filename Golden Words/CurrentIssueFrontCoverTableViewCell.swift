@@ -7,15 +7,23 @@
 //
 
 import UIKit
+import Alamofire
 
 class CurrentIssueFrontCoverTableViewCell: UITableViewCell {
     
     @IBOutlet weak var currentIssueFrontCoverImageView: UIImageView!
-    @IBOutlet weak var currentIssueFrontCoverHeadlineLabel: UILabel!
-    @IBOutlet weak var currentIssueFrontCoverAuthorLabel: UILabel!
-    @IBOutlet weak var currentIssueFrontCoverPublishDateLabel: UILabel!
+    var request: Alamofire.Request?
+    
+    required init?(coder aDecoder: NSCoder!) {
+        super.init(coder: aDecoder)
+    }
     
 
+    func addSubviews(view: UIView) {
+        addSubview(currentIssueFrontCoverImageView)
+    }
+    
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

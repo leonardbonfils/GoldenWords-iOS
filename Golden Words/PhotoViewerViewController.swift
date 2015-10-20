@@ -9,9 +9,13 @@
 import UIKit
 import QuartzCore
 import Alamofire
+import AlamofireImage
 
-class PhotoViewerViewController: UIViewController, UIScrollViewDelegate, UIPopoverPresentationControllerDelegate, UIActionSheetDelegate {
-    var photoID: Int = 0
+class PhotoViewerViewController: UIViewController, UIScrollViewDelegate {
+    
+    let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
+    
+    var imageURLForViewerController: String = ""
     
     let scrollView = UIScrollView()
     let imageView = UIImageView()
@@ -23,11 +27,13 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate, UIPopov
         super.viewDidLoad()
         
         setupView()
+        loadPhoto()
     
     }
     
     func setupView() {
         spinner.center = CGPoint(x: view.center.x, y: view.center.y - view.bounds.origin.y / 2.0)
+        spinner.color = goldenWordsYellow
         spinner.hidesWhenStopped = true
         spinner.startAnimating()
         view.addSubview(spinner)
@@ -47,8 +53,22 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate, UIPopov
         doubleTapRecognizer.numberOfTouchesRequired = 1
         scrollView.addGestureRecognizer(doubleTapRecognizer)
     }
-
     
+    func loadPhoto() {
+        
+        Alamofire.request(.GET, imageURLForViewerController).responseImage { response in
+            
+            if let image = response.result.value {
+                print("image downloaded : \(image)")
+                
+                self.imageView.image = image
+                self.imageView.frame = self.centerFrameFromImage(image)
+                self.spinner.stopAnimating()
+                self.centerScrollViewContents()
+            }
+        }
+    }
+ 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -62,6 +82,7 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate, UIPopov
         navigationController?.setToolbarHidden(true, animated: true)
     }
     
+    /*
     func addButtonBar() {
         var items = [UIBarButtonItem]()
         
@@ -79,7 +100,7 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate, UIPopov
         
         self.setToolbarItems(items, animated: true)
         navigationController?.setToolbarHidden(false, animated: true)
-    }
+    } */
     
     
     override func didReceiveMemoryWarning() {
@@ -87,6 +108,7 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate, UIPopov
         // Dispose of any resources that can be recreated.
     }
     
+    /*
     func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
         return UIModalPresentationStyle.OverCurrentContext
     }
@@ -124,10 +146,6 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate, UIPopov
         return barButton
     }
     
-    func downloadPhoto() {
-        
-    }
-    
     func showActions() {
         let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Download Photo")
         actionSheet.showFromToolbar(((navigationController?.toolbar)!)!)
@@ -137,7 +155,12 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate, UIPopov
         if buttonIndex == 1 {
             downloadPhoto()
         }
-    }
+    } */
+    
+    
+    
+    
+    // MARK: Zooming
     
     func handleDoubleTap(recognizer: UITapGestureRecognizer!) {
         let pointInView = recognizer.locationInView(self.imageView)
@@ -188,6 +211,7 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate, UIPopov
         return self.imageView
     }
     
+    // Zooming function
     func zoomInZoomOut(point: CGPoint!) {
         let newZoomScale = self.scrollView.zoomScale > (self.scrollView.maximumZoomScale/2) ? self.scrollView.minimumZoomScale : self.scrollView.maximumZoomScale
         

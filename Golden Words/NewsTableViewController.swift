@@ -55,6 +55,8 @@ class NewsTableViewController: UITableViewController {
     
     var timeStampDateString : String!
     
+    var cellLoadingIndicator = UIActivityIndicatorView()
+    
     // Refresh control variables - end
     
     override func viewDidLoad() {
@@ -98,6 +100,13 @@ class NewsTableViewController: UITableViewController {
         self.customRefreshControl!.attributedTitle = NSAttributedString(string: updateString) */
         
         tableView.estimatedRowHeight = 50
+        
+        self.cellLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        self.cellLoadingIndicator.color = goldenWordsYellow
+        let indicatorCenter = CGPoint(x: self.newsTableView.center.x, y: self.newsTableView.center.y - 130)
+        self.cellLoadingIndicator.center = indicatorCenter
+        self.newsTableView.addSubview(cellLoadingIndicator)
+        self.newsTableView.bringSubviewToFront(cellLoadingIndicator)
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -396,7 +405,7 @@ class NewsTableViewController: UITableViewController {
     
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
-        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.5) {
+        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.25) {
         populateNewsArticles()
         }
     }
@@ -407,6 +416,9 @@ class NewsTableViewController: UITableViewController {
             return
         }
         populatingNewsArticles = true
+        
+        self.cellLoadingIndicator.backgroundColor = UIColor.yellowColor()
+        self.cellLoadingIndicator.startAnimating()
         
         Alamofire.request(GWNetworking.Router.News(self.currentPage)).responseJSON() { response in
             if let JSON = response.result.value {
@@ -473,6 +485,9 @@ class NewsTableViewController: UITableViewController {
                     
                     dispatch_async(dispatch_get_main_queue()) {
                         self.newsTableView.reloadData()
+                        
+                        self.cellLoadingIndicator.stopAnimating()
+                        self.cellLoadingIndicator.hidesWhenStopped = true
                     }
                     
                     self.currentPage++
@@ -493,6 +508,9 @@ class NewsTableViewController: UITableViewController {
         
         self.currentPage = 0
         
+        self.cellLoadingIndicator.startAnimating()
+        self.newsTableView.bringSubviewToFront(cellLoadingIndicator)
+        
         /*
         repeat {
         
@@ -509,6 +527,9 @@ class NewsTableViewController: UITableViewController {
         populateNewsArticles()
         
         print(newsObjects.count)
+        
+        self.cellLoadingIndicator.stopAnimating()
+        self.cellLoadingIndicator.hidesWhenStopped = true
         
         /*            self.editorialsTableView!.reloadData() */
         
