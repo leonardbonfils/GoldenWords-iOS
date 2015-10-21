@@ -33,6 +33,8 @@ class EditorialsDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        editorialDetailNavigationItem.title = "Article"
+        
         /* Swipe recognizers for left and right edges (can be used later). */
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipes:"))
         let rightSwipe = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipes:"))

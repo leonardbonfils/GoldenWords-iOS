@@ -255,14 +255,36 @@ class CurrentIssueTableViewController: UITableViewController {
             return tableView.dequeueReusableCellWithIdentifier(CurrentIssueArticlesTableCellIdentifier, forIndexPath: indexPath) as! EditorialsTableViewCell
         }
         
-        if let currentIssueObject = currentIssueObjects.objectAtIndex(indexPath.row) as? IssueElement {
+        guard currentIssueObjects.count - 1 > indexPath.row else {
+            return cell
+        }
+        
+        let currentIssueObject = currentIssueObjects.objectAtIndex(indexPath.row) as! IssueElement
             
             let title = currentIssueObject.title ?? ""
             
             let timeStampDateObject = NSDate(timeIntervalSince1970: NSTimeInterval(currentIssueObject.timeStamp))
             let timeStampDateString = dateFormatter.stringFromDate(timeStampDateObject) ?? "Date unknown"
+
+//            guard let author = currentIssueObject.author as? String else {
+//                print("author not found")
+//                return }
+
+//            guard let author = currentIssueObject.author as? String else {
+//                return cell
+//            }
+//            
+//            let author = currentIssueObject.author ?? ""
+
+        if let author = currentIssueObject.author {
             
-            let author = currentIssueObject.author
+            cell.currentIssueArticlesAuthorLabel!.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+            cell.currentIssueArticlesAuthorLabel!.text = author
+            
+        } else {
+            return cell
+        }
+        
             
             let issueNumber = currentIssueObject.issueNumber ?? ""
             let volumeNumber = currentIssueObject.volumeNumber ?? ""
@@ -274,8 +296,7 @@ class CurrentIssueTableViewController: UITableViewController {
             cell.currentIssueArticlesHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
             cell.currentIssueArticlesHeadlineLabel.text = title
             
-            cell.currentIssueArticlesAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-            cell.currentIssueArticlesAuthorLabel.text = author as! String
+
             
             cell.currentIssueArticlesPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
             cell.currentIssueArticlesPublishDateLabel.text = timeStampDateString
@@ -320,7 +341,7 @@ class CurrentIssueTableViewController: UITableViewController {
                 
             }
             
-        }
+        
         
         return cell
     }
@@ -535,7 +556,11 @@ class CurrentIssueTableViewController: UITableViewController {
                                 issueElement.timeStamp = Int(timeStampString)!
                                 
                                 issueElement.imageURL = String(node.1["image_url"])
-                                issueElement.author = String(node.1["author"])
+                                
+                                if let author = node.1["author"] as? String {
+                                    issueElement.author = author
+                                }
+//                                issueElement.author = String(node.1["author"])
                                 issueElement.issueNumber = String(node.1["issue_int"])
                                 issueElement.volumeNumber = String(node.1["volume_int"])
                                 issueElement.articleContent = String(node.1["html_content"])
@@ -563,7 +588,6 @@ class CurrentIssueTableViewController: UITableViewController {
                                 let indexPaths = (lastItem..<self.currentIssueObjects.count).map {
                                     NSIndexPath(forItem: $0, inSection: 0) }
                                 }
-                            
                             }
                         
                         }

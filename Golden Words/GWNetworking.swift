@@ -121,7 +121,7 @@ class IssueElement: NSObject {
     var nodeID: Int             // nid
     var timeStamp: Int          // revision_timestamp
     var imageURL: String?      // image_url
-    var author: String          // author
+    var author: String?          // author
     
     var issueNumber: String     // issue_int
     var volumeNumber: String    // volume_int

@@ -29,7 +29,7 @@ class CurrentIssueDetailViewController: UIViewController {
         super.viewDidLoad()
         
         // Inserting the selected currentIssue's title
-        currentIssueNavigationItem.title = currentIssueArticleTitleThroughSegue
+        currentIssueNavigationItem.title = "Article"
         
         // "Swipe from left edge" recognizer
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipes:"))
@@ -42,7 +42,7 @@ class CurrentIssueDetailViewController: UIViewController {
         view.addGestureRecognizer(rightSwipe)
         
         currentIssueDetailHeadlineLabel.text = currentIssueArticleTitleThroughSegue
-        currentIssueDetailAuthorLabel.text = currentIssueAuthorThroughSegue
+        currentIssueDetailAuthorLabel.text! = currentIssueAuthorThroughSegue!
         currentIssueDetailPublishDateLabel.text = currentIssuePublishDateThroughSegue
         
         /*
