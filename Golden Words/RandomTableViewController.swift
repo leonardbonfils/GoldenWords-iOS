@@ -300,6 +300,7 @@ class RandomTableViewController: UITableViewController {
         cell.randomPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
         cell.randomPublishDateLabel.text = timeStampDateString
             
+            
         } else {
             
             let author = "Author"
@@ -438,7 +439,7 @@ class RandomTableViewController: UITableViewController {
                             
                             self.nodeIDArray.addObject(nodeIDValue)
                             
-                            if let randomElement : RandomElement = RandomElement(title: "init", nodeID: 0, timeStamp: 0, imageURL: "init", author: "init", issueNumber: "init", volumeNumber: "init", articleContent: "init") {
+                            if let randomElement : RandomElement = RandomElement(title: "Could not retrieve title", nodeID: 0, timeStamp: 0, imageURL: "init", author: "Author not found", issueNumber: "Issue # error", volumeNumber: "Volume # error", articleContent: "Could not retrieve article content") {
                                 
                                 randomElement.title = node.1["title"] as! String
                                 randomElement.nodeID = Int(nodeIDValue)!
@@ -452,9 +453,13 @@ class RandomTableViewController: UITableViewController {
                                     randomElement.author = author
                                 }
 //                                randomElement.author = String(node.1["author"])
-                                randomElement.issueNumber = String(node.1["issue_int"])
-                                randomElement.volumeNumber = String(node.1["volume_int"])
                                 
+                                if let issueNumber = node.1["issue_int"] as? String {
+                                    randomElement.issueNumber = issueNumber
+                                }
+                                if let volumeNumber = node.1["volume_int"] as? String {
+                                    randomElement.volumeNumber = volumeNumber
+                                }
                                 if let articleContent = node.1["html_content"] as? String {
                                     randomElement.articleContent = articleContent
                                 }

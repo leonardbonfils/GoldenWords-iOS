@@ -16,8 +16,6 @@ class EditorialsDetailViewController: UIViewController {
 
     @IBOutlet weak var editorialDetailWebView: UIWebView!
     
-    @IBOutlet weak var editorialDetailScrollView: UIScrollView!
-    
     var editorialTitleThroughSegue: String?
     var editorialAuthorThroughSegue: String?
     var editorialPublishDateThroughSegue: String?
@@ -48,10 +46,8 @@ class EditorialsDetailViewController: UIViewController {
         editorialDetailHeadlineLabel.text = editorialTitleThroughSegue
         editorialDetailAuthorLabel.text = editorialAuthorThroughSegue
         editorialDetailPublishDateLabel.text = editorialPublishDateThroughSegue
-        editorialDetailVolumeAndIssueLabel.text = "Volume \(editorialVolumeIndexThroughSegue) - Issue \(editorialIssueIndexThroughSegue)"
+        editorialDetailVolumeAndIssueLabel.text = "Volume \(editorialVolumeIndexThroughSegue!) - Issue \(editorialIssueIndexThroughSegue!)"
         
-        
-
         /*
         
         Version 1.1 feature - 3D Touch Link Preview
@@ -65,17 +61,6 @@ class EditorialsDetailViewController: UIViewController {
         
         self.editorialDetailWebView.loadHTMLString(editorialArticleContentThroughSegue!, baseURL: nil)
         
-        self.editorialDetailScrollView.addSubview(editorialDetailWebView)
-        self.editorialDetailScrollView.addSubview(editorialDetailHeadlineLabel)
-        self.editorialDetailScrollView.addSubview(editorialDetailAuthorLabel)
-        self.editorialDetailScrollView.addSubview(editorialDetailPublishDateLabel)
-        self.editorialDetailScrollView.addSubview(editorialDetailVolumeAndIssueLabel)
-//        self.editorialDetailWebView.frame = self.editorialDetailScrollView.bounds
-        self.editorialDetailWebView.autoresizingMask = UIViewAutoresizing.FlexibleHeight
-        self.editorialDetailWebView.autoresizingMask = UIViewAutoresizing.FlexibleBottomMargin
-                
-/*        editorialDetailWebView.sizeToFit()
-*/
         
 
     }
@@ -94,12 +79,7 @@ class EditorialsDetailViewController: UIViewController {
 
     }
 */
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        editorialDetailScrollView.contentSize = CGSize(width: self.view.frame.size.width, height: self.view.frame.size.height * 2.0)
-        
-    }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()

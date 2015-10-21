@@ -297,7 +297,6 @@ class EditorialsTableViewController: UITableViewController {
 //            var noInternetConnectionAlert = UIAlertController(title: "No Internet Connection", message: "Could not retrieve data from Golden Words servers", preferredStyle: UIAlertControllerStyle.Alert)
 //            noInternetConnectionAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
 //            self.presentViewController(noInternetConnectionAlert, animated: true, completion: nil)
-            
         
         }
         
@@ -335,15 +334,19 @@ class EditorialsTableViewController: UITableViewController {
 /*        cell.editorialVolumeAndIssueLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
         cell.editorialVoluameAndIssueLabel.text = "Volume \(volumeNumber) - Issue \(issueNumber)" */
         
+        
         return cell
+        
+//        if cell.editorialHeadlineLabel.text == nil {
+//            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
+//        }
     }
     
     
     
+    
+    
     // The "didDeselectItemAtIndexPath" method from the Pictures View Controller does not need to be implemented since the Storyboard has already defined the segue from each table view cell to the detail view controller (i.e. select a cell, it takes you to the corresponding view controller].
-    
-
-    
     
     
     
@@ -424,7 +427,7 @@ class EditorialsTableViewController: UITableViewController {
         }
         populatingEditorials = true
         
-        self.cellLoadingIndicator.backgroundColor = UIColor.yellowColor()
+        self.cellLoadingIndicator.backgroundColor = goldenWordsYellow
         self.cellLoadingIndicator.startAnimating()
         
         Alamofire.request(GWNetworking.Router.Editorials(self.currentPage)).responseJSON() { response in
@@ -450,7 +453,7 @@ class EditorialsTableViewController: UITableViewController {
                         
                         self.nodeIDArray.addObject(nodeIDValue)
                         
-                        if let editorialElement : EditorialElement = EditorialElement(title: "init", nodeID: 0, timeStamp: 0, imageURL: "init", author: "init", issueNumber: "init", volumeNumber: "init", articleContent: "init") {
+                        if let editorialElement : EditorialElement = EditorialElement(title: "Could not retrieve title", nodeID: 0, timeStamp: 0, imageURL: "init", author: "Author not found", issueNumber: "Issue # error", volumeNumber: "Volume # error", articleContent: "Could not retrieve article content") {
                         
                                 editorialElement.title = node.1["title"] as! String
                                 editorialElement.nodeID = Int(nodeIDValue)!
@@ -464,8 +467,12 @@ class EditorialsTableViewController: UITableViewController {
                                     editorialElement.author = author
                                 }
 //                                editorialElement.author = String(node.1["author"]) as! String
-                                editorialElement.issueNumber = String(node.1["issue_int"])
-                                editorialElement.volumeNumber = String(node.1["volume_int"])
+                                if let issueNumber = node.1["issue_int"] as? String {
+                                    editorialElement.issueNumber = issueNumber
+                                }
+                                if let volumeNumber = node.1["volume_int"] as? String {
+                                    editorialElement.volumeNumber = volumeNumber
+                                }
                             
                                 if let articleContent = node.1["html_content"] as? String {
                                     editorialElement.articleContent = articleContent
@@ -476,10 +483,8 @@ class EditorialsTableViewController: UITableViewController {
                                 
                                 print(editorialElement.nodeID)
                                         
-                                        
                                 self.editorialObjects.addObject(editorialElement)
-                                        
-                                        
+                            
                                 /* Sorting the elements in order of newest to oldest (as the array index increases] */
                                 let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
                                 self.editorialObjects.sortUsingDescriptors([timestampSortDescriptor])

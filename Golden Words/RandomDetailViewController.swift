@@ -48,7 +48,7 @@ class RandomDetailViewController: UIViewController {
         randomArticleDetailHeadlineLabel.text = randomArticleTitleThroughSegue
         randomArticleDetailAuthorLabel.text = randomArticleAuthorThroughSegue
         randomArticleDetailPublishDateLabel.text = randomArticlePublishDateThroughSegue
-        randomArticleDetailVolumeAndIssueLabel.text = "Volume \(randomArticleVolumeIndexThroughSegue) - Issue \(randomArticleIssueIndexThroughSegue)"
+        randomArticleDetailVolumeAndIssueLabel.text = "Volume \(randomArticleVolumeIndexThroughSegue!) - Issue \(randomArticleIssueIndexThroughSegue!)"
         
 //        // Version 1.1 feature - 3D Touch Link Preview
 //        randomDetailWebView.allowsLinkPreview = true

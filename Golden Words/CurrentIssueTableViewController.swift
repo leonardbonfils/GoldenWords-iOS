@@ -23,7 +23,7 @@ class CurrentIssueTableViewController: UITableViewController {
     
     var currentIssueObjects = NSMutableOrderedSet(capacity: 1000)
     
-    var customRefreshControl = UIRefreshControl()
+    var goldenWordsRefreshControl = UIRefreshControl()
     
     var revealViewControllerIndicator : Int = 0
     
@@ -75,17 +75,17 @@ class CurrentIssueTableViewController: UITableViewController {
         currentIssueTableView.delegate = self
         currentIssueTableView.dataSource = self
         
-        // Creating and configuring the customRefreshControl subview
-        customRefreshControl = UIRefreshControl()
-        customRefreshControl.backgroundColor = goldenWordsYellow
-        customRefreshControl.tintColor = UIColor.whiteColor()
-        currentIssueTableView.addSubview(customRefreshControl)
+        // Creating and configuring the goldenWordsRefreshControl subview
+        goldenWordsRefreshControl = UIRefreshControl()
+        goldenWordsRefreshControl.backgroundColor = goldenWordsYellow
+        goldenWordsRefreshControl.tintColor = UIColor.whiteColor()
+        currentIssueTableView.addSubview(goldenWordsRefreshControl)
         
         // Navigation set up
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationItem.title = "Current Issue"
         
-        loadCustomRefreshContents()
+//        loadCustomRefreshContents()
         
         populateCurrentIssue()
         
@@ -113,6 +113,7 @@ class CurrentIssueTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    /*
     func loadCustomRefreshContents() {
         let refreshContents = NSBundle.mainBundle().loadNibNamed("RefreshContents", owner: self, options: nil)
         
@@ -201,13 +202,14 @@ class CurrentIssueTableViewController: UITableViewController {
         })
         
     }
+    */
 
     override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        if customRefreshControl.refreshing {
+        if goldenWordsRefreshControl.refreshing {
             if !isAnimating {
                 //                handleRefresh()
                 holdRefreshControl()
-                animateRefreshStep1()
+//                animateRefreshStep1()
                 
             }
         }
@@ -296,7 +298,7 @@ class CurrentIssueTableViewController: UITableViewController {
             cell.currentIssueArticlesHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
             cell.currentIssueArticlesHeadlineLabel.text = title
             
-
+        
             
             cell.currentIssueArticlesPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
             cell.currentIssueArticlesPublishDateLabel.text = timeStampDateString
@@ -340,8 +342,6 @@ class CurrentIssueTableViewController: UITableViewController {
                 cell.currentIssueArticlesBackgroundImageView.hidden = true
                 
             }
-            
-        
         
         return cell
     }
@@ -530,7 +530,7 @@ class CurrentIssueTableViewController: UITableViewController {
         
         populatingCurrentIssue = true
         
-        self.cellLoadingIndicator.backgroundColor = UIColor.yellowColor()
+        self.cellLoadingIndicator.backgroundColor = goldenWordsYellow
         self.cellLoadingIndicator.startAnimating()
         
         Alamofire.request(GWNetworking.Router.Issue).responseJSON() { response in
@@ -547,7 +547,9 @@ class CurrentIssueTableViewController: UITableViewController {
                             let nodeIDValue = node.0
                             var lastItem : Int = 0
                             
-                            if let issueElement : IssueElement = IssueElement(title: "init", nodeID: 0, timeStamp: 0, imageURL: "init", author: "init", issueNumber: "init", volumeNumber: "init", articleContent: "init", coverImageInteger: "init", coverImage: UIImage()) {
+                            self.nodeIDArray.addObject(nodeIDValue)
+                            
+                            if let issueElement : IssueElement = IssueElement(title: "Could not retrieve title", nodeID: 0, timeStamp: 0, imageURL: "init", author: "Author not found", issueNumber: "Issue # error", volumeNumber: "Volume # error", articleContent: "Could not retrieve article content", coverImageInteger: "init", coverImage: UIImage()) {
                                 
                                 issueElement.title = node.1["title"] as! String
                                 issueElement.nodeID = Int(nodeIDValue)!
@@ -561,37 +563,42 @@ class CurrentIssueTableViewController: UITableViewController {
                                     issueElement.author = author
                                 }
 //                                issueElement.author = String(node.1["author"])
-                                issueElement.issueNumber = String(node.1["issue_int"])
-                                issueElement.volumeNumber = String(node.1["volume_int"])
+                                if let issueNumber = node.1["issue_int"] as? String {
+                                    issueElement.issueNumber = issueNumber
+                                }
+                                if let volumeNumber = node.1["volume_int"] as? String {
+                                    issueElement.volumeNumber = volumeNumber
+                                }
                                 
                                 if let articleContent = node.1["html_content"] as? String {
                                     issueElement.articleContent = articleContent
                                 }
 //                                issueElement.articleContent = String(node.1["html_content"])
+                                
                                 issueElement.coverImageInteger = String(node.1["cover_image"]) // addition specific to the Current Issue View Controller
                                 
                                 lastItem = self.currentIssueObjects.count
                                 
                                 print(issueElement.nodeID)
+//                                
+//                                if (String(issueElement.articleContent) != "Could not retrieve article content"){
+//                                self.currentIssueObjects.addObject(issueElement)
+//                                }
                                 
                                 self.currentIssueObjects.addObject(issueElement)
                                 
                                 // Sorting with decreasing timestamp from top to bottom.
                                 let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
                                 self.currentIssueObjects.sortUsingDescriptors([timestampSortDescriptor])
-                                
-                                print(self.currentIssueObjects)
-                                
+                            
                                 // Placing the object with coverImage
                                 
                                 let coverImageSortDescriptor = NSSortDescriptor(key: "coverImageInteger", ascending: false)
                                 self.currentIssueObjects.sortUsingDescriptors([coverImageSortDescriptor])
                                 
-                                print(self.currentIssueObjects)
-                                
                                 let indexPaths = (lastItem..<self.currentIssueObjects.count).map {
                                     NSIndexPath(forItem: $0, inSection: 0) }
-                                }
+                                 }
                             }
                         
                         }
@@ -608,13 +615,14 @@ class CurrentIssueTableViewController: UITableViewController {
                         
             }
             
+            
             self.populatingCurrentIssue = false
     }
 }
    
     func handleRefresh() {
         
-        customRefreshControl.beginRefreshing()
+        goldenWordsRefreshControl.beginRefreshing()
         
         self.cellLoadingIndicator.startAnimating()
         self.currentIssueTableView.bringSubviewToFront(cellLoadingIndicator)
@@ -628,7 +636,7 @@ class CurrentIssueTableViewController: UITableViewController {
         self.cellLoadingIndicator.stopAnimating()
         self.cellLoadingIndicator.hidesWhenStopped = true
         
-        customRefreshControl.endRefreshing()
+        goldenWordsRefreshControl.endRefreshing()
         
     }
     

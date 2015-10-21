@@ -51,7 +51,7 @@ class NewsDetailViewController: UIViewController {
         newsArticleDetailHeadlineLabel.text = newsArticleTitleThroughSegue
         newsArticleDetailAuthorLabel.text = newsArticleAuthorThroughSegue
         newsArticleDetailPublishDateLabel.text = newsArticlePublishDateThroughSegue
-        newsArticleDetailVolumeAndIssueLabel.text = "Volume \(newsArticleVolumeIndexThroughSegue) - Issue \(newsArticleIssueIndexThroughSegue) "
+        newsArticleDetailVolumeAndIssueLabel.text = "Volume \(newsArticleVolumeIndexThroughSegue!) - Issue \(newsArticleIssueIndexThroughSegue!) "
         
 //        // Version 1.1 feature - 3D Touch Link Preview
 //        newsDetailWebView.allowsLinkPreview = true
