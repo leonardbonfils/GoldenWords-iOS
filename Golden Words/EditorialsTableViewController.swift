@@ -400,7 +400,7 @@ class EditorialsTableViewController: UITableViewController {
             
             // Passing the article information through the segue
             detailViewController.editorialTitleThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).title
-            detailViewController.editorialPublishDateThroughSegue = timeStampDateString
+//            detailViewController.editorialPublishDateThroughSegue = timeStampDateString
             detailViewController.editorialVolumeIndexThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).volumeNumber
             detailViewController.editorialIssueIndexThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).issueNumber
             detailViewController.editorialAuthorThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).author

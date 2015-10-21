@@ -18,7 +18,7 @@ class NewsDetailViewController: UIViewController {
     
     var newsArticleTitleThroughSegue: String?
     var newsArticleAuthorThroughSegue: String?
-    var newsArticlePublishDateThroughSegue: String?
+//    var newsArticlePublishDateThroughSegue: String?
     var newsArticleVolumeIndexThroughSegue: String?
     var newsArticleIssueIndexThroughSegue: String?
     var newsArticleArticleContentThroughSegue: String?
@@ -26,7 +26,7 @@ class NewsDetailViewController: UIViewController {
 
     @IBOutlet weak var newsArticleDetailHeadlineLabel: UILabel!
     @IBOutlet weak var newsArticleDetailAuthorLabel: UILabel!
-    @IBOutlet weak var newsArticleDetailPublishDateLabel: UILabel!
+//    @IBOutlet weak var newsArticleDetailPublishDateLabel: UILabel!
     @IBOutlet weak var newsArticleDetailVolumeAndIssueLabel: UILabel!
     
 
@@ -50,8 +50,8 @@ class NewsDetailViewController: UIViewController {
         // Setting the right values for all labels, from values given through the segue
         newsArticleDetailHeadlineLabel.text = newsArticleTitleThroughSegue
         newsArticleDetailAuthorLabel.text = newsArticleAuthorThroughSegue
-        newsArticleDetailPublishDateLabel.text = newsArticlePublishDateThroughSegue
-        newsArticleDetailVolumeAndIssueLabel.text = "Volume \(newsArticleVolumeIndexThroughSegue!) - Issue \(newsArticleIssueIndexThroughSegue!) "
+//        newsArticleDetailPublishDateLabel.text = newsArticlePublishDateThroughSegue
+        newsArticleDetailVolumeAndIssueLabel.text = "V.\(newsArticleVolumeIndexThroughSegue!) - Issue \(newsArticleIssueIndexThroughSegue!) "
         
 //        // Version 1.1 feature - 3D Touch Link Preview
 //        newsDetailWebView.allowsLinkPreview = true

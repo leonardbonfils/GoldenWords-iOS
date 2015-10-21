@@ -292,7 +292,7 @@ class NewsTableViewController: UITableViewController {
             cell.newsHeadlineLabel.text = title
             
             cell.newsAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-            cell.newsAuthorLabel.text = String(author)
+            cell.newsAuthorLabel.text = author
             
             cell.newsPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
             cell.newsPublishDateLabel.text = timeStampDateString
@@ -388,7 +388,7 @@ class NewsTableViewController: UITableViewController {
             
             // Passing the article information through the segue
             detailViewController.newsArticleTitleThroughSegue = newsObjects.objectAtIndex((myIndexPath?.row)!).title
-            detailViewController.newsArticlePublishDateThroughSegue = timeStampDateString
+//            detailViewController.newsArticlePublishDateThroughSegue = timeStampDateString
             detailViewController.newsArticleVolumeIndexThroughSegue = newsObjects.objectAtIndex((myIndexPath?.row)!).volumeNumber
             detailViewController.newsArticleIssueIndexThroughSegue = newsObjects.objectAtIndex((myIndexPath?.row)!).issueNumber
             detailViewController.newsArticleAuthorThroughSegue = newsObjects.objectAtIndex((myIndexPath?.row)!).author

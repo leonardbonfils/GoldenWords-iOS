@@ -18,14 +18,14 @@ class RandomDetailViewController: UIViewController {
     
     var randomArticleTitleThroughSegue: String?
     var randomArticleAuthorThroughSegue: String?
-    var randomArticlePublishDateThroughSegue: String?
+//    var randomArticlePublishDateThroughSegue: String?
     var randomArticleVolumeIndexThroughSegue: String?
     var randomArticleIssueIndexThroughSegue: String?
     var randomArticleArticleContentThroughSegue: String?
 
     @IBOutlet weak var randomArticleDetailHeadlineLabel: UILabel!
     @IBOutlet weak var randomArticleDetailAuthorLabel: UILabel!
-    @IBOutlet weak var randomArticleDetailPublishDateLabel: UILabel!
+//    @IBOutlet weak var randomArticleDetailPublishDateLabel: UILabel!
     @IBOutlet weak var randomArticleDetailVolumeAndIssueLabel: UILabel!
 
     override func viewDidLoad() {
@@ -47,8 +47,8 @@ class RandomDetailViewController: UIViewController {
         // Setting the right values for all labels, from values given through the segue
         randomArticleDetailHeadlineLabel.text = randomArticleTitleThroughSegue
         randomArticleDetailAuthorLabel.text = randomArticleAuthorThroughSegue
-        randomArticleDetailPublishDateLabel.text = randomArticlePublishDateThroughSegue
-        randomArticleDetailVolumeAndIssueLabel.text = "Volume \(randomArticleVolumeIndexThroughSegue!) - Issue \(randomArticleIssueIndexThroughSegue!)"
+//        randomArticleDetailPublishDateLabel.text = randomArticlePublishDateThroughSegue
+        randomArticleDetailVolumeAndIssueLabel.text = "V.\(randomArticleVolumeIndexThroughSegue!) - Issue \(randomArticleIssueIndexThroughSegue!)"
         
 //        // Version 1.1 feature - 3D Touch Link Preview
 //        randomDetailWebView.allowsLinkPreview = true

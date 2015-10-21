@@ -256,10 +256,10 @@ class CurrentIssueTableViewController: UITableViewController {
             print ("error: currentIssueTableView cell is not of class CurrentIssueArticlesTableViewCell, we will use EditorialsTableViewCell instead")
             return tableView.dequeueReusableCellWithIdentifier(CurrentIssueArticlesTableCellIdentifier, forIndexPath: indexPath) as! EditorialsTableViewCell
         }
-        
-        guard currentIssueObjects.count - 1 > indexPath.row else {
-            return cell
-        }
+//        
+//        guard currentIssueObjects.count - 1 > indexPath.row else {
+//            return cell
+//        }
         
         let currentIssueObject = currentIssueObjects.objectAtIndex(indexPath.row) as! IssueElement
             

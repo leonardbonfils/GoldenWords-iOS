@@ -386,7 +386,7 @@ class RandomTableViewController: UITableViewController {
             
             // Passing the article information through the segue
             detailViewController.randomArticleTitleThroughSegue = randomObjects.objectAtIndex((myIndexPath?.row)!).title
-            detailViewController.randomArticlePublishDateThroughSegue = timeStampDateString
+//            detailViewController.randomArticlePublishDateThroughSegue = timeStampDateString
             detailViewController.randomArticleVolumeIndexThroughSegue = randomObjects.objectAtIndex((myIndexPath?.row)!).volumeNumber
             detailViewController.randomArticleIssueIndexThroughSegue = randomObjects.objectAtIndex((myIndexPath?.row)!).issueNumber
             detailViewController.randomArticleAuthorThroughSegue = randomObjects.objectAtIndex((myIndexPath?.row)!).author

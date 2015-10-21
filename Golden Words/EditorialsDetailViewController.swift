@@ -18,14 +18,14 @@ class EditorialsDetailViewController: UIViewController {
     
     var editorialTitleThroughSegue: String?
     var editorialAuthorThroughSegue: String?
-    var editorialPublishDateThroughSegue: String?
+//    var editorialPublishDateThroughSegue: String?
     var editorialVolumeIndexThroughSegue: String?
     var editorialIssueIndexThroughSegue: String?
     var editorialArticleContentThroughSegue: String?
 
     @IBOutlet weak var editorialDetailHeadlineLabel: UILabel!
     @IBOutlet weak var editorialDetailAuthorLabel: UILabel!
-    @IBOutlet weak var editorialDetailPublishDateLabel: UILabel!
+//    @IBOutlet weak var editorialDetailPublishDateLabel: UILabel!
     @IBOutlet weak var editorialDetailVolumeAndIssueLabel: UILabel!
     
     override func viewDidLoad() {
@@ -45,8 +45,8 @@ class EditorialsDetailViewController: UIViewController {
         
         editorialDetailHeadlineLabel.text = editorialTitleThroughSegue
         editorialDetailAuthorLabel.text = editorialAuthorThroughSegue
-        editorialDetailPublishDateLabel.text = editorialPublishDateThroughSegue
-        editorialDetailVolumeAndIssueLabel.text = "Volume \(editorialVolumeIndexThroughSegue!) - Issue \(editorialIssueIndexThroughSegue!)"
+//        editorialDetailPublishDateLabel.text = editorialPublishDateThroughSegue
+        editorialDetailVolumeAndIssueLabel.text = "V.\(editorialVolumeIndexThroughSegue!) - Issue \(editorialIssueIndexThroughSegue!)"
         
         /*
         
