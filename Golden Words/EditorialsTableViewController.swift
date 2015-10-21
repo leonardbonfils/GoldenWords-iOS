@@ -459,11 +459,19 @@ class EditorialsTableViewController: UITableViewController {
                                 editorialElement.timeStamp = Int(timeStampString)!
                                         
                                 editorialElement.imageURL = String(node.1["image_url"])
-                                editorialElement.author = String(node.1["author"]) as! String
+                            
+                                if let author = node.1["author"] as? String {
+                                    editorialElement.author = author
+                                }
+//                                editorialElement.author = String(node.1["author"]) as! String
                                 editorialElement.issueNumber = String(node.1["issue_int"])
                                 editorialElement.volumeNumber = String(node.1["volume_int"])
-                                editorialElement.articleContent = String(node.1["html_content"])
-                                
+                            
+                                if let articleContent = node.1["html_content"] as? String {
+                                    editorialElement.articleContent = articleContent
+                                }
+//                                editorialElement.articleContent = String(node.1["html_content"])
+                            
                                 lastItem = self.editorialObjects.count
                                 
                                 print(editorialElement.nodeID)

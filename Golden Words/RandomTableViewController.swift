@@ -447,10 +447,18 @@ class RandomTableViewController: UITableViewController {
                                 randomElement.timeStamp = Int(timeStampString)!
                                 
                                 randomElement.imageURL = String(node.1["image_url"])
-                                randomElement.author = String(node.1["author"])
+                                
+                                if let author = node.1["author"] as? String {
+                                    randomElement.author = author
+                                }
+//                                randomElement.author = String(node.1["author"])
                                 randomElement.issueNumber = String(node.1["issue_int"])
                                 randomElement.volumeNumber = String(node.1["volume_int"])
-                                randomElement.articleContent = String(node.1["html_content"])
+                                
+                                if let articleContent = node.1["html_content"] as? String {
+                                    randomElement.articleContent = articleContent
+                                }
+//                                randomElement.articleContent = String(node.1["html_content"])
                                 
                                 lastItem = self.randomObjects.count
                                 

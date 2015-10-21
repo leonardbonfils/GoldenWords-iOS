@@ -563,7 +563,11 @@ class CurrentIssueTableViewController: UITableViewController {
 //                                issueElement.author = String(node.1["author"])
                                 issueElement.issueNumber = String(node.1["issue_int"])
                                 issueElement.volumeNumber = String(node.1["volume_int"])
-                                issueElement.articleContent = String(node.1["html_content"])
+                                
+                                if let articleContent = node.1["html_content"] as? String {
+                                    issueElement.articleContent = articleContent
+                                }
+//                                issueElement.articleContent = String(node.1["html_content"])
                                 issueElement.coverImageInteger = String(node.1["cover_image"]) // addition specific to the Current Issue View Controller
                                 
                                 lastItem = self.currentIssueObjects.count

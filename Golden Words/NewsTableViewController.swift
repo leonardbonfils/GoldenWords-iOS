@@ -452,10 +452,18 @@ class NewsTableViewController: UITableViewController {
                                 newsArticleElement.timeStamp = Int(timeStampString)!
                                 
                                 newsArticleElement.imageURL = String(node.1["image_url"])
-                                newsArticleElement.author = String(node.1["author"]) as! String
+                                
+                                if let author = node.1["author"] as? String {
+                                    newsArticleElement.author = author
+                                }
+//                                newsArticleElement.author = String(node.1["author"]) as! String
                                 newsArticleElement.issueNumber = String(node.1["issue_int"])
                                 newsArticleElement.volumeNumber = String(node.1["volume_int"])
-                                newsArticleElement.articleContent = String(node.1["html_content"])
+                                
+                                if let articleContent = node.1["html_content"] as? String {
+                                    newsArticleElement.articleContent = articleContent
+                                }
+//                                newsArticleElement.articleContent = String(node.1["html_content"])
                                 
                                 lastItem = self.newsObjects.count
                                 

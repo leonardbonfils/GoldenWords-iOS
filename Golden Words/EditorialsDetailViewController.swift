@@ -70,9 +70,10 @@ class EditorialsDetailViewController: UIViewController {
         self.editorialDetailScrollView.addSubview(editorialDetailAuthorLabel)
         self.editorialDetailScrollView.addSubview(editorialDetailPublishDateLabel)
         self.editorialDetailScrollView.addSubview(editorialDetailVolumeAndIssueLabel)
-        
-        self.editorialDetailScrollView.contentSize = CGSize(width: self.view.frame.width, height: self.editorialDetailWebView.scrollView.frame.height)
-        
+//        self.editorialDetailWebView.frame = self.editorialDetailScrollView.bounds
+        self.editorialDetailWebView.autoresizingMask = UIViewAutoresizing.FlexibleHeight
+        self.editorialDetailWebView.autoresizingMask = UIViewAutoresizing.FlexibleBottomMargin
+                
 /*        editorialDetailWebView.sizeToFit()
 */
         
