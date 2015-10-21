@@ -27,7 +27,7 @@ class NewsTableViewController: UITableViewController {
     
     var newsObjects = NSMutableOrderedSet(capacity: 1000)
         
-    var customRefreshControl: UIRefreshControl! = UIRefreshControl()
+    var goldenWordsRefreshControl: UIRefreshControl! = UIRefreshControl()
     
     var revealViewControllerIndicator : Int = 0
     
@@ -76,18 +76,18 @@ class NewsTableViewController: UITableViewController {
         newsTableView.delegate = self
         newsTableView.dataSource = self
         
-        // Creating and configuring the customRefreshControl subview
-        customRefreshControl = UIRefreshControl()
-        customRefreshControl.backgroundColor = goldenWordsYellow
-        customRefreshControl.tintColor = UIColor.whiteColor()
-//        customRefreshControl.addTarget(self, action: "handleRefresh", forControlEvents: .ValueChanged)
-        newsTableView.addSubview(customRefreshControl!)
+        // Creating and configuring the goldenWordsRefreshControl subview
+        goldenWordsRefreshControl = UIRefreshControl()
+        goldenWordsRefreshControl.backgroundColor = goldenWordsYellow
+        goldenWordsRefreshControl.tintColor = UIColor.whiteColor()
+//        goldenWordsRefreshControl.addTarget(self, action: "handleRefresh", forControlEvents: .ValueChanged)
+        newsTableView.addSubview(goldenWordsRefreshControl!)
         
         // Navigation set up
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationItem.title = "News Articles"
         
-        loadCustomRefreshContents()
+//        loadCustomRefreshContents()
         
         populateNewsArticles()
 /*
@@ -97,7 +97,7 @@ class NewsTableViewController: UITableViewController {
         
         let currentDateAndTime = NSDate()
         let updateString = "Last updated at " + self.dateFormatter.stringFromDate(currentDateAndTime)
-        self.customRefreshControl!.attributedTitle = NSAttributedString(string: updateString) */
+        self.goldenWordsRefreshControl!.attributedTitle = NSAttributedString(string: updateString) */
         
         tableView.estimatedRowHeight = 50
         
@@ -122,6 +122,7 @@ class NewsTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    /*
     func loadCustomRefreshContents() {
         let refreshContents = NSBundle.mainBundle().loadNibNamed("RefreshContents", owner: self, options: nil)
         
@@ -210,12 +211,13 @@ class NewsTableViewController: UITableViewController {
         })
         
     }
+    */
     
     override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        if customRefreshControl!.refreshing {
+        if goldenWordsRefreshControl!.refreshing {
             if !isAnimating {
                 holdRefreshControl()
-                animateRefreshStep1()
+//                animateRefreshStep1()
             }
         }
     }
@@ -239,7 +241,7 @@ class NewsTableViewController: UITableViewController {
     
     /*
     func endOfWork() {
-        customRefreshControl!.endRefreshing()
+        goldenWordsRefreshControl!.endRefreshing()
         
         timer.invalidate()
         timer = nil
@@ -512,7 +514,7 @@ class NewsTableViewController: UITableViewController {
     
     func handleRefresh() {
         
-        customRefreshControl.beginRefreshing()
+        goldenWordsRefreshControl.beginRefreshing()
         
         //            let currentNumberOfPages = self.currentPage
         
@@ -545,7 +547,7 @@ class NewsTableViewController: UITableViewController {
         
         /*            self.editorialsTableView!.reloadData() */
         
-        customRefreshControl.endRefreshing()
+        goldenWordsRefreshControl.endRefreshing()
         
         /*            populateNewsArticles() */
     }

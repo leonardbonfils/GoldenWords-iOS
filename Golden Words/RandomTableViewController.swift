@@ -29,7 +29,7 @@ class RandomTableViewController: UITableViewController {
     
     var randomObjects = NSMutableOrderedSet(capacity: 1000)
     
-    var customRefreshControl = UIRefreshControl()
+    var goldenWordsRefreshControl = UIRefreshControl()
     
     var revealViewControllerIndicator : Int = 0
     
@@ -76,18 +76,18 @@ class RandomTableViewController: UITableViewController {
         randomTableView.delegate = self
         randomTableView.dataSource = self
         
-        // Creating and configuring the customRefreshControl subview
-        customRefreshControl = UIRefreshControl()
-       customRefreshControl.backgroundColor = goldenWordsYellow
-        customRefreshControl.tintColor = UIColor.whiteColor()
-//        customRefreshControl.addTarget(self, action: "handleRefresh", forControlEvents: .ValueChanged)
-        randomTableView.addSubview(customRefreshControl)
+        // Creating and configuring the goldenWordsRefreshControl subview
+        goldenWordsRefreshControl = UIRefreshControl()
+       goldenWordsRefreshControl.backgroundColor = goldenWordsYellow
+        goldenWordsRefreshControl.tintColor = UIColor.whiteColor()
+//        goldenWordsRefreshControl.addTarget(self, action: "handleRefresh", forControlEvents: .ValueChanged)
+        randomTableView.addSubview(goldenWordsRefreshControl)
         
         // Navigation set up
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationItem.title = "Random Articles"
         
-        loadCustomRefreshContents()
+//        loadCustomRefreshContents()
         
         populateRandomArticles()
         
@@ -98,7 +98,7 @@ class RandomTableViewController: UITableViewController {
         
         let currentDateAndTime = NSDate()
         let updateString = "Last updated at " + self.dateFormatter.stringFromDate(currentDateAndTime)
-        self.customRefreshControl!.attributedTitle = NSAttributedString(string: updateString)
+        self.goldenWordsRefreshControl!.attributedTitle = NSAttributedString(string: updateString)
             */
         
         tableView.estimatedRowHeight = 50
@@ -126,7 +126,7 @@ class RandomTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    
+        /*
     func loadCustomRefreshContents() {
         let refreshContents = NSBundle.mainBundle().loadNibNamed("RefreshContents", owner: self, options: nil)
         
@@ -215,12 +215,13 @@ class RandomTableViewController: UITableViewController {
         })
         
     }
+    */
     
     override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        if customRefreshControl.refreshing {
+        if goldenWordsRefreshControl.refreshing {
             if !isAnimating {
                 holdRefreshControl()
-                animateRefreshStep1()
+//                animateRefreshStep1()
                 
             }
         }
@@ -244,7 +245,7 @@ class RandomTableViewController: UITableViewController {
     }
     
 //    func endOfWork() {
-//        customRefreshControl.endRefreshing()
+//        goldenWordsRefreshControl.endRefreshing()
 //        
 //        timer.invalidate()
 //        timer = nil
@@ -508,7 +509,7 @@ class RandomTableViewController: UITableViewController {
     
     func handleRefresh() {
         
-        customRefreshControl.beginRefreshing()
+        goldenWordsRefreshControl.beginRefreshing()
         
 //        let currentNumberOfPages : Int = self.currentPage
 //        
@@ -541,7 +542,7 @@ class RandomTableViewController: UITableViewController {
         
 /*        self.randomTableView!.reloadData() */
         
-        customRefreshControl.endRefreshing()
+        goldenWordsRefreshControl.endRefreshing()
         
         //            populateEditorials()
     }
