@@ -56,6 +56,7 @@ class NewsDetailViewController: UIViewController {
 //        // Version 1.1 feature - 3D Touch Link Preview
 //        newsDetailWebView.allowsLinkPreview = true
         
+        newsDetailWebView.dataDetectorTypes = UIDataDetectorTypes.None
         newsDetailWebView.loadHTMLString(newsArticleArticleContentThroughSegue!, baseURL: nil)
         
         // Do any additional setup after loading the view.

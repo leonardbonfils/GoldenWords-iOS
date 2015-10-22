@@ -2,17 +2,11 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15A282b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="Avenir.ttc">
-            <string>Avenir-Book</string>
-            <string>Avenir-Book</string>
-            <string>Avenir-Book</string>
-            <string>Avenir-Book</string>
-            <string>Avenir-Book</string>
-            <string>Avenir-Book</string>
-            <string>Avenir-Book</string>
-            <string>Avenir-Book</string>
             <string>Avenir-Book</string>
             <string>Avenir-Book</string>
             <string>Avenir-Book</string>
@@ -25,231 +19,104 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="60"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="D" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wGh-uC-Hwq">
+                <label opaque="NO" userInteractionEnabled="NO" tag="4" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="D" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ggI-r8-ZOb">
                     <rect key="frame" x="219" y="15" width="20" height="30"/>
                     <animations/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="20" id="Iog-em-zHr"/>
+                        <constraint firstAttribute="width" constant="20" id="uCP-12-wsz"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="20"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
-                    <variation key="widthClass=compact" misplaced="YES">
+                    <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
+                        <rect key="frame" x="219" y="15" width="20" height="30"/>
+                        <mask key="constraints">
+                            <exclude reference="uCP-12-wsz"/>
+                        </mask>
+                    </variation>
+                    <variation key="heightClass=regular-widthClass=compact" ambiguous="YES" misplaced="YES">
                         <rect key="frame" x="232" y="16" width="15" height="28"/>
                     </variation>
-                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="232" y="16" width="15" height="28"/>
-                    </variation>
                 </label>
-                <label opaque="NO" userInteractionEnabled="NO" tag="5" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="E" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="97V-uP-vvB">
-                    <rect key="frame" x="247" y="15" width="20" height="30"/>
-                    <animations/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="20" id="Fp1-HY-kHf"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="20"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                    <variation key="widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="255" y="16" width="12" height="28"/>
-                    </variation>
-                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="255" y="16" width="12" height="28"/>
-                    </variation>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" tag="6" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="N" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ayd-bm-gfC">
-                    <rect key="frame" x="275" y="15" width="20" height="30"/>
-                    <animations/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="20" id="wfO-Q6-1TW"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="20"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                    <variation key="widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="275" y="16" width="16" height="28"/>
-                    </variation>
-                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="275" y="16" width="16" height="28"/>
-                    </variation>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="L" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pNn-Xn-7Li">
-                    <rect key="frame" x="191" y="15" width="20" height="30"/>
-                    <animations/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="20" id="5wM-kB-DSg"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="20"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                    <variation key="widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="214" y="16" width="10" height="28"/>
-                    </variation>
-                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="214" y="16" width="10" height="28"/>
-                    </variation>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="O" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fao-39-aT9">
-                    <rect key="frame" x="163" y="15" width="20" height="30"/>
-                    <animations/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="20" id="gjr-Zm-xTu"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="20"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                    <variation key="widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="189" y="16" width="17" height="28"/>
-                    </variation>
-                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="189" y="16" width="17" height="28"/>
-                    </variation>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" tag="7" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="W" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jmq-9f-H0D">
-                    <rect key="frame" x="331" y="15" width="20" height="30"/>
-                    <animations/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="20" id="j5U-vt-Tq9"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="20"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                    <variation key="widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="327" y="16" width="19" height="28"/>
-                    </variation>
-                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="327" y="16" width="19" height="28"/>
-                    </variation>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" tag="8" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="O" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2ex-Yo-bAx">
-                    <rect key="frame" x="359" y="15" width="20" height="30"/>
-                    <animations/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="20" id="5vC-Jf-XNE"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="20"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                    <variation key="widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="354" y="16" width="17" height="28"/>
-                    </variation>
-                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="354" y="16" width="17" height="28"/>
-                    </variation>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" tag="9" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="R" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l74-Nn-L8V">
-                    <rect key="frame" x="387" y="15" width="20" height="30"/>
-                    <animations/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="20" id="Y4p-h3-KkQ"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="20"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                    <variation key="widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="379" y="16" width="12" height="28"/>
-                    </variation>
-                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="379" y="16" width="12" height="28"/>
-                    </variation>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" tag="11" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="S" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="397-6q-xIP">
-                    <rect key="frame" x="443" y="15" width="20" height="30"/>
-                    <animations/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="20" id="WNF-vN-xFF"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="20"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                    <variation key="widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="422" y="16" width="12" height="28"/>
-                    </variation>
-                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="422" y="16" width="12" height="28"/>
-                    </variation>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="G" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UoV-pM-3Dp">
-                    <rect key="frame" x="137" y="15" width="20" height="30"/>
-                    <animations/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="20" id="YDF-EJ-rX0"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="20"/>
-                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="167" y="16" width="16" height="28"/>
-                    </variation>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" tag="10" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="D" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xxQ-WG-CPF">
+                <label opaque="NO" userInteractionEnabled="NO" tag="10" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="D" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dit-Q3-tu7">
                     <rect key="frame" x="415" y="15" width="20" height="30"/>
                     <animations/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="20" id="Jz9-uk-W0T"/>
+                        <constraint firstAttribute="width" constant="20" id="FuR-mp-fHJ"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="20"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
-                    <variation key="widthClass=compact" misplaced="YES">
+                    <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
+                        <rect key="frame" x="415" y="15" width="20" height="30"/>
+                        <mask key="constraints">
+                            <exclude reference="FuR-mp-fHJ"/>
+                        </mask>
+                    </variation>
+                    <variation key="heightClass=regular-widthClass=compact" ambiguous="YES" misplaced="YES">
                         <rect key="frame" x="399" y="16" width="15" height="28"/>
                     </variation>
-                    <variation key="heightClass=regular-widthClass=compact" misplaced="YES">
-                        <rect key="frame" x="399" y="16" width="15" height="28"/>
+                </label>
+                <label opaque="NO" userInteractionEnabled="NO" tag="6" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="N" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0iz-QJ-ROu">
+                    <rect key="frame" x="275" y="15" width="20" height="30"/>
+                    <animations/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="20" id="xcE-Il-KSb"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" name="Avenir-Book" family="Avenir" pointSize="20"/>
+                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                    <nil key="highlightedColor"/>
+                    <variation key="widthClass=compact" ambiguous="YES" misplaced="YES">
+                        <rect key="frame" x="275" y="15" width="20" height="30"/>
+                        <mask key="constraints">
+                            <exclude reference="xcE-Il-KSb"/>
+                        </mask>
+                    </variation>
+                    <variation key="heightClass=regular-widthClass=compact" ambiguous="YES" misplaced="YES">
+                        <rect key="frame" x="275" y="16" width="16" height="28"/>
                     </variation>
                 </label>
             </subviews>
             <animations/>
             <color key="backgroundColor" red="0.92549020049999997" green="0.94117647410000005" blue="0.94509804249999996" alpha="1" colorSpace="calibratedRGB"/>
             <constraints>
-                <constraint firstItem="397-6q-xIP" firstAttribute="centerY" secondItem="qv9-k9-4pZ" secondAttribute="centerY" id="1EL-cJ-Nw3"/>
-                <constraint firstItem="397-6q-xIP" firstAttribute="baseline" secondItem="xxQ-WG-CPF" secondAttribute="baseline" id="25y-xf-TMg"/>
-                <constraint firstItem="l74-Nn-L8V" firstAttribute="baseline" secondItem="2ex-Yo-bAx" secondAttribute="baseline" id="2q7-hW-ag2"/>
-                <constraint firstItem="397-6q-xIP" firstAttribute="leading" secondItem="xxQ-WG-CPF" secondAttribute="trailing" constant="8" id="5dJ-mM-Zy8"/>
-                <constraint firstItem="pNn-Xn-7Li" firstAttribute="centerY" secondItem="qv9-k9-4pZ" secondAttribute="centerY" id="5oX-c6-Edk"/>
-                <constraint firstItem="l74-Nn-L8V" firstAttribute="centerY" secondItem="qv9-k9-4pZ" secondAttribute="centerY" id="6gO-QZ-LN8"/>
-                <constraint firstItem="97V-uP-vvB" firstAttribute="baseline" secondItem="ayd-bm-gfC" secondAttribute="baseline" id="AZH-JZ-VR5"/>
-                <constraint firstItem="l74-Nn-L8V" firstAttribute="leading" secondItem="2ex-Yo-bAx" secondAttribute="trailing" constant="8" id="AjI-7S-OGp"/>
-                <constraint firstItem="ayd-bm-gfC" firstAttribute="centerY" secondItem="qv9-k9-4pZ" secondAttribute="centerY" id="Azi-2J-2ru"/>
-                <constraint firstItem="wGh-uC-Hwq" firstAttribute="baseline" secondItem="pNn-Xn-7Li" secondAttribute="baseline" id="JRS-Lk-R4s"/>
-                <constraint firstItem="Jmq-9f-H0D" firstAttribute="centerY" secondItem="qv9-k9-4pZ" secondAttribute="centerY" id="LVv-3M-yEG"/>
-                <constraint firstItem="97V-uP-vvB" firstAttribute="centerY" secondItem="qv9-k9-4pZ" secondAttribute="centerY" id="LgV-Z6-KD7"/>
-                <constraint firstItem="Fao-39-aT9" firstAttribute="centerY" secondItem="qv9-k9-4pZ" secondAttribute="centerY" id="QdI-vL-RUB"/>
-                <constraint firstItem="Jmq-9f-H0D" firstAttribute="leading" secondItem="ayd-bm-gfC" secondAttribute="trailing" constant="36" id="Rqg-dv-HSB"/>
-                <constraint firstItem="97V-uP-vvB" firstAttribute="leading" secondItem="wGh-uC-Hwq" secondAttribute="trailing" constant="8" id="T1I-7B-40B"/>
-                <constraint firstItem="wGh-uC-Hwq" firstAttribute="centerY" secondItem="qv9-k9-4pZ" secondAttribute="centerY" id="VJe-vx-B5s"/>
-                <constraint firstItem="UoV-pM-3Dp" firstAttribute="centerY" secondItem="qv9-k9-4pZ" secondAttribute="centerY" id="Xba-cY-LXQ"/>
-                <constraint firstItem="l74-Nn-L8V" firstAttribute="baseline" secondItem="xxQ-WG-CPF" secondAttribute="baseline" id="YYD-WO-uWw"/>
-                <constraint firstItem="ayd-bm-gfC" firstAttribute="leading" secondItem="97V-uP-vvB" secondAttribute="trailing" constant="8" id="YbX-Ip-vKi"/>
-                <constraint firstItem="UoV-pM-3Dp" firstAttribute="leading" secondItem="qv9-k9-4pZ" secondAttribute="leading" constant="137" id="aOi-dG-3O5"/>
-                <constraint firstItem="xxQ-WG-CPF" firstAttribute="leading" secondItem="l74-Nn-L8V" secondAttribute="trailing" constant="8" id="cCd-kS-YeW"/>
-                <constraint firstItem="xxQ-WG-CPF" firstAttribute="centerY" secondItem="qv9-k9-4pZ" secondAttribute="centerY" id="dlZ-gd-sa5"/>
-                <constraint firstItem="pNn-Xn-7Li" firstAttribute="leading" secondItem="Fao-39-aT9" secondAttribute="trailing" constant="8" id="eoS-6B-NB8"/>
-                <constraint firstItem="2ex-Yo-bAx" firstAttribute="baseline" secondItem="Jmq-9f-H0D" secondAttribute="baseline" id="gXm-xP-YT1"/>
-                <constraint firstItem="wGh-uC-Hwq" firstAttribute="leading" secondItem="pNn-Xn-7Li" secondAttribute="trailing" constant="8" id="isp-IC-zPb"/>
-                <constraint firstItem="2ex-Yo-bAx" firstAttribute="leading" secondItem="Jmq-9f-H0D" secondAttribute="trailing" constant="8" id="m43-ig-kJe"/>
-                <constraint firstItem="UoV-pM-3Dp" firstAttribute="baseline" secondItem="Fao-39-aT9" secondAttribute="baseline" id="m9e-2x-Qxq"/>
-                <constraint firstItem="ayd-bm-gfC" firstAttribute="baseline" secondItem="Jmq-9f-H0D" secondAttribute="baseline" id="mVb-sA-8Ie"/>
-                <constraint firstItem="2ex-Yo-bAx" firstAttribute="centerY" secondItem="qv9-k9-4pZ" secondAttribute="centerY" id="pf7-e7-nOt"/>
-                <constraint firstItem="Fao-39-aT9" firstAttribute="leading" secondItem="UoV-pM-3Dp" secondAttribute="trailing" constant="6" id="qTM-sP-EoW"/>
-                <constraint firstItem="wGh-uC-Hwq" firstAttribute="baseline" secondItem="97V-uP-vvB" secondAttribute="baseline" id="rRA-sU-JL6"/>
-                <constraint firstItem="Fao-39-aT9" firstAttribute="baseline" secondItem="pNn-Xn-7Li" secondAttribute="baseline" id="vXW-aA-CCO"/>
-                <constraint firstItem="UoV-pM-3Dp" firstAttribute="top" secondItem="qv9-k9-4pZ" secondAttribute="top" constant="15" id="zal-XE-9nI"/>
-                <constraint firstItem="UoV-pM-3Dp" firstAttribute="leading" secondItem="qv9-k9-4pZ" secondAttribute="leading" constant="165" id="zwe-tp-qM9">
-                    <variation key="widthClass=compact" constant="50"/>
-                    <variation key="heightClass=regular-widthClass=compact" constant="75"/>
-                </constraint>
+                <constraint firstItem="dit-Q3-tu7" firstAttribute="top" secondItem="qv9-k9-4pZ" secondAttribute="topMargin" constant="7" id="Mlc-2M-pKz"/>
+                <constraint firstAttribute="bottomMargin" secondItem="0iz-QJ-ROu" secondAttribute="bottom" constant="7" id="RbD-DA-wQO"/>
+                <constraint firstAttribute="bottomMargin" secondItem="dit-Q3-tu7" secondAttribute="bottom" constant="7" id="SCo-Jg-L5U"/>
+                <constraint firstAttribute="bottomMargin" secondItem="ggI-r8-ZOb" secondAttribute="bottom" constant="7" id="TLj-IH-sop"/>
+                <constraint firstItem="ggI-r8-ZOb" firstAttribute="top" secondItem="qv9-k9-4pZ" secondAttribute="topMargin" constant="7" id="c6h-ag-hey"/>
+                <constraint firstItem="0iz-QJ-ROu" firstAttribute="top" secondItem="qv9-k9-4pZ" secondAttribute="topMargin" constant="7" id="gcL-eH-m47"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <variation key="default">
+                <mask key="subviews">
+                    <exclude reference="ggI-r8-ZOb"/>
+                    <exclude reference="dit-Q3-tu7"/>
+                    <exclude reference="0iz-QJ-ROu"/>
+                </mask>
                 <mask key="constraints">
-                    <exclude reference="zwe-tp-qM9"/>
+                    <exclude reference="TLj-IH-sop"/>
+                    <exclude reference="c6h-ag-hey"/>
+                    <exclude reference="RbD-DA-wQO"/>
+                    <exclude reference="gcL-eH-m47"/>
+                    <exclude reference="Mlc-2M-pKz"/>
+                    <exclude reference="SCo-Jg-L5U"/>
                 </mask>
             </variation>
             <variation key="widthClass=compact">
+                <mask key="subviews">
+                    <include reference="ggI-r8-ZOb"/>
+                    <include reference="dit-Q3-tu7"/>
+                    <include reference="0iz-QJ-ROu"/>
+                </mask>
                 <mask key="constraints">
-                    <include reference="zwe-tp-qM9"/>
+                    <include reference="TLj-IH-sop"/>
+                    <include reference="c6h-ag-hey"/>
+                    <include reference="RbD-DA-wQO"/>
+                    <include reference="gcL-eH-m47"/>
+                    <include reference="Mlc-2M-pKz"/>
+                    <include reference="SCo-Jg-L5U"/>
                 </mask>
             </variation>
         </view>

@@ -26,7 +26,7 @@ class IssueLocation: NSObject, MKAnnotation {
     }
     
     var subtitle: String? {
-        return locationName
+            return "Queen's University"
     }
     
     var title: String? {
@@ -35,7 +35,7 @@ class IssueLocation: NSObject, MKAnnotation {
     
     func mapItem() -> MKMapItem {
         
-        let addressDictionary = [String(CNPostalAddressStreetKey): locationName]
+        let addressDictionary = [String(kABPersonAddressStreetKey): locationName]
         
         let placemark = MKPlacemark(coordinate: coordinate, addressDictionary: addressDictionary)
         

@@ -52,7 +52,8 @@ class CurrentIssueDetailViewController: UIViewController {
         
         */
         
-        self.currentIssueDetailWebView.loadHTMLString(currentIssueArticleContentThroughSegue!, baseURL: nil)
+        currentIssueDetailWebView.dataDetectorTypes = UIDataDetectorTypes.None
+        currentIssueDetailWebView.loadHTMLString(currentIssueArticleContentThroughSegue!, baseURL: nil)
         
         // Do any additional setup after loading the view.
     }

@@ -283,9 +283,10 @@ class CurrentIssueTableViewController: UITableViewController {
             cell.currentIssueArticlesAuthorLabel!.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
             cell.currentIssueArticlesAuthorLabel!.text = author
             
-        } else {
-            return cell
         }
+//        else {
+////            return cell
+//        }
         
             
             let issueNumber = currentIssueObject.issueNumber ?? ""
@@ -578,15 +579,17 @@ class CurrentIssueTableViewController: UITableViewController {
                                 issueElement.coverImageInteger = String(node.1["cover_image"]) // addition specific to the Current Issue View Controller
                                 
                                 lastItem = self.currentIssueObjects.count
+
                                 
-                                print(issueElement.nodeID)
-//                                
-//                                if (String(issueElement.articleContent) != "Could not retrieve article content"){
-//                                self.currentIssueObjects.addObject(issueElement)
+//                              print(issueElement.nodeID)
+                                
+//                                if issueElement.articleContent.characters.count > 40 {
+//                                    self.currentIssueObjects.addObject(issueElement)
+//                                    print(issueElement.nodeID)
 //                                }
                                 
                                 self.currentIssueObjects.addObject(issueElement)
-                                
+                                    
                                 // Sorting with decreasing timestamp from top to bottom.
                                 let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
                                 self.currentIssueObjects.sortUsingDescriptors([timestampSortDescriptor])
@@ -598,11 +601,10 @@ class CurrentIssueTableViewController: UITableViewController {
                                 
                                 let indexPaths = (lastItem..<self.currentIssueObjects.count).map {
                                     NSIndexPath(forItem: $0, inSection: 0) }
-                                 }
+                                }
                             }
-                        
                         }
-                    
+                        
                     dispatch_async(dispatch_get_main_queue()) {
                         self.currentIssueTableView.reloadData()
                 
@@ -610,11 +612,8 @@ class CurrentIssueTableViewController: UITableViewController {
                         self.cellLoadingIndicator.hidesWhenStopped = true
                         
                     }
-                            
                 }
-                        
             }
-            
             
             self.populatingCurrentIssue = false
     }

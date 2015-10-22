@@ -53,6 +53,7 @@ class RandomDetailViewController: UIViewController {
 //        // Version 1.1 feature - 3D Touch Link Preview
 //        randomDetailWebView.allowsLinkPreview = true
         
+        randomDetailWebView.dataDetectorTypes = UIDataDetectorTypes.None
         randomDetailWebView.loadHTMLString(randomArticleArticleContentThroughSegue!, baseURL: nil)
         
         

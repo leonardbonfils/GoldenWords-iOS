@@ -59,7 +59,8 @@ class EditorialsDetailViewController: UIViewController {
         let justifiedArticleContent = "<p style=\"text-align:justify\"> \(editorialArticleContentThroughSegue) </p>"
         */
         
-        self.editorialDetailWebView.loadHTMLString(editorialArticleContentThroughSegue!, baseURL: nil)
+        editorialDetailWebView.dataDetectorTypes = UIDataDetectorTypes.None
+        editorialDetailWebView.loadHTMLString(editorialArticleContentThroughSegue!, baseURL: nil)
         
         
 
