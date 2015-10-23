@@ -30,6 +30,20 @@ class MenuController: UITableViewController {
 //    }
 //    
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.revealViewController().view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+        self.revealViewController().frontViewController.revealViewController().tapGestureRecognizer()
+        self.revealViewController().frontViewController.view.userInteractionEnabled = false
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillAppear(animated)
+    
+        self.revealViewController().frontViewController.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+        self.revealViewController().frontViewController.view.userInteractionEnabled = true
+    }
     
     
     override func viewDidLoad() {
