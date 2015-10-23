@@ -14,6 +14,16 @@
       "idiom" : "iphone",
       "filename" : "iTunesArtwork@2x-2.png",
       "scale" : "3x"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "ios_icon.png",
+      "scale" : "1x"
+    },
+    {
+      "idiom" : "ipad",
+      "filename" : "ios_icon-1.png",
+      "scale" : "2x"
     }
   ],
   "info" : {

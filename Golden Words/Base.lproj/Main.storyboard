@@ -1812,7 +1812,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             </webView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Publish Date" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XQZ-s9-UpI">
-                                <rect key="frame" x="402" y="134" width="178" height="32"/>
+                                <rect key="frame" x="449" y="134" width="131" height="32"/>
                                 <animations/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="131" id="bbM-uT-YBY"/>
@@ -2240,47 +2240,25 @@
                                     </mask>
                                 </variation>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jcP-a3-BUA">
-                                <rect key="frame" x="271" y="148" width="58" height="30"/>
-                                <animations/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="30" id="WjS-uZ-MUX"/>
-                                    <constraint firstAttribute="width" constant="58" id="qB8-Dw-E8V"/>
-                                    <constraint firstAttribute="width" constant="58" id="vdx-I7-iBq"/>
-                                </constraints>
-                                <state key="normal" title="Editors">
-                                    <color key="titleColor" red="0.96862745100000003" green="0.75294117650000003" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <variation key="default">
-                                    <mask key="constraints">
-                                        <exclude reference="WjS-uZ-MUX"/>
-                                        <exclude reference="qB8-Dw-E8V"/>
-                                    </mask>
-                                </variation>
-                                <variation key="widthClass=compact">
-                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                    <mask key="constraints">
-                                        <include reference="WjS-uZ-MUX"/>
-                                        <include reference="qB8-Dw-E8V"/>
-                                        <exclude reference="vdx-I7-iBq"/>
-                                    </mask>
-                                </variation>
-                                <connections>
-                                    <action selector="editorsContactButton:" destination="Kbb-JD-99L" eventType="touchUpInside" id="DwJ-ic-rOd"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XiL-WT-IUV">
-                                <rect key="frame" x="221" y="257" width="153" height="55"/>
+                                <rect key="frame" x="229" y="262" width="143" height="38"/>
                                 <animations/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="31" id="HZ9-fj-w3z"/>
                                     <constraint firstAttribute="width" constant="131" id="Oo7-Ao-GNE"/>
-                                    <constraint firstAttribute="height" constant="55" id="okt-8g-vRd"/>
-                                    <constraint firstAttribute="width" constant="153" id="ymE-7h-Prr"/>
+                                    <constraint firstAttribute="height" constant="38" id="okt-8g-vRd"/>
+                                    <constraint firstAttribute="width" constant="143" id="ymE-7h-Prr"/>
                                 </constraints>
                                 <state key="normal" title="Business Manager">
                                     <color key="titleColor" red="0.96862745100000003" green="0.75294117650000003" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="8"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="HZ9-fj-w3z"/>
@@ -2300,9 +2278,10 @@
                                     <action selector="businessManagerContactButton:" destination="Kbb-JD-99L" eventType="touchUpInside" id="wZp-be-KJU"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sP9-aX-Jw0">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sP9-aX-Jw0">
                                 <rect key="frame" x="222" y="539" width="157" height="35"/>
                                 <animations/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="157" id="4Ay-uU-ZhZ"/>
                                     <constraint firstAttribute="width" constant="157" id="lFo-VF-otf"/>
@@ -2312,6 +2291,12 @@
                                 <state key="normal" title="Operations Manager">
                                     <color key="titleColor" red="0.96862745100000003" green="0.75294117650000003" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="8"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="lFo-VF-otf"/>
@@ -2361,9 +2346,10 @@
                                     </mask>
                                 </variation>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5OC-7N-WVu">
-                                <rect key="frame" x="265" y="402" width="70" height="30"/>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5OC-7N-WVu">
+                                <rect key="frame" x="256" y="402" width="89" height="33"/>
                                 <animations/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="70" id="jRV-0l-rTh"/>
                                     <constraint firstAttribute="height" constant="30" id="pkY-nW-VIu"/>
@@ -2371,6 +2357,12 @@
                                 <state key="normal" title="Developer">
                                     <color key="titleColor" red="0.96862745100000003" green="0.75294117650000003" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="8"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
                                 <variation key="default">
                                     <mask key="constraints">
                                         <exclude reference="jRV-0l-rTh"/>
@@ -2388,7 +2380,7 @@
                                     <action selector="developerContactButton:" destination="Kbb-JD-99L" eventType="touchUpInside" id="iCq-O0-bfV"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="For all other inquiries please contact the Operations Manager" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KGN-Ty-ggN">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="For all other inquiries please contact the Operations Manager" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KGN-Ty-ggN">
                                 <rect key="frame" x="14" y="457" width="566" height="74"/>
                                 <animations/>
                                 <constraints>
@@ -2444,6 +2436,42 @@
                                     </mask>
                                 </variation>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jcP-a3-BUA">
+                                <rect key="frame" x="265" y="148" width="65" height="30"/>
+                                <animations/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="WjS-uZ-MUX"/>
+                                    <constraint firstAttribute="width" constant="58" id="qB8-Dw-E8V"/>
+                                    <constraint firstAttribute="width" constant="65" id="vdx-I7-iBq"/>
+                                </constraints>
+                                <state key="normal" title="Editors">
+                                    <color key="titleColor" red="0.96862745100000003" green="0.75294117650000003" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="8"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="WjS-uZ-MUX"/>
+                                        <exclude reference="qB8-Dw-E8V"/>
+                                    </mask>
+                                </variation>
+                                <variation key="widthClass=compact">
+                                    <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                    <mask key="constraints">
+                                        <include reference="WjS-uZ-MUX"/>
+                                        <include reference="qB8-Dw-E8V"/>
+                                        <exclude reference="vdx-I7-iBq"/>
+                                    </mask>
+                                </variation>
+                                <connections>
+                                    <action selector="editorsContactButton:" destination="Kbb-JD-99L" eventType="touchUpInside" id="DwJ-ic-rOd"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -2461,15 +2489,15 @@
                             <constraint firstItem="5OC-7N-WVu" firstAttribute="top" secondItem="4da-xf-UjX" secondAttribute="bottom" constant="8" symbolic="YES" id="M86-HP-k2G"/>
                             <constraint firstAttribute="trailing" secondItem="4da-xf-UjX" secondAttribute="trailing" constant="20" id="MfR-I6-WRp"/>
                             <constraint firstAttribute="trailing" secondItem="4da-xf-UjX" secondAttribute="trailing" constant="15" id="OaD-Cz-Xi2"/>
-                            <constraint firstItem="XiL-WT-IUV" firstAttribute="top" secondItem="jcP-a3-BUA" secondAttribute="bottom" constant="79" id="Qo1-3e-8s7"/>
+                            <constraint firstItem="XiL-WT-IUV" firstAttribute="top" secondItem="jcP-a3-BUA" secondAttribute="bottom" constant="84" id="Qo1-3e-8s7"/>
                             <constraint firstItem="sP9-aX-Jw0" firstAttribute="centerX" secondItem="Ivg-F7-Xa0" secondAttribute="centerX" id="SMi-cR-cM9"/>
-                            <constraint firstItem="jcP-a3-BUA" firstAttribute="centerX" secondItem="Ivg-F7-Xa0" secondAttribute="centerX" id="TJF-gX-2EI"/>
+                            <constraint firstItem="jcP-a3-BUA" firstAttribute="centerX" secondItem="Ivg-F7-Xa0" secondAttribute="centerX" constant="-2.5" id="TJF-gX-2EI"/>
                             <constraint firstItem="jcP-a3-BUA" firstAttribute="centerX" secondItem="B30-Es-cNE" secondAttribute="centerX" id="Tih-wn-tOa">
                                 <variation key="widthClass=compact" constant="-1"/>
                             </constraint>
                             <constraint firstItem="Ivg-F7-Xa0" firstAttribute="leading" secondItem="B30-Es-cNE" secondAttribute="leading" constant="17" id="UtO-d7-a7R"/>
                             <constraint firstItem="pm6-so-qdb" firstAttribute="top" secondItem="iAf-JV-9Dy" secondAttribute="bottom" constant="8" id="XPy-0g-NOa"/>
-                            <constraint firstItem="4da-xf-UjX" firstAttribute="top" secondItem="XiL-WT-IUV" secondAttribute="bottom" constant="8" symbolic="YES" id="ZgL-nt-9pX"/>
+                            <constraint firstItem="4da-xf-UjX" firstAttribute="top" secondItem="XiL-WT-IUV" secondAttribute="bottom" constant="20" id="ZgL-nt-9pX"/>
                             <constraint firstItem="4da-xf-UjX" firstAttribute="leading" secondItem="B30-Es-cNE" secondAttribute="leading" constant="19" id="aHr-ew-JOG"/>
                             <constraint firstItem="KGN-Ty-ggN" firstAttribute="leading" secondItem="B30-Es-cNE" secondAttribute="leading" constant="14" id="f6F-2Z-gYk"/>
                             <constraint firstItem="KGN-Ty-ggN" firstAttribute="top" secondItem="XiL-WT-IUV" secondAttribute="bottom" constant="13" id="fXN-OQ-1jR"/>
@@ -2481,7 +2509,7 @@
                             <constraint firstItem="sP9-aX-Jw0" firstAttribute="centerX" secondItem="B30-Es-cNE" secondAttribute="centerX" id="ivN-d0-ITB">
                                 <variation key="widthClass=compact" constant="6.5"/>
                             </constraint>
-                            <constraint firstItem="KGN-Ty-ggN" firstAttribute="top" secondItem="5OC-7N-WVu" secondAttribute="bottom" constant="25" id="kGV-2f-4pd"/>
+                            <constraint firstItem="KGN-Ty-ggN" firstAttribute="top" secondItem="5OC-7N-WVu" secondAttribute="bottom" constant="22" id="kGV-2f-4pd"/>
                             <constraint firstItem="KGN-Ty-ggN" firstAttribute="leading" secondItem="B30-Es-cNE" secondAttribute="leading" constant="20" id="oiF-7j-8IM"/>
                             <constraint firstItem="4da-xf-UjX" firstAttribute="leading" secondItem="B30-Es-cNE" secondAttribute="leading" constant="14" id="pFq-Nn-gwu"/>
                             <constraint firstItem="XiL-WT-IUV" firstAttribute="top" secondItem="Ivg-F7-Xa0" secondAttribute="bottom" constant="8" id="pf9-Km-uru"/>
@@ -2492,7 +2520,7 @@
                                 <variation key="widthClass=compact" constant="-5"/>
                             </constraint>
                             <constraint firstAttribute="trailing" secondItem="pm6-so-qdb" secondAttribute="trailing" constant="20" id="uMz-mU-Rkm"/>
-                            <constraint firstItem="XiL-WT-IUV" firstAttribute="centerX" secondItem="4da-xf-UjX" secondAttribute="centerX" id="ulp-yk-7FM"/>
+                            <constraint firstItem="XiL-WT-IUV" firstAttribute="centerX" secondItem="4da-xf-UjX" secondAttribute="centerX" constant="3.5" id="ulp-yk-7FM"/>
                             <constraint firstItem="5OC-7N-WVu" firstAttribute="top" secondItem="4da-xf-UjX" secondAttribute="bottom" constant="8" id="vEn-un-eZS">
                                 <variation key="widthClass=compact" constant="-12"/>
                             </constraint>

@@ -17,22 +17,28 @@ class MenuController: UITableViewController {
     // Defining the right yellow for the application
     let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
     
+//    var overlayView: UIView = UIView()
+//    
+//    override func viewDidAppear(animated: Bool) {
+//        super.viewDidAppear(animated)
+//        self.revealViewController().frontViewController.view.addSubview(overlayView)
+//    }
+//    
+//    override func viewDidDisappear(animated: Bool) {
+//        super.viewDidDisappear(animated)
+//        overlayView.removeFromSuperview()
+//    }
+//    
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.view.backgroundColor = UIColor.whiteColor()
+        
+//        overlayView = UIView(frame: self.view.frame)
 
-        
-//        // Testing the API
-//        
-//        Alamofire.request(.GET, MyGlobalVariables.baseURL).responseJSON(options: NSJSONReadingOptions){
-//            request, response, data, error in
-//            print (data)
-//        }
-        
-        
-        
-        
         // Defining the easter egg gesture
         let fiveTapGesture = UITapGestureRecognizer(target: self, action: "cellTappedFiveTimes:")
         fiveTapGesture.numberOfTapsRequired = 5
