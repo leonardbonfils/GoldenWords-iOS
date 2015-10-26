@@ -252,17 +252,7 @@ class CurrentIssueTableViewController: UITableViewController {
     
         let row = indexPath.row
         
-//        guard let cell = tableView.dequeueReusableCellWithIdentifier(CurrentIssueArticlesTableCellIdentifier, forIndexPath: indexPath) as? CurrentIssueArticlesTableViewCell else {
-//            
-//            print ("error: currentIssueTableView cell is not of class CurrentIssueArticlesTableViewCell, we will use EditorialsTableViewCell instead")
-//            return tableView.dequeueReusableCellWithIdentifier(CurrentIssueArticlesTableCellIdentifier, forIndexPath: indexPath) as! EditorialsTableViewCell
-//        }
-        
         let cell = tableView.dequeueReusableCellWithIdentifier(CurrentIssueArticlesTableCellIdentifier, forIndexPath: indexPath) as! CurrentIssueArticlesTableViewCell
-        
-//        guard currentIssueObjects.count - 1 > indexPath.row else {
-//            return cell
-//        }
         
         if let currentIssueObject = currentIssueObjects.objectAtIndex(indexPath.row) as? IssueElement {
             

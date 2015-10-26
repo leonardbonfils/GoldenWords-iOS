@@ -52,6 +52,8 @@ class EditorialsTableViewController: UITableViewController {
     
     var cellLoadingIndicator = UIActivityIndicatorView()
     
+    var doOneMoreRequest = true
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -432,7 +434,7 @@ class EditorialsTableViewController: UITableViewController {
     
     func populateEditorials() {
         
-        if populatingEditorials {
+        if (populatingEditorials == true) {
             return
         }
         populatingEditorials = true

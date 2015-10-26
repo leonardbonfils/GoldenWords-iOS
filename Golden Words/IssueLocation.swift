@@ -26,7 +26,11 @@ class IssueLocation: NSObject, MKAnnotation {
     }
     
     var subtitle: String? {
-            return "Queen's University"
+        if (locationName == "Jean Royce Hall") {
+            return "West Campus"
+        } else {
+            return "Main Campus"
+        }
     }
     
     var title: String? {

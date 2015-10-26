@@ -48,6 +48,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="launch_screen_hi_res" width="621" height="1104"/>
+        <image name="launch_screen_hi_res" width="27" height="27"/>
     </resources>
 </document>

@@ -41,7 +41,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     let coordinatesLeonardHall = IssueLocation(locationName: "Leonard Hall", coordinate: CLLocationCoordinate2D(latitude: 44.22429016019697, longitude: -76.50065660476685))
     let coordinatesVictoriaHall = IssueLocation(locationName: "Victoria Hall", coordinate: CLLocationCoordinate2D(latitude: 44.22550492192426, longitude: -76.49863958358765))
     let coordinatesStirlingHall = IssueLocation(locationName: "Stirling Hall", coordinate: CLLocationCoordinate2D(latitude: 44.22463613919133, longitude: -76.49767398834229))
-    let coordinatesWestCampus = IssueLocation(locationName: "West Campus", coordinate: CLLocationCoordinate2D(latitude: 44.22438242146097, longitude: -76.51471138000487))
+    let coordinatesWestCampus = IssueLocation(locationName: "Jean Royce Hall", coordinate: CLLocationCoordinate2D(latitude: 44.22438242146097, longitude: -76.51471138000487))
     
     override func viewDidLoad() {
         super.viewDidLoad()
