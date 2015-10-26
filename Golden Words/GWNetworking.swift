@@ -120,7 +120,7 @@ class IssueElement: NSObject {
     var title: String           // title
     var nodeID: Int             // nid
     var timeStamp: Int          // revision_timestamp
-    var imageURL: String?      // image_url
+    var imageURL: String      // image_url
     var author: String?          // author
     
     var issueNumber: String     // issue_int
@@ -135,7 +135,7 @@ class IssueElement: NSObject {
     /* To get an NSDate objec from Unix timestamp
      var date = NSDate(timeIntervalSince1970: timeStamp) */
     
-    init(title: String, nodeID: Int, timeStamp: Int, imageURL: String?, author: String, issueNumber: String, volumeNumber: String, articleContent: String, coverImageInteger: String, coverImage: UIImage) {
+    init(title: String, nodeID: Int, timeStamp: Int, imageURL: String, author: String, issueNumber: String, volumeNumber: String, articleContent: String, coverImageInteger: String, coverImage: UIImage) {
         self.title = title
         self.nodeID = nodeID
         self.timeStamp = timeStamp

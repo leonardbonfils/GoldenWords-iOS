@@ -19,6 +19,7 @@ class EditorialsTableViewController: UITableViewController {
     // Table View Outlet used for the refresh control
     @IBOutlet var editorialsTableView: UITableView!
     
+    var temporaryEditorialObjects = NSMutableOrderedSet(capacity: 1000)
     var editorialObjects = NSMutableOrderedSet(capacity: 1000)
     
     var goldenWordsRefreshControl = UIRefreshControl()
@@ -53,6 +54,9 @@ class EditorialsTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.cellLoadingIndicator.backgroundColor = goldenWordsYellow
+        self.cellLoadingIndicator.hidesWhenStopped = true
         
         // Hamburger button configuration
         if self.revealViewController() != nil {
@@ -259,11 +263,13 @@ class EditorialsTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let row = indexPath.row
+//        
+//        guard let cell = tableView.dequeueReusableCellWithIdentifier(EditorialTableCellIdentifier, forIndexPath: indexPath) as? EditorialsTableViewCell else {
+//            print ("error: editorialsTableView cell is not of class EditorialsTableViewCell, we will use RandomTableViewCell instead")
+//            return tableView.dequeueReusableCellWithIdentifier(EditorialTableCellIdentifier, forIndexPath: indexPath) as! RandomTableViewCell
+//        }
         
-        guard let cell = tableView.dequeueReusableCellWithIdentifier(EditorialTableCellIdentifier, forIndexPath: indexPath) as? EditorialsTableViewCell else {
-            print ("error: editorialsTableView cell is not of class EditorialsTableViewCell, we will use RandomTableViewCell instead")
-            return tableView.dequeueReusableCellWithIdentifier(EditorialTableCellIdentifier, forIndexPath: indexPath) as! RandomTableViewCell
-        }
+        let cell = tableView.dequeueReusableCellWithIdentifier(EditorialTableCellIdentifier, forIndexPath: indexPath) as! EditorialsTableViewCell
         
         if let editorialObject = editorialObjects.objectAtIndex(indexPath.row) as? EditorialElement {
             // we just unwrapped editorialObject
@@ -271,7 +277,7 @@ class EditorialsTableViewController: UITableViewController {
             let title = editorialObject.title ?? "" // if editorialObject.title == nil, then we return an empty string.
             
             let timeStampDateObject = NSDate(timeIntervalSince1970: NSTimeInterval(editorialObject.timeStamp))
-            let timeStampDateString = dateFormatter.stringFromDate(timeStampDateObject)
+            let timeStampDateString = dateFormatter.stringFromDate(timeStampDateObject) ?? "Date unknown"
             
             let author = editorialObject.author ?? ""
           
@@ -287,12 +293,16 @@ class EditorialsTableViewController: UITableViewController {
             cell.editorialHeadlineLabel.text = title
             
             cell.editorialAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-            cell.editorialAuthorLabel.text = String(author)
+            cell.editorialAuthorLabel.text = author
             
             cell.editorialPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
             cell.editorialPublishDateLabel.text = timeStampDateString
             
         } else {
+            
+            cell.editorialHeadlineLabel.text = nil
+            cell.editorialAuthorLabel.text = nil
+            cell.editorialPublishDateLabel.text = nil
             
 //            var noInternetConnectionAlert = UIAlertController(title: "No Internet Connection", message: "Could not retrieve data from Golden Words servers", preferredStyle: UIAlertControllerStyle.Alert)
 //            noInternetConnectionAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
@@ -415,7 +425,7 @@ class EditorialsTableViewController: UITableViewController {
     }
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
-        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.25) {
+        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.75) {
             populateEditorials()
         }
     }
@@ -427,22 +437,16 @@ class EditorialsTableViewController: UITableViewController {
         }
         populatingEditorials = true
         
-        self.cellLoadingIndicator.backgroundColor = goldenWordsYellow
         self.cellLoadingIndicator.startAnimating()
         
         Alamofire.request(GWNetworking.Router.Editorials(self.currentPage)).responseJSON() { response in
             if let JSON = response.result.value {
-               /*
-            if response.result.error == nil {
-                */
                 
                 /* Creating objects for every single editorial is long running work, so we put that work on a background queue, to keep the app very responsive. */
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
-                    
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)) {
                     
                     /* Making an array of all the node IDs from the JSON file */
                 var nodeIDArray : [Int]
-                    
                     
                 if (JSON .isKindOfClass(NSDictionary)) {
                     
@@ -460,13 +464,14 @@ class EditorialsTableViewController: UITableViewController {
                                         
                                 let timeStampString = node.1["revision_timestamp"] as! String
                                 editorialElement.timeStamp = Int(timeStampString)!
-                                        
-                                editorialElement.imageURL = String(node.1["image_url"])
                             
+                                if let imageURL = node.1["image_url"] as? String {
+                                    editorialElement.imageURL = imageURL
+                                }
+                                
                                 if let author = node.1["author"] as? String {
                                     editorialElement.author = author
                                 }
-//                                editorialElement.author = String(node.1["author"]) as! String
                                 if let issueNumber = node.1["issue_int"] as? String {
                                     editorialElement.issueNumber = issueNumber
                                 }
@@ -479,44 +484,41 @@ class EditorialsTableViewController: UITableViewController {
                                 }
 //                                editorialElement.articleContent = String(node.1["html_content"])
                             
-                                lastItem = self.editorialObjects.count
-                                
+                            if editorialElement.articleContent.characters.count > 40 {
+                                lastItem = self.temporaryEditorialObjects.count
+                                self.temporaryEditorialObjects.addObject(editorialElement)
                                 print(editorialElement.nodeID)
-                                        
-                                self.editorialObjects.addObject(editorialElement)
+                            }
+                                    
+                            let indexPaths = (lastItem..<self.temporaryEditorialObjects.count).map { NSIndexPath(forItem: $0, inSection: 0) }
                             
-                                /* Sorting the elements in order of newest to oldest (as the array index increases] */
-                                let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
-                                self.editorialObjects.sortUsingDescriptors([timestampSortDescriptor])
-                                    
-                                let indexPaths = (lastItem..<self.editorialObjects.count).map { NSIndexPath(forItem: $0, inSection: 0) }
-                                
-                             
                                /*
-                                    
-                                        nodeIDArray[nodeCounter] = jsonValue{nodeCounter}.string
-                                        let editorialInfos : EditorialElement = ((jsonValue as! NSDictionary].1["\(nodeIDArray[nodeCounter]]"] as! [NSDictionary]].map { EditorialElement(title: $0["title"] as! String, nodeID: $0["nid"] as! Int, timeStamp: $0["revision_timestamp"] as! Int, imageURL: $0["image_url"] as! String, author: $0["author"], issueNumber: $0["issue_int"] as! Int, volumeNumber: $0["volume_int"] as! Int, articleContent: $0["html_content"] as! String] // I am going to try to break this line down to simplify it and fix the build errors */
-                                }
-                    
-                    print(self.editorialObjects.count)
-                    
+                                nodeIDArray[nodeCounter] = jsonValue{nodeCounter}.string
+                                let editorialInfos : EditorialElement = ((jsonValue as! NSDictionary].1["\(nodeIDArray[nodeCounter]]"] as! [NSDictionary]].map { EditorialElement(title: $0["title"] as! String, nodeID: $0["nid"] as! Int, timeStamp: $0["revision_timestamp"] as! Int, imageURL: $0["image_url"] as! String, author: $0["author"], issueNumber: $0["issue_int"] as! Int, volumeNumber: $0["volume_int"] as! Int, articleContent: $0["html_content"] as! String] // I am going to try to break this line down to simplify it and fix the build errors
+                            */
+                    }
                 }
+                    
+                    /* Sorting the elements in order of newest to oldest (as the array index increases] */
+                    let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
+                    self.temporaryEditorialObjects.sortUsingDescriptors([timestampSortDescriptor])
+                    
+                    
             }
                     
                     dispatch_async(dispatch_get_main_queue()) {
+                        
+                        self.editorialObjects = self.temporaryEditorialObjects
                         self.editorialsTableView.reloadData()
                         
                         self.cellLoadingIndicator.stopAnimating()
-                        self.cellLoadingIndicator.hidesWhenStopped = true
                         
-                    }
-                    
-                    self.currentPage++
+                        self.currentPage++
+                        self.populatingEditorials = false
+
+                }
             }
         }
-            
-            
-            self.populatingEditorials = false
     }
 }
 
@@ -552,7 +554,6 @@ class EditorialsTableViewController: UITableViewController {
 /*            self.editorialsTableView!.reloadData() */
             
             self.cellLoadingIndicator.stopAnimating()
-            self.cellLoadingIndicator.hidesWhenStopped = true
             
             goldenWordsRefreshControl.endRefreshing()
             

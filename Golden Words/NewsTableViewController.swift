@@ -13,21 +13,16 @@ class NewsTableViewController: UITableViewController {
 
     let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
     
-//    // Declaring data strings for labels in NewsTableViewController
-//    
-//    var newsHeadline = [String]()
-//    var newsAuthor = [String]()
-//    var newsPublishDate = [String]()
-    
     // Hamburger button declaration
     @IBOutlet weak var menuButton:UIBarButtonItem!
 
     // Table View Outlet used for the refresh control
     @IBOutlet var newsTableView: UITableView!
     
+    var temporaryNewsObjects = NSMutableOrderedSet(capacity: 1000)
     var newsObjects = NSMutableOrderedSet(capacity: 1000)
         
-    var goldenWordsRefreshControl: UIRefreshControl! = UIRefreshControl()
+    var goldenWordsRefreshControl = UIRefreshControl()
     
     var revealViewControllerIndicator : Int = 0
     
@@ -62,6 +57,8 @@ class NewsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.cellLoadingIndicator.backgroundColor = UIColor.yellowColor()
+        self.cellLoadingIndicator.hidesWhenStopped = true
         
         // Hamburger button configuration
         if self.revealViewController() != nil {
@@ -81,7 +78,7 @@ class NewsTableViewController: UITableViewController {
         goldenWordsRefreshControl.backgroundColor = goldenWordsYellow
         goldenWordsRefreshControl.tintColor = UIColor.whiteColor()
 //        goldenWordsRefreshControl.addTarget(self, action: "handleRefresh", forControlEvents: .ValueChanged)
-        newsTableView.addSubview(goldenWordsRefreshControl!)
+        newsTableView.addSubview(goldenWordsRefreshControl)
         
         // Navigation set up
         navigationController?.setNavigationBarHidden(false, animated: true)
@@ -90,6 +87,8 @@ class NewsTableViewController: UITableViewController {
 //        loadCustomRefreshContents()
         
         populateNewsArticles()
+        
+        self.dateFormatter.dateFormat = "dd/MM/yy"
 /*
         // Formatting the date for the "last updated on..." string
         self.dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
@@ -214,7 +213,7 @@ class NewsTableViewController: UITableViewController {
     */
     
     override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        if goldenWordsRefreshControl!.refreshing {
+        if goldenWordsRefreshControl.refreshing {
             if !isAnimating {
                 holdRefreshControl()
 //                animateRefreshStep1()
@@ -265,10 +264,12 @@ class NewsTableViewController: UITableViewController {
 //        
         let row = indexPath.row
 
-        guard let cell = tableView.dequeueReusableCellWithIdentifier(newsArticleTableCellIdentifier, forIndexPath: indexPath) as? NewsTableViewCell else {
-                print ("error: newsArticleTableview cell is not of class NewsTableViewCell, we will use RandomTableViewCell instead")
-            return tableView.dequeueReusableCellWithIdentifier(newsArticleTableCellIdentifier, forIndexPath: indexPath) as! RandomTableViewCell
-        }
+//        guard let cell = tableView.dequeueReusableCellWithIdentifier(newsArticleTableCellIdentifier, forIndexPath: indexPath) as? NewsTableViewCell else {
+//                print ("error: newsArticleTableview cell is not of class NewsTableViewCell, we will use RandomTableViewCell instead")
+//            return tableView.dequeueReusableCellWithIdentifier(newsArticleTableCellIdentifier, forIndexPath: indexPath) as! RandomTableViewCell
+//        }
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier(newsArticleTableCellIdentifier, forIndexPath: indexPath) as! NewsTableViewCell
         
         if let newsObject = newsObjects.objectAtIndex(indexPath.row) as? NewsElement {
             // we just unwrapped newsObject
@@ -299,8 +300,9 @@ class NewsTableViewController: UITableViewController {
             
         } else {
             
-            
-            
+            cell.newsHeadlineLabel.text = nil
+            cell.newsAuthorLabel.text = nil
+            cell.newsPublishDateLabel.text = nil
         }
         
         /*
@@ -407,7 +409,7 @@ class NewsTableViewController: UITableViewController {
     
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
-        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.25) {
+        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.75) {
         populateNewsArticles()
         }
     }
@@ -419,22 +421,16 @@ class NewsTableViewController: UITableViewController {
         }
         populatingNewsArticles = true
         
-        self.cellLoadingIndicator.backgroundColor = UIColor.yellowColor()
         self.cellLoadingIndicator.startAnimating()
         
         Alamofire.request(GWNetworking.Router.News(self.currentPage)).responseJSON() { response in
             if let JSON = response.result.value {
-                /*
-                if response.result.error == nil {
-                */
                 
                 /* Creating objects for every single editorial is long running work, so we put that work on a background queue, to keep the app very responsive. */
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
-                    
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)) {
                     
                     /* Making an array of all the node IDs from the JSON file */
                     var nodeIDArray : [Int]
-                    
                     
                     if (JSON .isKindOfClass(NSDictionary)) {
                         
@@ -453,12 +449,13 @@ class NewsTableViewController: UITableViewController {
                                 let timeStampString = node.1["revision_timestamp"] as! String
                                 newsArticleElement.timeStamp = Int(timeStampString)!
                                 
-                                newsArticleElement.imageURL = String(node.1["image_url"])
+                                if let imageURL = node.1["image_url"] as? String {
+                                    newsArticleElement.imageURL = imageURL
+                                }
                                 
                                 if let author = node.1["author"] as? String {
                                     newsArticleElement.author = author
                                 }
-//                                newsArticleElement.author = String(node.1["author"]) as! String
                                 if let issueNumber = node.1["issue_int"] as? String {
                                     newsArticleElement.issueNumber = issueNumber
                                 }
@@ -469,46 +466,35 @@ class NewsTableViewController: UITableViewController {
                                 if let articleContent = node.1["html_content"] as? String {
                                     newsArticleElement.articleContent = articleContent
                                 }
-//                                newsArticleElement.articleContent = String(node.1["html_content"])
                                 
-                                lastItem = self.newsObjects.count
+                                if newsArticleElement.articleContent.characters.count > 40 {
+                                    lastItem = self.temporaryNewsObjects.count
+                                    self.temporaryNewsObjects.addObject(newsArticleElement)
+                                    print(newsArticleElement.nodeID)
+                                }
                                 
-                                print (newsArticleElement.nodeID)
-                                
-                                
-                                self.newsObjects.addObject(newsArticleElement)
-                                
-                                
-                                /* Sorting the elements in order of newest to oldest (as the array index increases] */
-                                let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
-                                self.newsObjects.sortUsingDescriptors([timestampSortDescriptor])
-                                
-                                let indexPaths = (lastItem..<self.newsObjects.count).map { NSIndexPath(forItem: $0, inSection: 0) }
-                                
-                                
-                                /*
-                                
-                                nodeIDArray[nodeCounter] = jsonValue{nodeCounter}.string
-                                let editorialInfos : EditorialElement = ((jsonValue as! NSDictionary].1["\(nodeIDArray[nodeCounter]]"] as! [NSDictionary]].map { EditorialElement(title: $0["title"] as! String, nodeID: $0["nid"] as! Int, timeStamp: $0["revision_timestamp"] as! Int, imageURL: $0["image_url"] as! String, author: $0["author"], issueNumber: $0["issue_int"] as! Int, volumeNumber: $0["volume_int"] as! Int, articleContent: $0["html_content"] as! String] // I am going to try to break this line down to simplify it and fix the build errors */
+                                let indexPaths = (lastItem..<self.temporaryNewsObjects.count).map { NSIndexPath(forItem: $0, inSection: 0) }
+
                             }
-                            
-                            print(self.newsObjects.count)
-                            
                         }
-                    }
+                        
+                        /* Sorting the elements in order of newest to oldest (as the array index increases] */
+                        let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
+                        self.temporaryNewsObjects.sortUsingDescriptors([timestampSortDescriptor])
+                        
+                }
                     
                     dispatch_async(dispatch_get_main_queue()) {
+                        self.newsObjects = self.temporaryNewsObjects
                         self.newsTableView.reloadData()
                         
                         self.cellLoadingIndicator.stopAnimating()
-                        self.cellLoadingIndicator.hidesWhenStopped = true
+                        self.currentPage++
+                        self.populatingNewsArticles = false
+
                     }
-                    
-                    self.currentPage++
                 }
             }
-            
-            self.populatingNewsArticles = false
         }
     }
     
@@ -543,7 +529,6 @@ class NewsTableViewController: UITableViewController {
         print(newsObjects.count)
         
         self.cellLoadingIndicator.stopAnimating()
-        self.cellLoadingIndicator.hidesWhenStopped = true
         
         /*            self.editorialsTableView!.reloadData() */
         

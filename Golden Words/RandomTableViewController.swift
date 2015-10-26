@@ -12,21 +12,14 @@ import Alamofire
 class RandomTableViewController: UITableViewController {
     
     let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
-//    
-//    // Declaring data strings for labels in RandomTableViewController
-//    
-//    var randomHeadline = [String]()
-//    var randomAuthor = [String]()
-//    var randomPublishDate = [String]()
-    
+
     // Hamburger button declaration
     @IBOutlet weak var menuButton:UIBarButtonItem!
-
-    // Refresh control variables - start
     
     // Table View Outlet used for the refresh control
     @IBOutlet var randomTableView: UITableView!
     
+    var temporaryRandomObjects = NSMutableOrderedSet(capacity: 1000)
     var randomObjects = NSMutableOrderedSet(capacity: 1000)
     
     var goldenWordsRefreshControl = UIRefreshControl()
@@ -61,6 +54,9 @@ class RandomTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.cellLoadingIndicator.backgroundColor = goldenWordsYellow
+        self.cellLoadingIndicator.hidesWhenStopped = true
         
         // Hamburger button configuration
         if self.revealViewController() != nil {
@@ -267,44 +263,48 @@ class RandomTableViewController: UITableViewController {
         
         let row = indexPath.row
 
-        guard let cell = tableView.dequeueReusableCellWithIdentifier(RandomArticleTableCellIdentifier, forIndexPath: indexPath) as? RandomTableViewCell else {
-            
-            print("error: randArticlesTableView cell is not of class RandomTableViewCell, we will use EditorialTableViewCell instead")
-            return tableView.dequeueReusableCellWithIdentifier(RandomArticleTableCellIdentifier, forIndexPath: indexPath) as! NewsTableViewCell
+//        guard let cell = tableView.dequeueReusableCellWithIdentifier(RandomArticleTableCellIdentifier, forIndexPath: indexPath) as? RandomTableViewCell else {
+//            
+//            print("error: randArticlesTableView cell is not of class RandomTableViewCell, we will use EditorialTableViewCell instead")
+//            return tableView.dequeueReusableCellWithIdentifier(RandomArticleTableCellIdentifier, forIndexPath: indexPath) as! NewsTableViewCell
+//        
+//        }
         
-        }
+        let cell = tableView.dequeueReusableCellWithIdentifier(RandomArticleTableCellIdentifier, forIndexPath: indexPath) as! RandomTableViewCell
         
         if let randomObject = randomObjects.objectAtIndex(indexPath.row) as? RandomElement {
             // we just unwrapped randomObject
             
-        let title = randomObject.title ?? "" // if randomObject.title == nil, then we return an empty string.
-        
-        let timeStampDateObject = NSDate(timeIntervalSince1970: NSTimeInterval(randomObject.timeStamp))
-        let timeStampDateString = dateFormatter.stringFromDate(timeStampDateObject)
-        
-        let author = randomObject.author ?? ""
-        
-        let issueNumber = randomObject.issueNumber ?? ""
-        let volumeNumber = randomObject.volumeNumber ?? ""
-        
-        let articleContent = randomObject.articleContent ?? ""
-        
-        let nodeID = randomObject.nodeID ?? 0
-        
-        
-        cell.randomHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
-        cell.randomHeadlineLabel.text = title
-        
-        cell.randomAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-        cell.randomAuthorLabel.text = String(author)
-        
-        cell.randomPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-        cell.randomPublishDateLabel.text = timeStampDateString
+            let title = randomObject.title ?? "" // if randomObject.title == nil, then we return an empty string.
             
+            let timeStampDateObject = NSDate(timeIntervalSince1970: NSTimeInterval(randomObject.timeStamp))
+            let timeStampDateString = dateFormatter.stringFromDate(timeStampDateObject)
+            
+            let author = randomObject.author ?? ""
+            
+            let issueNumber = randomObject.issueNumber ?? ""
+            let volumeNumber = randomObject.volumeNumber ?? ""
+            
+            let articleContent = randomObject.articleContent ?? ""
+            
+            let nodeID = randomObject.nodeID ?? 0
+            
+            
+            cell.randomHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
+            cell.randomHeadlineLabel.text = title
+            
+            cell.randomAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+            cell.randomAuthorLabel.text = author
+            
+            cell.randomPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+            cell.randomPublishDateLabel.text = timeStampDateString
+                
             
         } else {
             
-            let author = "Author"
+            cell.randomHeadlineLabel.text = nil
+            cell.randomAuthorLabel.text = nil
+            cell.randomPublishDateLabel.text = nil
             
         }
         
@@ -402,7 +402,7 @@ class RandomTableViewController: UITableViewController {
     
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
-        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.25) {
+        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.75) {
             populateRandomArticles()
         }
     }
@@ -414,22 +414,16 @@ class RandomTableViewController: UITableViewController {
         }
         populatingRandomArticles = true
         
-        self.cellLoadingIndicator.backgroundColor = UIColor.yellowColor()
         self.cellLoadingIndicator.startAnimating()
         
         Alamofire.request(GWNetworking.Router.Random(self.currentPage)).responseJSON() { response in
             if let JSON = response.result.value {
-                /*
-                if response.result.error == nil {
-                */
-                
+
                 /* Creating objects for every single editorial is long running work, so we put that work on a background queue, to keep the app very responsive. */
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
-                    
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)) {
                     
                     /* Making an array of all the node IDs from the JSON file */
                     var nodeIDArray : [Int]
-                    
                     
                     if (JSON .isKindOfClass(NSDictionary)) {
                         
@@ -448,13 +442,14 @@ class RandomTableViewController: UITableViewController {
                                 let timeStampString = node.1["revision_timestamp"] as! String
                                 randomElement.timeStamp = Int(timeStampString)!
                                 
-                                randomElement.imageURL = String(node.1["image_url"])
+                                if let imageURL = node.1["image_url"] as? String {
+                                    randomElement.imageURL = imageURL
+                                }
                                 
                                 if let author = node.1["author"] as? String {
                                     randomElement.author = author
                                 }
-//                                randomElement.author = String(node.1["author"])
-                                
+
                                 if let issueNumber = node.1["issue_int"] as? String {
                                     randomElement.issueNumber = issueNumber
                                 }
@@ -464,46 +459,33 @@ class RandomTableViewController: UITableViewController {
                                 if let articleContent = node.1["html_content"] as? String {
                                     randomElement.articleContent = articleContent
                                 }
-//                                randomElement.articleContent = String(node.1["html_content"])
                                 
-                                lastItem = self.randomObjects.count
-                                
-                                print (randomElement.nodeID)
-                                
-                                
-                                self.randomObjects.addObject(randomElement)
-                                
-                                
-                                /* Sorting the elements in order of newest to oldest (as the array index increases] */
-                                let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
-                                self.randomObjects.sortUsingDescriptors([timestampSortDescriptor])
-                                
-                                let indexPaths = (lastItem..<self.randomObjects.count).map { NSIndexPath(forItem: $0, inSection: 0) }
-                                
-                                
-                                /*
-                                
-                                nodeIDArray[nodeCounter] = jsonValue{nodeCounter}.string
-                                let editorialInfos : EditorialElement = ((jsonValue as! NSDictionary].1["\(nodeIDArray[nodeCounter]]"] as! [NSDictionary]].map { EditorialElement(title: $0["title"] as! String, nodeID: $0["nid"] as! Int, timeStamp: $0["revision_timestamp"] as! Int, imageURL: $0["image_url"] as! String, author: $0["author"], issueNumber: $0["issue_int"] as! Int, volumeNumber: $0["volume_int"] as! Int, articleContent: $0["html_content"] as! String] // I am going to try to break this line down to simplify it and fix the build errors */
+                                if randomElement.articleContent.characters.count > 40 {
+                                    lastItem = self.temporaryRandomObjects.count
+                                    self.temporaryRandomObjects.addObject(randomElement)
+                                    print(randomElement.nodeID)
+                                }
+                                let indexPaths = (lastItem..<self.temporaryRandomObjects.count).map { NSIndexPath(forItem: $0, inSection: 0) }
                             }
-                            
-                            print(self.randomObjects.count)
-                            
                         }
+                        
+                        /* Sorting the elements in order of newest to oldest (as the array index increases] */
+                        let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
+                        self.temporaryRandomObjects.sortUsingDescriptors([timestampSortDescriptor])
                     }
                     
                     dispatch_async(dispatch_get_main_queue()) {
+                        
+                        self.randomObjects = self.temporaryRandomObjects
                         self.randomTableView.reloadData()
                         
                         self.cellLoadingIndicator.stopAnimating()
-                        self.cellLoadingIndicator.hidesWhenStopped = true
+                        
+                        self.currentPage++
+                        self.populatingRandomArticles = false
                     }
-                    
-                    self.currentPage++
                 }
             }
-            
-            self.populatingRandomArticles = false
         }
     }
     

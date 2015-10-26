@@ -14,13 +14,13 @@ class CurrentIssueTableViewController: UITableViewController {
     
     let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
     
+    // Hamburger menu declaration
     @IBOutlet weak var menuButton: UIBarButtonItem!
-    
-    // Refresh control variables - start
     
     // Table View outlet used for the refresh control
     @IBOutlet var currentIssueTableView: UITableView!
     
+    var temporaryCurrentIssueObjects = NSMutableOrderedSet(capacity: 1000)
     var currentIssueObjects = NSMutableOrderedSet(capacity: 1000)
     
     var goldenWordsRefreshControl = UIRefreshControl()
@@ -60,7 +60,8 @@ class CurrentIssueTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Hamburger button configuration
+        self.cellLoadingIndicator.backgroundColor = goldenWordsYellow
+        self.cellLoadingIndicator.hidesWhenStopped = true
         
         if self.revealViewController() != nil {
             revealViewControllerIndicator = 1
@@ -251,43 +252,26 @@ class CurrentIssueTableViewController: UITableViewController {
     
         let row = indexPath.row
         
-        guard let cell = tableView.dequeueReusableCellWithIdentifier(CurrentIssueArticlesTableCellIdentifier, forIndexPath: indexPath) as? CurrentIssueArticlesTableViewCell else {
-            
-            print ("error: currentIssueTableView cell is not of class CurrentIssueArticlesTableViewCell, we will use EditorialsTableViewCell instead")
-            return tableView.dequeueReusableCellWithIdentifier(CurrentIssueArticlesTableCellIdentifier, forIndexPath: indexPath) as! EditorialsTableViewCell
-        }
-//        
+//        guard let cell = tableView.dequeueReusableCellWithIdentifier(CurrentIssueArticlesTableCellIdentifier, forIndexPath: indexPath) as? CurrentIssueArticlesTableViewCell else {
+//            
+//            print ("error: currentIssueTableView cell is not of class CurrentIssueArticlesTableViewCell, we will use EditorialsTableViewCell instead")
+//            return tableView.dequeueReusableCellWithIdentifier(CurrentIssueArticlesTableCellIdentifier, forIndexPath: indexPath) as! EditorialsTableViewCell
+//        }
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier(CurrentIssueArticlesTableCellIdentifier, forIndexPath: indexPath) as! CurrentIssueArticlesTableViewCell
+        
 //        guard currentIssueObjects.count - 1 > indexPath.row else {
 //            return cell
 //        }
         
-        let currentIssueObject = currentIssueObjects.objectAtIndex(indexPath.row) as! IssueElement
+        if let currentIssueObject = currentIssueObjects.objectAtIndex(indexPath.row) as? IssueElement {
             
             let title = currentIssueObject.title ?? ""
             
             let timeStampDateObject = NSDate(timeIntervalSince1970: NSTimeInterval(currentIssueObject.timeStamp))
             let timeStampDateString = dateFormatter.stringFromDate(timeStampDateObject) ?? "Date unknown"
-
-//            guard let author = currentIssueObject.author as? String else {
-//                print("author not found")
-//                return }
-
-//            guard let author = currentIssueObject.author as? String else {
-//                return cell
-//            }
-//            
-//            let author = currentIssueObject.author ?? ""
-
-        if let author = currentIssueObject.author {
-            
-            cell.currentIssueArticlesAuthorLabel!.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-            cell.currentIssueArticlesAuthorLabel!.text = author
-            
-        }
-//        else {
-////            return cell
-//        }
         
+            let author = currentIssueObject.author ?? ""
             
             let issueNumber = currentIssueObject.issueNumber ?? ""
             let volumeNumber = currentIssueObject.volumeNumber ?? ""
@@ -295,11 +279,13 @@ class CurrentIssueTableViewController: UITableViewController {
             let articleContent = currentIssueObject.articleContent ?? ""
             
             let nodeID = currentIssueObject.nodeID ?? 0
-            
+        
+        
             cell.currentIssueArticlesHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
             cell.currentIssueArticlesHeadlineLabel.text = title
             
-        
+            cell.currentIssueArticlesAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+            cell.currentIssueArticlesAuthorLabel.text = author
             
             cell.currentIssueArticlesPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
             cell.currentIssueArticlesPublishDateLabel.text = timeStampDateString
@@ -308,6 +294,7 @@ class CurrentIssueTableViewController: UITableViewController {
                 
                 cell.userInteractionEnabled = false
                 
+                // The URL isn't being obtained properly because the row is not right. I should sort the array first and then get the URL from row 0.
                 let imageURL = (currentIssueObjects.objectAtIndex(row) as! IssueElement).imageURL
                 
                 cell.currentIssueArticlesHeadlineLabel.textColor = UIColor.clearColor()
@@ -316,36 +303,35 @@ class CurrentIssueTableViewController: UITableViewController {
                 
                 cell.request?.cancel()
                 
-                if let image = self.imageCache.objectForKey(imageURL!) as? UIImage {
+                if let image = self.imageCache.objectForKey(imageURL) as? UIImage {
                     cell.currentIssueArticlesBackgroundImageView.image = image
                 } else {
                     cell.currentIssueArticlesBackgroundImageView.image = UIImage(named: "reveal Image")
-                    cell.request = Alamofire.request(.GET, imageURL!).responseImage() { response in
+                    cell.request = Alamofire.request(.GET, imageURL).responseImage() { response in
                         if response.result.error == nil && response.result.value != nil {
-                            
                             self.imageCache.setObject(response.result.value!, forKey: response.request!.URLString)
-                            
                             cell.currentIssueArticlesBackgroundImageView.image = response.result.value
                         } else {
-                            
+            
                         }
-                        
                     }
                 }
-                
-//                cell.currentIssueArticlesBackgroundImageView.image = currentIssueObject.
                 cell.currentIssueArticlesBackgroundImageView.hidden = false
             }
-            
             else {
-                
-//                cell.currentIssueArticlesBackgroundImageView.image = currentIssueObject.
                 cell.currentIssueArticlesBackgroundImageView.hidden = true
-                
-            }
+        }
         
-        return cell
+    
+    } else {
+            
+            cell.currentIssueArticlesHeadlineLabel.text = nil
+            cell.currentIssueArticlesAuthorLabel.text = nil
+            cell.currentIssueArticlesPublishDateLabel.text = nil
+            
     }
+        return cell
+}
         
         
 //        switch(row) {
@@ -531,13 +517,12 @@ class CurrentIssueTableViewController: UITableViewController {
         
         populatingCurrentIssue = true
         
-        self.cellLoadingIndicator.backgroundColor = goldenWordsYellow
         self.cellLoadingIndicator.startAnimating()
         
         Alamofire.request(GWNetworking.Router.Issue).responseJSON() { response in
             if let JSON = response.result.value {
                 
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0)) {
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)) {
                     
                     var nodeIDArray : [Int]
                     
@@ -558,7 +543,9 @@ class CurrentIssueTableViewController: UITableViewController {
                                 let timeStampString = node.1["revision_timestamp"] as! String
                                 issueElement.timeStamp = Int(timeStampString)!
                                 
-                                issueElement.imageURL = String(node.1["image_url"])
+                                if let imageURL = node.1["image_url"] as? String {
+                                    issueElement.imageURL = imageURL
+                                }
                                 
                                 if let author = node.1["author"] as? String {
                                     issueElement.author = author
@@ -574,48 +561,42 @@ class CurrentIssueTableViewController: UITableViewController {
                                 if let articleContent = node.1["html_content"] as? String {
                                     issueElement.articleContent = articleContent
                                 }
-//                                issueElement.articleContent = String(node.1["html_content"])
+//
+                                if let coverImageInteger = node.1["cover_image"] as? String {
+                                    issueElement.coverImageInteger = coverImageInteger
+                                }
+//                                issueElement.coverImageInteger = String(node.1["cover_image"]) // addition specific to the Current Issue View Controller
                                 
-                                issueElement.coverImageInteger = String(node.1["cover_image"]) // addition specific to the Current Issue View Controller
-                                
-                                lastItem = self.currentIssueObjects.count
+                                if issueElement.articleContent.characters.count > 40 {
+                                    lastItem = self.temporaryCurrentIssueObjects.count
+                                    self.temporaryCurrentIssueObjects.addObject(issueElement)
+                                    print(issueElement.nodeID)
+                                }
 
-                                
-//                              print(issueElement.nodeID)
-                                
-//                                if issueElement.articleContent.characters.count > 40 {
-//                                    self.currentIssueObjects.addObject(issueElement)
-//                                    print(issueElement.nodeID)
-//                                }
-                                
-                                self.currentIssueObjects.addObject(issueElement)
-                                    
-                                // Sorting with decreasing timestamp from top to bottom.
-                                let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
-                                self.currentIssueObjects.sortUsingDescriptors([timestampSortDescriptor])
-                            
-                                // Placing the object with coverImage
-                                
-                                let coverImageSortDescriptor = NSSortDescriptor(key: "coverImageInteger", ascending: false)
-                                self.currentIssueObjects.sortUsingDescriptors([coverImageSortDescriptor])
-                                
-                                let indexPaths = (lastItem..<self.currentIssueObjects.count).map {
+                                let indexPaths = (lastItem..<self.temporaryCurrentIssueObjects.count).map {
                                     NSIndexPath(forItem: $0, inSection: 0) }
                                 }
                             }
-                        }
                         
+                            let coverImageSortDescriptor = NSSortDescriptor(key: "coverImageInteger", ascending: false)
+                            self.temporaryCurrentIssueObjects.sortUsingDescriptors([coverImageSortDescriptor])
+                        
+                            // Sorting with decreasing timestamp from top to bottom.
+                            let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
+                            self.temporaryCurrentIssueObjects.sortUsingDescriptors([timestampSortDescriptor])
+                            
+                        }
+                    
                     dispatch_async(dispatch_get_main_queue()) {
+                        self.currentIssueObjects = self.temporaryCurrentIssueObjects
                         self.currentIssueTableView.reloadData()
                 
                         self.cellLoadingIndicator.stopAnimating()
-                        self.cellLoadingIndicator.hidesWhenStopped = true
                         
-                    }
+                        self.populatingCurrentIssue = false
                 }
             }
-            
-            self.populatingCurrentIssue = false
+        }
     }
 }
    
@@ -630,10 +611,7 @@ class CurrentIssueTableViewController: UITableViewController {
         
         populateCurrentIssue()
         
-        print(currentIssueObjects.count)
-        
         self.cellLoadingIndicator.stopAnimating()
-        self.cellLoadingIndicator.hidesWhenStopped = true
         
         goldenWordsRefreshControl.endRefreshing()
         
