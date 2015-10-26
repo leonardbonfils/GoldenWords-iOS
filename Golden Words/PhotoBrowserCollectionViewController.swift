@@ -464,8 +464,8 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
                             self.pictureObjects.sortUsingDescriptors([timeStampSortDescriptor])
                             let indexPaths = (lastItem..<self.pictureObjects.count).map { NSIndexPath(forItem: $0, inSection: 0) }
                         }
-                        print(self.pictureObjects.count)
-                        print(self.pictureObjects)
+                        // print(self.pictureObjects.count)
+                        // print(self.pictureObjects)
                     }
                 }
                 dispatch_async(dispatch_get_main_queue()) {

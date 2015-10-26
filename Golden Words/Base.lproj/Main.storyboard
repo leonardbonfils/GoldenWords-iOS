@@ -1625,87 +1625,43 @@
                                                 </mask>
                                             </variation>
                                         </label>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="sHj-v1-xra">
-                                            <rect key="frame" x="0.0" y="8" width="600" height="117"/>
-                                            <animations/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="117" id="Zhj-zA-ZiM"/>
-                                                <constraint firstAttribute="width" constant="400" id="ozD-3c-X54"/>
-                                            </constraints>
-                                            <variation key="default">
-                                                <mask key="constraints">
-                                                    <exclude reference="Zhj-zA-ZiM"/>
-                                                    <exclude reference="ozD-3c-X54"/>
-                                                </mask>
-                                            </variation>
-                                            <variation key="widthClass=compact">
-                                                <mask key="constraints">
-                                                    <include reference="Zhj-zA-ZiM"/>
-                                                    <include reference="ozD-3c-X54"/>
-                                                </mask>
-                                            </variation>
-                                        </imageView>
                                     </subviews>
                                     <animations/>
                                     <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="sHj-v1-xra" secondAttribute="trailing" id="0DA-nC-N5i"/>
                                         <constraint firstItem="u6u-Xt-9Dg" firstAttribute="top" secondItem="7Oq-hi-AN9" secondAttribute="bottom" constant="8" id="3A7-sP-0RC"/>
-                                        <constraint firstItem="sHj-v1-xra" firstAttribute="centerY" secondItem="AdY-hd-yIk" secondAttribute="centerY" constant="4" id="7Eg-iW-K5e"/>
-                                        <constraint firstItem="sHj-v1-xra" firstAttribute="top" secondItem="AdY-hd-yIk" secondAttribute="topMargin" id="7cV-oP-iBG"/>
                                         <constraint firstItem="Rg5-Lj-ars" firstAttribute="top" secondItem="7Oq-hi-AN9" secondAttribute="bottom" constant="8" symbolic="YES" id="8KX-zO-Ijp"/>
                                         <constraint firstItem="u6u-Xt-9Dg" firstAttribute="trailing" secondItem="7Oq-hi-AN9" secondAttribute="trailing" id="9Au-19-Jft"/>
-                                        <constraint firstItem="sHj-v1-xra" firstAttribute="leading" secondItem="AdY-hd-yIk" secondAttribute="leading" id="AVb-Lj-iOd"/>
-                                        <constraint firstItem="sHj-v1-xra" firstAttribute="top" secondItem="AdY-hd-yIk" secondAttribute="top" constant="8" id="Cee-mB-tRo"/>
                                         <constraint firstItem="u6u-Xt-9Dg" firstAttribute="leading" secondItem="Rg5-Lj-ars" secondAttribute="trailing" constant="36" id="GMV-sU-fjg"/>
-                                        <constraint firstAttribute="trailing" secondItem="sHj-v1-xra" secondAttribute="trailing" id="Ltg-hc-Lkh"/>
-                                        <constraint firstItem="u6u-Xt-9Dg" firstAttribute="leading" secondItem="sHj-v1-xra" secondAttribute="trailing" constant="-99" id="M8S-Ow-0Of"/>
                                         <constraint firstItem="u6u-Xt-9Dg" firstAttribute="baseline" secondItem="Rg5-Lj-ars" secondAttribute="firstBaseline" id="MUc-8o-61O"/>
                                         <constraint firstItem="u6u-Xt-9Dg" firstAttribute="trailing" secondItem="AdY-hd-yIk" secondAttribute="trailingMargin" id="PJY-US-6g8"/>
                                         <constraint firstAttribute="bottomMargin" secondItem="Rg5-Lj-ars" secondAttribute="bottom" id="Rff-Ni-jgm"/>
                                         <constraint firstItem="u6u-Xt-9Dg" firstAttribute="baseline" secondItem="Rg5-Lj-ars" secondAttribute="baseline" id="T3o-bd-Vfk"/>
                                         <constraint firstItem="7Oq-hi-AN9" firstAttribute="leading" secondItem="AdY-hd-yIk" secondAttribute="leadingMargin" constant="18" id="TEB-H4-G8t"/>
                                         <constraint firstItem="7Oq-hi-AN9" firstAttribute="leading" secondItem="AdY-hd-yIk" secondAttribute="leading" constant="8" id="VKh-NS-Xya"/>
-                                        <constraint firstItem="7Oq-hi-AN9" firstAttribute="centerX" secondItem="sHj-v1-xra" secondAttribute="centerX" id="VNT-yQ-FEo"/>
                                         <constraint firstItem="Rg5-Lj-ars" firstAttribute="leading" secondItem="7Oq-hi-AN9" secondAttribute="leading" id="VU7-mH-91R"/>
                                         <constraint firstItem="u6u-Xt-9Dg" firstAttribute="leading" secondItem="Rg5-Lj-ars" secondAttribute="trailing" constant="8" id="Wyp-4x-PWm"/>
                                         <constraint firstItem="Rg5-Lj-ars" firstAttribute="leading" secondItem="AdY-hd-yIk" secondAttribute="leading" constant="8" id="crA-jA-eNV"/>
                                         <constraint firstItem="7Oq-hi-AN9" firstAttribute="top" secondItem="AdY-hd-yIk" secondAttribute="topMargin" constant="6" id="jSs-c8-7P8"/>
                                         <constraint firstItem="7Oq-hi-AN9" firstAttribute="top" secondItem="AdY-hd-yIk" secondAttribute="top" constant="14" id="qvr-nC-fFQ"/>
                                         <constraint firstItem="Rg5-Lj-ars" firstAttribute="top" secondItem="7Oq-hi-AN9" secondAttribute="bottom" constant="8" id="sdd-n3-RG1"/>
-                                        <constraint firstItem="sHj-v1-xra" firstAttribute="leading" secondItem="AdY-hd-yIk" secondAttribute="leading" id="tgq-Rw-B6T"/>
-                                        <constraint firstAttribute="bottom" secondItem="sHj-v1-xra" secondAttribute="bottom" id="tuy-8T-te3"/>
                                         <constraint firstAttribute="trailing" secondItem="7Oq-hi-AN9" secondAttribute="trailing" constant="8" id="xHx-hj-LyI"/>
                                     </constraints>
                                     <variation key="default">
                                         <mask key="constraints">
-                                            <exclude reference="AVb-Lj-iOd"/>
-                                            <exclude reference="Cee-mB-tRo"/>
-                                            <exclude reference="Ltg-hc-Lkh"/>
-                                            <exclude reference="tuy-8T-te3"/>
                                             <exclude reference="VKh-NS-Xya"/>
                                             <exclude reference="qvr-nC-fFQ"/>
                                             <exclude reference="xHx-hj-LyI"/>
                                             <exclude reference="crA-jA-eNV"/>
                                             <exclude reference="sdd-n3-RG1"/>
                                             <exclude reference="3A7-sP-0RC"/>
-                                            <exclude reference="M8S-Ow-0Of"/>
                                             <exclude reference="PJY-US-6g8"/>
                                             <exclude reference="Wyp-4x-PWm"/>
                                         </mask>
                                     </variation>
                                     <variation key="widthClass=compact">
                                         <mask key="constraints">
-                                            <exclude reference="0DA-nC-N5i"/>
-                                            <exclude reference="7Eg-iW-K5e"/>
-                                            <exclude reference="7cV-oP-iBG"/>
-                                            <include reference="AVb-Lj-iOd"/>
-                                            <include reference="Cee-mB-tRo"/>
-                                            <include reference="Ltg-hc-Lkh"/>
-                                            <exclude reference="tgq-Rw-B6T"/>
-                                            <include reference="tuy-8T-te3"/>
                                             <exclude reference="TEB-H4-G8t"/>
                                             <include reference="VKh-NS-Xya"/>
-                                            <exclude reference="VNT-yQ-FEo"/>
                                             <exclude reference="jSs-c8-7P8"/>
                                             <include reference="qvr-nC-fFQ"/>
                                             <include reference="xHx-hj-LyI"/>
@@ -1717,7 +1673,6 @@
                                             <include reference="3A7-sP-0RC"/>
                                             <exclude reference="9Au-19-Jft"/>
                                             <exclude reference="GMV-sU-fjg"/>
-                                            <include reference="M8S-Ow-0Of"/>
                                             <exclude reference="MUc-8o-61O"/>
                                             <include reference="PJY-US-6g8"/>
                                             <exclude reference="T3o-bd-Vfk"/>
@@ -1728,7 +1683,6 @@
                                 <animations/>
                                 <connections>
                                     <outlet property="currentIssueArticlesAuthorLabel" destination="Rg5-Lj-ars" id="tyK-fq-8Aw"/>
-                                    <outlet property="currentIssueArticlesBackgroundImageView" destination="sHj-v1-xra" id="nyL-QJ-Yfz"/>
                                     <outlet property="currentIssueArticlesHeadlineLabel" destination="7Oq-hi-AN9" id="Kpq-sT-ntd"/>
                                     <outlet property="currentIssueArticlesPublishDateLabel" destination="u6u-Xt-9Dg" id="wm8-2S-QR9"/>
                                     <segue destination="wD5-kF-59X" kind="show" identifier="ShowCurrentIssueArticleDetail" id="2th-9K-WVi"/>
@@ -2589,7 +2543,7 @@
         <image name="news" width="128" height="128"/>
         <image name="random" width="128" height="128"/>
         <image name="reveal Image" width="1553" height="832"/>
-        <image name="reveal-icon" width="27" height="27"/>
+        <image name="reveal-icon" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="EvQ-OT-TRV"/>

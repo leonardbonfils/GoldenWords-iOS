@@ -289,13 +289,13 @@ class NewsTableViewController: UITableViewController {
             let nodeID = newsObject.nodeID ?? 0
             
             
-            cell.newsHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
+//            cell.newsHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
             cell.newsHeadlineLabel.text = title
             
-            cell.newsAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+//            cell.newsAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
             cell.newsAuthorLabel.text = author
             
-            cell.newsPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+//            cell.newsPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
             cell.newsPublishDateLabel.text = timeStampDateString
             
         } else {
@@ -441,7 +441,7 @@ class NewsTableViewController: UITableViewController {
                             
                             self.nodeIDArray.addObject(nodeIDValue)
                             
-                            if let newsArticleElement : NewsElement = NewsElement(title: "Could not retrieve title", nodeID: 0, timeStamp: 0, imageURL: "init", author: "Author not found", issueNumber: "Issue # error", volumeNumber: "Volume # error", articleContent: "Could not retrieve article content") {
+                            if let newsArticleElement : NewsElement = NewsElement(title: "Just another Golden Words article", nodeID: 0, timeStamp: 0, imageURL: "init", author: "Staff", issueNumber: "Issue # error", volumeNumber: "Volume # error", articleContent: "Could not retrieve article content") {
                                 
                                 newsArticleElement.title = node.1["title"] as! String
                                 newsArticleElement.nodeID = Int(nodeIDValue)!
@@ -470,7 +470,7 @@ class NewsTableViewController: UITableViewController {
                                 if newsArticleElement.articleContent.characters.count > 40 {
                                     lastItem = self.temporaryNewsObjects.count
                                     self.temporaryNewsObjects.addObject(newsArticleElement)
-                                    print(newsArticleElement.nodeID)
+                                    // print(newsArticleElement.nodeID)
                                 }
                                 
                                 let indexPaths = (lastItem..<self.temporaryNewsObjects.count).map { NSIndexPath(forItem: $0, inSection: 0) }
@@ -526,7 +526,7 @@ class NewsTableViewController: UITableViewController {
         
         populateNewsArticles()
         
-        print(newsObjects.count)
+        // print(newsObjects.count)
         
         self.cellLoadingIndicator.stopAnimating()
         

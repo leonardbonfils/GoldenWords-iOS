@@ -91,7 +91,7 @@ class MenuController: UITableViewController {
     func cellTappedFiveTimes(gesture : UIGestureRecognizer) {
         
         if let mainIconTableViewCell = gesture.view as? UITableViewCell {
-            print("Image tapped 5 times")
+            // print("Image tapped 5 times")
             
             // Producing an alert view to notify the user of the easter egg
             var alertView = UIAlertView()

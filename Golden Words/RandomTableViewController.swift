@@ -290,13 +290,13 @@ class RandomTableViewController: UITableViewController {
             let nodeID = randomObject.nodeID ?? 0
             
             
-            cell.randomHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
+//            cell.randomHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
             cell.randomHeadlineLabel.text = title
             
-            cell.randomAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+//            cell.randomAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
             cell.randomAuthorLabel.text = author
             
-            cell.randomPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+//            cell.randomPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
             cell.randomPublishDateLabel.text = timeStampDateString
                 
             
@@ -434,7 +434,7 @@ class RandomTableViewController: UITableViewController {
                             
                             self.nodeIDArray.addObject(nodeIDValue)
                             
-                            if let randomElement : RandomElement = RandomElement(title: "Could not retrieve title", nodeID: 0, timeStamp: 0, imageURL: "init", author: "Author not found", issueNumber: "Issue # error", volumeNumber: "Volume # error", articleContent: "Could not retrieve article content") {
+                            if let randomElement : RandomElement = RandomElement(title: "Just another Golden Words article", nodeID: 0, timeStamp: 0, imageURL: "init", author: "Staff", issueNumber: "Issue # error", volumeNumber: "Volume # error", articleContent: "Could not retrieve article content") {
                                 
                                 randomElement.title = node.1["title"] as! String
                                 randomElement.nodeID = Int(nodeIDValue)!
@@ -463,7 +463,7 @@ class RandomTableViewController: UITableViewController {
                                 if randomElement.articleContent.characters.count > 40 {
                                     lastItem = self.temporaryRandomObjects.count
                                     self.temporaryRandomObjects.addObject(randomElement)
-                                    print(randomElement.nodeID)
+                                    // print(randomElement.nodeID)
                                 }
                                 let indexPaths = (lastItem..<self.temporaryRandomObjects.count).map { NSIndexPath(forItem: $0, inSection: 0) }
                             }
@@ -517,7 +517,7 @@ class RandomTableViewController: UITableViewController {
         self.populatingRandomArticles = false
         populateRandomArticles()
         
-        print(randomObjects.count)
+        // print(randomObjects.count)
         
         self.cellLoadingIndicator.stopAnimating()
         self.cellLoadingIndicator.hidesWhenStopped = true

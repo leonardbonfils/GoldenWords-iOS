@@ -291,13 +291,13 @@ class EditorialsTableViewController: UITableViewController {
             let nodeID = editorialObject.nodeID ?? 0
             
             
-            cell.editorialHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
+//            cell.editorialHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
             cell.editorialHeadlineLabel.text = title
             
-            cell.editorialAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+//            cell.editorialAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
             cell.editorialAuthorLabel.text = author
             
-            cell.editorialPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+//            cell.editorialPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
             cell.editorialPublishDateLabel.text = timeStampDateString
             
         } else {
@@ -459,7 +459,7 @@ class EditorialsTableViewController: UITableViewController {
                         
                         self.nodeIDArray.addObject(nodeIDValue)
                         
-                        if let editorialElement : EditorialElement = EditorialElement(title: "Could not retrieve title", nodeID: 0, timeStamp: 0, imageURL: "init", author: "Author not found", issueNumber: "Issue # error", volumeNumber: "Volume # error", articleContent: "Could not retrieve article content") {
+                        if let editorialElement : EditorialElement = EditorialElement(title: "Just another Golden Words article", nodeID: 0, timeStamp: 0, imageURL: "init", author: "Staff", issueNumber: "Issue # error", volumeNumber: "Volume # error", articleContent: "Could not retrieve article content") {
                         
                                 editorialElement.title = node.1["title"] as! String
                                 editorialElement.nodeID = Int(nodeIDValue)!
@@ -489,7 +489,7 @@ class EditorialsTableViewController: UITableViewController {
                             if editorialElement.articleContent.characters.count > 40 {
                                 lastItem = self.temporaryEditorialObjects.count
                                 self.temporaryEditorialObjects.addObject(editorialElement)
-                                print(editorialElement.nodeID)
+                                // print(editorialElement.nodeID)
                             }
                                     
                             let indexPaths = (lastItem..<self.temporaryEditorialObjects.count).map { NSIndexPath(forItem: $0, inSection: 0) }

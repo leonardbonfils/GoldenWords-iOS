@@ -253,7 +253,7 @@ class CurrentIssueTableViewController: UITableViewController {
         let row = indexPath.row
         
         let cell = tableView.dequeueReusableCellWithIdentifier(CurrentIssueArticlesTableCellIdentifier, forIndexPath: indexPath) as! CurrentIssueArticlesTableViewCell
-        
+                
         if let currentIssueObject = currentIssueObjects.objectAtIndex(indexPath.row) as? IssueElement {
             
             let title = currentIssueObject.title ?? ""
@@ -271,15 +271,16 @@ class CurrentIssueTableViewController: UITableViewController {
             let nodeID = currentIssueObject.nodeID ?? 0
         
         
-            cell.currentIssueArticlesHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
+//            cell.currentIssueArticlesHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
             cell.currentIssueArticlesHeadlineLabel.text = title
             
-            cell.currentIssueArticlesAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+//            cell.currentIssueArticlesAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
             cell.currentIssueArticlesAuthorLabel.text = author
             
-            cell.currentIssueArticlesPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
+//            cell.currentIssueArticlesPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
             cell.currentIssueArticlesPublishDateLabel.text = timeStampDateString
             
+            /*
             if row == 0 {
                 
                 cell.userInteractionEnabled = false
@@ -311,7 +312,7 @@ class CurrentIssueTableViewController: UITableViewController {
             else {
                 cell.currentIssueArticlesBackgroundImageView.hidden = true
         }
-        
+        */
     
     } else {
             
@@ -525,7 +526,7 @@ class CurrentIssueTableViewController: UITableViewController {
                             
                             self.nodeIDArray.addObject(nodeIDValue)
                             
-                            if let issueElement : IssueElement = IssueElement(title: "Could not retrieve title", nodeID: 0, timeStamp: 0, imageURL: "init", author: "Author not found", issueNumber: "Issue # error", volumeNumber: "Volume # error", articleContent: "Could not retrieve article content", coverImageInteger: "init", coverImage: UIImage()) {
+                            if let issueElement : IssueElement = IssueElement(title: "Just another Golden Words article", nodeID: 0, timeStamp: 0, imageURL: "init", author: "Staff", issueNumber: "Issue # error", volumeNumber: "Volume # error", articleContent: "Could not retrieve article content", coverImageInteger: "init", coverImage: UIImage()) {
                                 
                                 issueElement.title = node.1["title"] as! String
                                 issueElement.nodeID = Int(nodeIDValue)!
@@ -552,15 +553,15 @@ class CurrentIssueTableViewController: UITableViewController {
                                     issueElement.articleContent = articleContent
                                 }
 //
-                                if let coverImageInteger = node.1["cover_image"] as? String {
-                                    issueElement.coverImageInteger = coverImageInteger
-                                }
+//                                if let coverImageInteger = node.1["cover_image"] as? String {
+//                                    issueElement.coverImageInteger = coverImageInteger
+//                                }
 //                                issueElement.coverImageInteger = String(node.1["cover_image"]) // addition specific to the Current Issue View Controller
                                 
                                 if issueElement.articleContent.characters.count > 40 {
                                     lastItem = self.temporaryCurrentIssueObjects.count
                                     self.temporaryCurrentIssueObjects.addObject(issueElement)
-                                    print(issueElement.nodeID)
+                                    // print(issueElement.nodeID)
                                 }
 
                                 let indexPaths = (lastItem..<self.temporaryCurrentIssueObjects.count).map {
@@ -568,8 +569,8 @@ class CurrentIssueTableViewController: UITableViewController {
                                 }
                             }
                         
-                            let coverImageSortDescriptor = NSSortDescriptor(key: "coverImageInteger", ascending: false)
-                            self.temporaryCurrentIssueObjects.sortUsingDescriptors([coverImageSortDescriptor])
+//                            let coverImageSortDescriptor = NSSortDescriptor(key: "coverImageInteger", ascending: false)
+//                            self.temporaryCurrentIssueObjects.sortUsingDescriptors([coverImageSortDescriptor])
                         
                             // Sorting with decreasing timestamp from top to bottom.
                             let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
