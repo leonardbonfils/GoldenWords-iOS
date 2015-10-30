@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 import AlamofireImage
 
-class CurrentIssueTableViewController: UITableViewController {
+class CurrentIssueTableViewController: UITableViewController, UIViewControllerPreviewingDelegate {
     
     let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
     
@@ -19,6 +19,9 @@ class CurrentIssueTableViewController: UITableViewController {
     
     // Table View outlet used for the refresh control
     @IBOutlet var currentIssueTableView: UITableView!
+    
+    // Volume # - Issue # header view label
+    @IBOutlet weak var headerVolumeAndIssueLabel: UILabel!
     
     var temporaryCurrentIssueObjects = NSMutableOrderedSet(capacity: 1000)
     var currentIssueObjects = NSMutableOrderedSet(capacity: 1000)
@@ -100,7 +103,15 @@ class CurrentIssueTableViewController: UITableViewController {
         self.cellLoadingIndicator.center = indicatorCenter
         self.currentIssueTableView.addSubview(cellLoadingIndicator)
         self.currentIssueTableView.bringSubviewToFront(cellLoadingIndicator)
-//        self.cellLoadingIndicator.
+        
+        // Checking for 3D Touch Support
+        if #available(iOS 9.0, *) {
+            if (traitCollection.forceTouchCapability == .Available){
+                registerForPreviewingWithDelegate(self, sourceView: view)
+            }
+        } else {
+            // Fallback on earlier versions
+        }
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -246,7 +257,6 @@ class CurrentIssueTableViewController: UITableViewController {
         
         return (currentIssueObjects.count)
     }
-
     
     override func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell {
     
@@ -278,7 +288,13 @@ class CurrentIssueTableViewController: UITableViewController {
             cell.currentIssueArticlesAuthorLabel.text = author
             
 //            cell.currentIssueArticlesPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-            cell.currentIssueArticlesPublishDateLabel.text = timeStampDateString
+//            cell.currentIssueArticlesPublishDateLabel.text = timeStampDateString
+            
+            // This "if" statement serves the sole purpose of only updating the label's text once.
+            if row == 0 {
+                let firstElementInIssue = currentIssueObjects.objectAtIndex(0) as! IssueElement
+                headerVolumeAndIssueLabel.text = "Volume \(firstElementInIssue.volumeNumber) - Issue \(firstElementInIssue.issueNumber)"
+            }
             
             /*
             if row == 0 {
@@ -318,11 +334,57 @@ class CurrentIssueTableViewController: UITableViewController {
             
             cell.currentIssueArticlesHeadlineLabel.text = nil
             cell.currentIssueArticlesAuthorLabel.text = nil
-            cell.currentIssueArticlesPublishDateLabel.text = nil
+//            cell.currentIssueArticlesPublishDateLabel.text = nil
             
     }
         return cell
 }
+    
+    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        
+        guard let indexPath = tableView?.indexPathForRowAtPoint(location) else { return nil }
+        
+        guard let cell = tableView?.cellForRowAtIndexPath(indexPath) else { return nil }
+        
+        guard let detailViewController = storyboard?.instantiateViewControllerWithIdentifier("CurrentIssueDetailViewControllerIdentifier") as? CurrentIssueDetailViewController else { return nil }
+        
+        if let currentIssueObject = currentIssueObjects.objectAtIndex(indexPath.row) as? IssueElement {
+            
+            let title = currentIssueObject.title ?? ""
+            
+            let author = currentIssueObject.author ?? ""
+            
+            let articleContent = currentIssueObject.articleContent ?? ""
+    
+            let currentIssueHeadlineFor3DTouch = title
+            let currentIssueAuthorFor3DTouch = author
+            let currentIssueArticleContentFor3DTouch = articleContent
+            
+            detailViewController.currentIssueArticleTitleThroughSegue = currentIssueHeadlineFor3DTouch
+            detailViewController.currentIssueAuthorThroughSegue = currentIssueAuthorFor3DTouch
+            detailViewController.currentIssueArticleContentThroughSegue = currentIssueArticleContentFor3DTouch
+            
+            detailViewController.preferredContentSize = CGSize(width: 0.0, height: 600)
+            
+            if #available(iOS 9.0, *) {
+                previewingContext.sourceRect = cell.frame
+            } else {
+                // Fallback on earlier versions
+            }
+            
+        }
+        
+        return detailViewController
+
+    }
+    
+    
+    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
+        
+        showViewController(viewControllerToCommit, sender: self)
+    }
+    
+    
         
         
 //        switch(row) {

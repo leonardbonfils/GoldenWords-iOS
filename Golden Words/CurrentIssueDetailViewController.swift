@@ -63,6 +63,19 @@ class CurrentIssueDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+
+    @available(iOS 9.0, *)
+    override func previewActionItems() -> [UIPreviewActionItem] {
+        
+        let saveArticleAction = UIPreviewAction(title: "Save Article", style: .Default) { (action, viewController) -> Void in
+            /* Save the article to the device's storage permanently */
+            print("You saved Article \(self.currentIssueArticleContentThroughSegue)")
+            }
+        
+        return [saveArticleAction]
+        
+    }
+    
     func handleSwipes(sender:UISwipeGestureRecognizer) {
         
         if (sender.direction == .Left) {

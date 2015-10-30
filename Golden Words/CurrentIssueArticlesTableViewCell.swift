@@ -13,7 +13,7 @@ class CurrentIssueArticlesTableViewCell: UITableViewCell {
     
     @IBOutlet weak var currentIssueArticlesHeadlineLabel: UILabel!
     @IBOutlet weak var currentIssueArticlesAuthorLabel: UILabel!
-    @IBOutlet weak var currentIssueArticlesPublishDateLabel: UILabel!
+//    @IBOutlet weak var currentIssueArticlesPublishDateLabel: UILabel!
     @IBOutlet weak var currentIssueArticlesBackgroundImageView: UIImageView!
     var request: Alamofire.Request?
     
@@ -25,7 +25,7 @@ class CurrentIssueArticlesTableViewCell: UITableViewCell {
     func addSubviews(view: UIView) {
         addSubview(currentIssueArticlesHeadlineLabel)
         addSubview(currentIssueArticlesAuthorLabel)
-        addSubview(currentIssueArticlesPublishDateLabel)
+//        addSubview(currentIssueArticlesPublishDateLabel)
         addSubview(currentIssueArticlesBackgroundImageView)
         
         bringSubviewToFront(currentIssueArticlesBackgroundImageView)
