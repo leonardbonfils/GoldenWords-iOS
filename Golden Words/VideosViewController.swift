@@ -8,22 +8,27 @@
 
 
 import UIKit
-//import YouTubePlayer
+import YouTubePlayer
+import Alamofire
 
 class VideosViewController: UITableViewController {
     
     let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
     
-    var videoHeadline = [String]()
-    var videoPublishDate = [String]()
-    
-    @IBOutlet var videosTableView: UITableView!
-    
+    // Hamburger button declaration
     @IBOutlet weak var menuButton: UIBarButtonItem!
     
-    // Variables for refresh control - start
+    // Table View Outlet used for the refresh control
+    @IBOutlet var videosTableView: UITableView!
+
+    var temporaryVideoObjects = NSMutableOrderedSet(capacity: 1000)
+    var videoObjects = NSMutableOrderedSet(capacity: 1000)
+    
+    var goldenWordsRefreshControl = UIRefreshControl()
     
     var revealViewControllerIndicator : Int = 0
+    
+    let imageCache = NSCache()
     
     var customView: UIView!
     
@@ -37,11 +42,25 @@ class VideosViewController: UITableViewController {
     
     var timer : NSTimer!
     
+    var populatingVideos = false
+    
+    var currentPage = 0
+    
+    let VideoTableCellIdentifier = "VideoTableCellIdentifier"
+    
+    var dateFormatter = NSDateFormatter()
+    
+    var nodeIDArray = NSMutableArray()
+    
+    var timeStampDateString : String!
+    
+    var cellLoadingIndicator = UIActivityIndicatorView()
+    
     // Variables for refresh control - end
     
     override func viewDidLoad() {
         super.viewDidLoad()
-                
+
         // Hamburger button configuration
         if self.revealViewController() != nil {
             menuButton.target = self.revealViewController()
@@ -49,28 +68,51 @@ class VideosViewController: UITableViewController {
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
         
+        self.revealViewController().rearViewRevealWidth = 280
+        
         // Preliminary refresh control "set up"
         videosTableView.delegate = self
         videosTableView.dataSource = self
         
-        // Creating and configuring the refreshControl subview
-        refreshControl = UIRefreshControl()
-        refreshControl!.backgroundColor = goldenWordsYellow
-        refreshControl!.tintColor = UIColor.whiteColor()
-        videosTableView.addSubview(refreshControl!)
+        // Creating and configuring the goldenWordsRefreshControl subview
+        goldenWordsRefreshControl = UIRefreshControl()
+        goldenWordsRefreshControl.backgroundColor = goldenWordsYellow
+        goldenWordsRefreshControl.tintColor = UIColor.whiteColor()
+        videosTableView.addSubview(goldenWordsRefreshControl)
         
-        loadCustomRefreshContents()
+        navigationController?.setNavigationBarHidden(false, animated: true)
+        navigationItem.title = "Videos"
+        
+//        loadCustomRefreshContents()
+        
+        populateVideos()
+        
+        self.dateFormatter.dateFormat = "dd/MM/yy"
         
         // Static data to test my table view controller
-        
-        videoHeadline = ["Video 1", "Video 2", "Video 3", "Video 4"]
-            
-        videoPublishDate = ["Date 1", "Date 2", "Date 3", "Date 4"]
-        
+
         tableView.estimatedRowHeight = 50
         
-        
+        self.cellLoadingIndicator.backgroundColor = goldenWordsYellow
+        self.cellLoadingIndicator.hidesWhenStopped = true
+        self.cellLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        self.cellLoadingIndicator.color = goldenWordsYellow
+        let indicatorCenter = CGPoint(x: self.videosTableView.center.x, y: self.videosTableView.center.y - 130)
+        self.videosTableView.addSubview(cellLoadingIndicator)
+        self.videosTableView.bringSubviewToFront(cellLoadingIndicator)
 
+    }
+    
+    override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
+        if goldenWordsRefreshControl.refreshing {
+            if !isAnimating {
+                holdRefreshControl()
+            }
+        }
+    }
+    
+    func holdRefreshControl() {
+        timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -87,31 +129,85 @@ class VideosViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return videoHeadline.count
+        return videoObjects.count
     }
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = self.tableView.dequeueReusableCellWithIdentifier("VideoTableCellIdentifier", forIndexPath: indexPath) as! VideoTableViewCell
         
         let row = indexPath.row
+        
+        let cell = tableView.dequeueReusableCellWithIdentifier(VideoTableCellIdentifier, forIndexPath: indexPath) as! VideoTableViewCell
+        
+        if let videoObject = videoObjects.objectAtIndex(indexPath.row) as? VideoElement {
+            
+            let title = videoObject.title ?? ""
+            
+            let timeStampDateObject = NSDate(timeIntervalSince1970: NSTimeInterval(videoObject.timeStamp))
+            let timeStampDateString = dateFormatter.stringFromDate(timeStampDateObject) ?? "Date unknown"
+            
+            let author = videoObject.author ?? ""
+            
+            let issueNumber = videoObject.issueNumber ?? ""
+            let volumeNumber = videoObject.volumeNumber ?? ""
+            
+            let nodeID = videoObject.nodeID ?? 0
+            
+            let thumbnailURL = videoObject.thumbnailURL ?? "http://goldenwords.ca/sites/all/themes/custom/gw/logo.png"
+            
+            cell.videoHeadlineLabel.text = title
+            cell.videoPublishDateLabel.text = timeStampDateString
+            
+            cell.request?.cancel()
+            
+            if let image = self.imageCache.objectForKey(thumbnailURL) as? UIImage {
+                
+                cell.videoThumbnailImage.image = image
+                
+            } else {
+                
+                cell.videoThumbnailImage.image = nil
+                cell.request = Alamofire.request(.GET, thumbnailURL).responseImage() { response in
+                    if let image = response.result.value {
+                        self.imageCache.setObject(response.result.value!, forKey: thumbnailURL)
+                        if cell.videoThumbnailImage.image == nil {
+                            cell.videoThumbnailImage.image = image
+                        }
+                    }
+                }
+            }
+        } else {
+            
+            cell.videoHeadlineLabel.text = nil
+            cell.videoPublishDateLabel.text = nil
+            cell.videoThumbnailImage.image = UIImage(named: "reveal Image")
+        }
 
-        
-        
-        
-        
         return cell
     }
-
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        
+        let row = indexPath.row
+        
+        if let videoObject = videoObjects.objectAtIndex(indexPath.row) as? VideoElement {
+            let videoURL = NSURL(string: videoObject.videoURL)
+            UIApplication.sharedApplication().openURL(videoURL!)
+        
+        tableView.cellForRowAtIndexPath(indexPath)?.setSelected(false, animated: true)
+            
+        }
+    }
+/*
     func loadCustomRefreshContents() {
         let refreshContents = NSBundle.mainBundle().loadNibNamed("RefreshContents", owner: self, options: nil)
         
         customView = refreshContents[0] as! UIView
-        customView.frame = refreshControl!.bounds
+        customView.frame = goldenWordsRefreshControl!.bounds
         
         for (var i=0; i < customView.subviews.count; i++) {
             labelsArray.append(customView.viewWithTag(i+1) as! UILabel)
             
-            refreshControl!.addSubview(customView)
+            goldenWordsRefreshControl!.addSubview(customView)
         }
     }
     
@@ -175,7 +271,7 @@ class VideosViewController: UITableViewController {
                     
                     
                     }, completion: { (finished) -> Void in
-                        if self.refreshControl!.refreshing {
+                        if self.goldenWordsRefreshControl!.refreshing {
                             self.currentLabelIndex = 0
                             self.animateRefreshStep1()
                         } else {
@@ -190,16 +286,9 @@ class VideosViewController: UITableViewController {
         })
         
     }
+    */
     
-    override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        if refreshControl!.refreshing {
-            if !isAnimating {
-                doSomething()
-                animateRefreshStep1()
-            }
-        }
-    }
-    
+    /*
     func getNextColor() -> UIColor {
         var colorsArray: [UIColor] = [goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow]
         
@@ -213,15 +302,143 @@ class VideosViewController: UITableViewController {
         return returnColor
     }
     
-    func doSomething() {
-        timer = NSTimer.scheduledTimerWithTimeInterval(4.0, target: self, selector: "endOfWork", userInfo: nil, repeats: true)
-    }
-    
     func endOfWork() {
-        refreshControl!.endRefreshing()
+        goldenWordsRefreshControl!.endRefreshing()
         
         timer.invalidate()
         timer = nil
     }
+*/
+    /*
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == "ShowVideo" {
+            
+            let detailViewController = segue.destinationViewController as! VideosDetailViewController
+            let myIndexPath = self.tableView.indexPathForSelectedRow
+            let row = myIndexPath?.row
 
+            if let videoObject = videoObjects.objectAtIndex((myIndexPath?.row)!) as? VideoElement {
+                    detailViewController.videoURLThroughSegue = videoObject.videoURL
+            }
+        }
+    }
+    */
+    
+    
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
+        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.75) {
+            populateVideos()
+        }
+    }
+    
+    func populateVideos() {
+        
+        if populatingVideos {
+            return
+        }
+        populatingVideos = true
+        
+        self.cellLoadingIndicator.startAnimating()
+        
+        Alamofire.request(GWNetworking.Router.Videos(currentPage)).responseJSON() { response in
+            if let JSON = response.result.value {
+                
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)) {
+                    
+                    /* Making an array of all the node IDs from the JSON file */
+                    var nodeIDArray : [Int]
+                    
+                    if (JSON .isKindOfClass(NSDictionary)) {
+                        
+                        for node in JSON as! Dictionary<String, AnyObject> {
+                            
+                            let nodeIDValue = node.0
+                            var lastItem : Int = 0
+                            
+                            self.nodeIDArray.addObject(nodeIDValue)
+                            
+                            if let videoElement: VideoElement = VideoElement(title: "Golden Words Video", nodeID: 0, timeStamp: 0, videoURL: "https://www.youtube.com/watch?v=XvK-5emkgLs", thumbnailURL:  "http://goldenwords.ca/sites/all/themes/custom/gw/logo.png", author: "Staff", issueNumber: "Issue # error", volumeNumber: "Volume # error") {
+                                
+                                videoElement.title = node.1["title"] as! String
+                                videoElement.nodeID = Int(nodeIDValue)!
+                                
+                                let timeStampString = node.1["revision_timestamp"] as! String
+                                videoElement.timeStamp = Int(timeStampString)!
+                                
+                                if let videoURL = node.1["video_url"] as? String {
+                                    videoElement.videoURL = videoURL
+                                }
+                                
+//                                let videoID = videoElement.videoURL.substringFromIndex(<#T##index: Index##Index#>)
+                                
+//                                 = videoElement.videoURL.substringFromIndex((videoElement.videoURL.characters.count)-11)
+                                
+                                if let author = node.1["author"] as? String {
+                                    videoElement.author = author
+                                }
+                                if let issueNumber = node.1["issue_int"] as? String {
+                                    videoElement.issueNumber = issueNumber
+                                }
+                                if let volumeNumber = node.1["volume_int"] as? String {
+                                    videoElement.volumeNumber = volumeNumber
+                                }
+                                
+//                                if (videoElement.videoURL != "https://www.youtube.com/watch?v=XvK-5emkgLs") {
+                                    lastItem = self.temporaryVideoObjects.count
+                                    self.temporaryVideoObjects.addObject(videoElement)
+//                                }
+                                
+                                let indexPaths = (lastItem..<self.temporaryVideoObjects.count).map { NSIndexPath(forItem: $0, inSection: 0) }
+                                
+                            }
+                        }
+                        
+                        /* Sorting the elements in order of newest to oldest (as the array index increases] */
+                        let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
+                        self.temporaryVideoObjects.sortUsingDescriptors([timestampSortDescriptor])
+                        
+                    }
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        if self.videoObjects != self.temporaryVideoObjects {
+                        self.videoObjects = self.temporaryVideoObjects
+                        }
+                        self.videosTableView.reloadData()
+                        
+                        self.cellLoadingIndicator.stopAnimating()
+                        
+                        self.currentPage++
+                        self.populatingVideos = false
+                        
+                    }
+                }
+            }
+        }
+    }
+    
+    func handleRefresh() {
+        
+        goldenWordsRefreshControl.beginRefreshing()
+        
+        self.currentPage = 0
+        
+        self.cellLoadingIndicator.startAnimating()
+        self.videosTableView.bringSubviewToFront(cellLoadingIndicator)
+        
+        self.populatingVideos = false
+        populateVideos()
+        
+        self.cellLoadingIndicator.stopAnimating()
+        
+        goldenWordsRefreshControl.endRefreshing()
+        
+        
+    }
+    
+    
+    
+    
+    
+    
 }

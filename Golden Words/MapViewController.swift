@@ -9,6 +9,8 @@
 import UIKit
 import MapKit
 import CoreLocation
+import Alamofire
+import SwiftyJSON
 
 class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
     
@@ -19,6 +21,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     
     // Hamburger button declaration
     @IBOutlet weak var menuButton:UIBarButtonItem!
+    
+    var loadingIndicator = UIActivityIndicatorView()
+    
+    var temporaryMapObjects = NSMutableOrderedSet(capacity: 1000)
+    var mapObjects = NSMutableOrderedSet(capacity: 1000)
     
     var locationManager: CLLocationManager?
     
@@ -53,6 +60,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
         
+        self.revealViewController().rearViewRevealWidth = 280
+        
         // Setting the Map type to standard
         mapView.mapType = MKMapType.Standard
         
@@ -70,6 +79,17 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         let coordinateRegion = MKCoordinateRegionMake(initialLocation, span)
         
         mapView.setRegion(coordinateRegion, animated: true)
+        
+//        populateMapObjects()
+//        loadObjectsIntoMap()
+        
+        self.loadingIndicator.backgroundColor = goldenWordsYellow
+        self.loadingIndicator.hidesWhenStopped = true
+        self.loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        self.loadingIndicator.color = goldenWordsYellow
+        let indicatorCenter = self.view.center
+        self.view.addSubview(loadingIndicator)
+        self.view.bringSubviewToFront(loadingIndicator)
         
 //        let ARCAnnotation = MKPointAnnotation()
 //        ARCAnnotation.title = "ARC"
@@ -178,6 +198,16 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    func populateMapObjects() {
+    
+        
+    
+    
+    
+    }
+    
+    
     
     
     /*

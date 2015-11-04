@@ -102,7 +102,7 @@ class NewsTableViewController: UITableViewController {
         
         self.cellLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
         self.cellLoadingIndicator.color = goldenWordsYellow
-        let indicatorCenter = CGPoint(x: self.newsTableView.center.x, y: self.newsTableView.center.y - 130)
+        let indicatorCenter = CGPoint(x: self.newsTableView.center.x, y: self.newsTableView.center.y - 50)
         self.cellLoadingIndicator.center = indicatorCenter
         self.newsTableView.addSubview(cellLoadingIndicator)
         self.newsTableView.bringSubviewToFront(cellLoadingIndicator)
@@ -221,18 +221,18 @@ class NewsTableViewController: UITableViewController {
         }
     }
     
-    func getNextColor() -> UIColor {
-        var colorsArray: [UIColor] = [goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow]
-        
-        if currentColorIndex == colorsArray.count {
-            currentColorIndex = 0
-        }
-        
-        let returnColor = colorsArray[currentColorIndex]
-        ++currentColorIndex
-        
-        return returnColor
-    }
+//    func getNextColor() -> UIColor {
+//        var colorsArray: [UIColor] = [goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow]
+//        
+//        if currentColorIndex == colorsArray.count {
+//            currentColorIndex = 0
+//        }
+//        
+//        let returnColor = colorsArray[currentColorIndex]
+//        ++currentColorIndex
+//        
+//        return returnColor
+//    }
     
     func holdRefreshControl() {
         timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)

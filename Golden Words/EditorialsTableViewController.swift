@@ -52,13 +52,10 @@ class EditorialsTableViewController: UITableViewController {
     
     var cellLoadingIndicator = UIActivityIndicatorView()
     
-    var doOneMoreRequest = true
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.cellLoadingIndicator.backgroundColor = goldenWordsYellow
-        self.cellLoadingIndicator.hidesWhenStopped = true
+
         
         // Hamburger button configuration
         if self.revealViewController() != nil {
@@ -101,9 +98,11 @@ class EditorialsTableViewController: UITableViewController {
         
         tableView.estimatedRowHeight = 50
         
+        self.cellLoadingIndicator.backgroundColor = goldenWordsYellow
+        self.cellLoadingIndicator.hidesWhenStopped = true
         self.cellLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
         self.cellLoadingIndicator.color = goldenWordsYellow
-        let indicatorCenter = CGPoint(x: self.editorialsTableView.center.x, y: self.editorialsTableView.center.y - 130)
+        let indicatorCenter = CGPoint(x: self.editorialsTableView.center.x, y: self.editorialsTableView.center.y - 50)
         self.cellLoadingIndicator.center = indicatorCenter
         self.editorialsTableView.addSubview(cellLoadingIndicator)
         self.editorialsTableView.bringSubviewToFront(cellLoadingIndicator)
@@ -225,18 +224,18 @@ class EditorialsTableViewController: UITableViewController {
         }
     }
     
-    func getNextColor() -> UIColor {
-        var colorsArray: [UIColor] = [goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow]
-        
-        if currentColorIndex == colorsArray.count {
-            currentColorIndex = 0
-        }
-        
-        let returnColor = colorsArray[currentColorIndex]
-        ++currentColorIndex
-        
-        return returnColor
-    }
+//    func getNextColor() -> UIColor {
+//        var colorsArray: [UIColor] = [goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow]
+//        
+//        if currentColorIndex == colorsArray.count {
+//            currentColorIndex = 0
+//        }
+//        
+//        let returnColor = colorsArray[currentColorIndex]
+//        ++currentColorIndex
+//        
+//        return returnColor
+//    }
     
     func holdRefreshControl() {
         timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
@@ -421,9 +420,6 @@ class EditorialsTableViewController: UITableViewController {
 //            detailViewController.editorialTitleThroughSegue = editorialHeadline[row!]
             
         }
-        
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
     }
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
@@ -434,7 +430,7 @@ class EditorialsTableViewController: UITableViewController {
     
     func populateEditorials() {
         
-        if (populatingEditorials == true) {
+        if populatingEditorials {
             return
         }
         populatingEditorials = true
@@ -444,7 +440,6 @@ class EditorialsTableViewController: UITableViewController {
         Alamofire.request(GWNetworking.Router.Editorials(self.currentPage)).responseJSON() { response in
             if let JSON = response.result.value {
                 
-                /* Creating objects for every single editorial is long running work, so we put that work on a background queue, to keep the app very responsive. */
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)) {
                     
                     /* Making an array of all the node IDs from the JSON file */
@@ -484,12 +479,10 @@ class EditorialsTableViewController: UITableViewController {
                                 if let articleContent = node.1["html_content"] as? String {
                                     editorialElement.articleContent = articleContent
                                 }
-//                                editorialElement.articleContent = String(node.1["html_content"])
                             
                             if editorialElement.articleContent.characters.count > 40 {
                                 lastItem = self.temporaryEditorialObjects.count
                                 self.temporaryEditorialObjects.addObject(editorialElement)
-                                // print(editorialElement.nodeID)
                             }
                                     
                             let indexPaths = (lastItem..<self.temporaryEditorialObjects.count).map { NSIndexPath(forItem: $0, inSection: 0) }
@@ -551,24 +544,11 @@ class EditorialsTableViewController: UITableViewController {
             self.populatingEditorials = false
             populateEditorials()
             
-            print(editorialObjects.count)
-            
 /*            self.editorialsTableView!.reloadData() */
             
             self.cellLoadingIndicator.stopAnimating()
             
             goldenWordsRefreshControl.endRefreshing()
             
-/*            populateEditorials() */
         }
-    
-//    func activityIndicator() {
-//        
-//        self.editorialLoadingIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 40, 40))
-//        self.editorialLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
-//        self.editorialLoadingIndicator.color = goldenWordsYellow
-//        self.editorialLoadingIndicator.center = self.tableView.center
-//        self.tableView.addSubview(editorialLoadingIndicator)
-//        self.editorialLoadingIndicator.bringSubviewToFront(self.tableView)
-//    }
  }

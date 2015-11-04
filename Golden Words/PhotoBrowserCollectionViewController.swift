@@ -17,15 +17,15 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
     @IBOutlet weak var menuButton:UIBarButtonItem!
     
     @IBOutlet var picturesCollectionView: UICollectionView!
-
-    var pictureObjects = NSMutableOrderedSet(capacity: 1000)
     
-    // an indicator used to know if the reveal view controller is currently shown (i.e. to know if the hamburger menu is open)
+    var temporaryPictureObjects = NSMutableOrderedSet(capacity: 1000)
+    var pictureObjects = NSMutableOrderedSet(capacity: 1000)
+
+    var goldenWordsRefreshControl = UIRefreshControl()
+    
     var revealViewControllerIndicator : Int = 0
     
     let imageCache = NSCache()
-    
-    var customRefreshControl = UIRefreshControl()
     
     var customView: UIView!
     
@@ -51,13 +51,19 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
     
     var timeStampDateString : String!
     
+    var cellLoadingIndicator = UIActivityIndicatorView()
+    
+    var scrollViewDidScrollLoadingIndicator = UIActivityIndicatorView()
+    
 //    let PhotoBrowserFooterViewIdentifier = "PhotoBrowserFooterView" // Identifier used for the footer view (with Featured and Downloads)
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.picturesCollectionView!.registerClass(PhotoBrowserCollectionViewCell.self, forCellWithReuseIdentifier:PhotoBrowserCellIdentifier)
-
+        self.collectionView!.registerClass(PhotoBrowserCollectionViewCell.self, forCellWithReuseIdentifier: PhotoBrowserCellIdentifier)
+        
+        self.cellLoadingIndicator.backgroundColor = goldenWordsYellow
+        self.cellLoadingIndicator.hidesWhenStopped = true
         
         // Hamburger menu button setup
     if self.revealViewController() != nil {
@@ -70,19 +76,19 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         self.revealViewController().rearViewRevealWidth = 280
         
         // Preliminary refresh control "set up"
-        picturesCollectionView!.delegate = self
-        picturesCollectionView!.dataSource = self
+        collectionView!.delegate = self
+        collectionView!.dataSource = self
         
-        // Creating and configuring the customRefreshControl subview
-        customRefreshControl = UIRefreshControl()
-        customRefreshControl.backgroundColor = goldenWordsYellow
-        customRefreshControl.tintColor = UIColor.whiteColor()
-        self.picturesCollectionView!.addSubview(customRefreshControl)
+        // Creating and configuring the goldenWordsRefreshControl subview
+        goldenWordsRefreshControl = UIRefreshControl()
+        goldenWordsRefreshControl.backgroundColor = goldenWordsYellow
+        goldenWordsRefreshControl.tintColor = UIColor.whiteColor()
+        self.collectionView!.addSubview(goldenWordsRefreshControl)
         
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationItem.title = "Pictures"
         
-        loadCustomRefreshContents()
+//        loadCustomRefreshContents()
         
         setupView()
         
@@ -90,13 +96,27 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         
         self.dateFormatter.dateFormat = "dd/MM/yy"
         
+        self.cellLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        self.cellLoadingIndicator.color = goldenWordsYellow
+        self.cellLoadingIndicator.center = (self.collectionView?.center)!
+        self.collectionView!.addSubview(cellLoadingIndicator)
+        self.collectionView!.bringSubviewToFront(cellLoadingIndicator)
+
+//        self.scrollViewDidScrollLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+//        self.scrollViewDidScrollLoadingIndicator.color = goldenWordsYellow
+//        self.scrollViewDidScrollLoadingIndicator.center =
+//        self.collectionView!.addSubview(scrollViewDidScrollLoadingIndicator)
+//        self.collectionView!.bringSubviewToFront(scrollViewDidScrollLoadingIndicator)
+        
+//        self.collectionView!.reloadData()
+        
         /*
         self.dateFormatter.dateStyle = NSDateFormatterStyle.ShortStyle
         self.dateFormatter.timeStyle = NSDateFormatterStyle.ShortStyle
         
         let currentDateAndTime = NSDate()
         let updateString = "Last updated at " + self.dateFormatter.stringFromDate(currentDateAndTime)
-        self.customRefreshControl.attributedTitle = NSAttributedString(string: updateString)
+        self.goldenWordsRefreshControl.attributedTitle = NSAttributedString(string: updateString)
         */
         
         // Do any additional setup after loading the view.
@@ -107,16 +127,18 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         // Dispose of any resources that can be recreated.
     }
     
+    /*
+    
     func loadCustomRefreshContents() {
         let refreshContents = NSBundle.mainBundle().loadNibNamed("RefreshContents", owner: self, options: nil)
         
         customView = refreshContents[0] as! UIView
-        customView.frame = customRefreshControl.bounds
+        customView.frame = goldenWordsRefreshControl.bounds
         
         for (var i=0; i < customView.subviews.count; i++) {
             labelsArray.append(customView.viewWithTag(i+1) as! UILabel)
             
-            customRefreshControl.addSubview(customView)
+            goldenWordsRefreshControl.addSubview(customView)
         }
     }
     
@@ -182,7 +204,7 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
                     
                     
                     }, completion: { (finished) -> Void in
-                        if self.customRefreshControl.refreshing {
+                        if self.goldenWordsRefreshControl.refreshing {
                             self.currentLabelIndex = 0
                             self.animateRefreshStep1()
                         } else {
@@ -198,14 +220,18 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         
     }
     
+    */
+    
     override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
-        if customRefreshControl.refreshing {
+        if goldenWordsRefreshControl.refreshing {
             if !isAnimating {
                 holdRefreshControl()
-                animateRefreshStep1()
+//                animateRefreshStep1()
             }
         }
     }
+    
+    /*
     
     func getNextColor() -> UIColor {
         var colorsArray: [UIColor] = [goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow]
@@ -220,12 +246,14 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         return returnColor
     }
     
+    */
+    
     func holdRefreshControl() {
         timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
     }
     
 //    func endOfWork() {
-//        customRefreshControl.endRefreshing()
+//        goldenWordsRefreshControl.endRefreshing()
 //        
 //        timer.invalidate()
 //        timer = nil
@@ -237,23 +265,22 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
     }
     
     override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return pictureObjects.count
+//        return pictureObjects.count
+        return (pictureObjects.count) // setting an arbitrary value in case pictureObjects is not getting correctly populated
     }
     
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         
+        /*
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PhotoBrowserCellIdentifier, forIndexPath: indexPath) as! PhotoBrowserCollectionViewCell
         
-        
-        
-        let cell = picturesCollectionView.dequeueReusableCellWithReuseIdentifier(PhotoBrowserCellIdentifier, forIndexPath: indexPath) as! PhotoBrowserCollectionViewCell
-        
-        cell.imageView.image = UIImage(named: "mail")
+        cell.imageView.image = UIImage(named: "reveal Image")
+        cell.backgroundColor = UIColor.blackColor()
         
         return cell
-    }
-        
-        //
-//    
+        */
+  
+    
 //    let imageURL = (pictureObjects.objectAtIndex(indexPath.row) as! PictureElement).imageURL
 //    
 //    cell.imageView.image = nil
@@ -269,7 +296,7 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
 //    
 //        return cell
         
-//        guard let cell = picturesCollectionView.dequeueReusableCellWithReuseIdentifier(PhotoBrowserCellIdentifier, forIndexPath: indexPath) as? PhotoBrowserCollectionViewCell else {
+//        guard let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PhotoBrowserCellIdentifier, forIndexPath: indexPath) as? PhotoBrowserCollectionViewCell else {
 //            
 //            print("cell could not be initialized as PhotoBrowserCollectionViewCell, hence it will be casted to another default UICollectionViewCell type")
 //            return picturesCollectionView.dequeueReusableCellWithReuseIdentifier(PhotoBrowserCellIdentifier, forIndexPath: indexPath)
@@ -277,52 +304,49 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
 //            
 //        }
         
-//        let cell = picturesCollectionView.dequeueReusableCellWithReuseIdentifier(PhotoBrowserCellIdentifier, forIndexPath: indexPath) as! PhotoBrowserCollectionViewCell
-//        
-//        if let photoObject = pictureObjects.objectAtIndex(indexPath.row) as? PictureElement {
-//            
-//            let title = photoObject.title ?? "" // if photoObject.title == nil, then we return an empty string
-//            
-//            let timeStampDateObject = NSDate(timeIntervalSince1970: NSTimeInterval(photoObject.timeStamp))
-//            let timeStampDateString = dateFormatter.stringFromDate(timeStampDateObject)
-//            
-//            let author = photoObject.author ?? ""
-//            
-//            let issueNumber = photoObject.issueNumber ?? ""
-//            let volumeNumber = photoObject.volumeNumber ?? ""
-//            
-//            let nodeID = photoObject.nodeID ?? 0
-//            
-//            let imageURL = photoObject.imageURL ?? ""
-//            
-//            cell.request?.cancel()
-//            
-//            // Using image cache system to make sure the table view works even when rapidly scrolling down the screen.
-//            if let image = self.imageCache.objectForKey(imageURL) as? UIImage {
-//                
-//                cell.imageView.image = image
-//                
-//            } else {
-//                
-//                cell.imageView.image = nil
-//                cell.request = Alamofire.request(.GET, imageURL).responseImage() { response in
-//                    if let image = response.result.value {
-////                        self.imageCache.setObject(response.result.value!, forKey: response.request!.URLString)
-//                        self.imageCache.setObject(response.result.value!, forKey: imageURL)
-//                        cell.imageView.image = image
-//                        
-//                    } else {
-//                    }
-//                }
-//            }
-//        } else {
-//    }
+        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PhotoBrowserCellIdentifier, forIndexPath: indexPath) as! PhotoBrowserCollectionViewCell
         
+        if let pictureObject = pictureObjects.objectAtIndex(indexPath.row) as? PictureElement {
+            
+            let title = pictureObject.title ?? "" // if pictureObject.title == nil, then we return an empty string
+            
+            let timeStampDateObject = NSDate(timeIntervalSince1970: NSTimeInterval(pictureObject.timeStamp))
+            let timeStampDateString = dateFormatter.stringFromDate(timeStampDateObject)
+            
+            let author = pictureObject.author ?? ""
+            
+            let issueNumber = pictureObject.issueNumber ?? ""
+            let volumeNumber = pictureObject.volumeNumber ?? ""
+            
+            let nodeID = pictureObject.nodeID ?? 0
+            
+            let imageURL = pictureObject.imageURL ?? "http://goldenwords.ca/sites/all/themes/custom/gw/logo.png"
+            
+            cell.request?.cancel()
+            
+            // Using image cache system to make sure the table view works even when rapidly scrolling down the screen.
+            if let image = self.imageCache.objectForKey(imageURL) as? UIImage {
+                
+                cell.imageView.image = image
+                
+            } else {
+                
+                cell.imageView.image = nil
+                cell.request = Alamofire.request(.GET, imageURL).responseImage() { response in
+                    if let image = response.result.value {
+//                        self.imageCache.setObject(response.result.value!, forKey: response.request!.URLString)
+                        self.imageCache.setObject(response.result.value!, forKey: imageURL)
+                        if cell.imageView.image == nil {
+                            cell.imageView.image = image
+                        }
+                    }
+                }
+            }
+        }
         
-        
-        
-
-        
+        return cell
+}
+    
 //        cell.request?.cancel()
 //        
 //        // Using image cache system to make sure the table view works even when rapidly scrolling down the screen.
@@ -348,31 +372,27 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
 //                
 //                
 //            }
-//   
-////            cell.request = Alamofire.request(.GET, imageURL).validate(contentType: ["image/*"]).responseImage() {
-////                (request, _, result) in
-////                if result.error == nil && result.value != nil {
-////                    
-////                    self.imageCache.setObject(result.value!, forKey: request!.URLString)
-////                    
-////                    cell.imageView.image = result.value
-////                } else {
-////                    
-////                }
-////            }
+   
+//            cell.request = Alamofire.request(.GET, imageURL).validate(contentType: ["image/*"]).responseImage() {
+//                (request, _, result) in
+//                if result.error == nil && result.value != nil {
+//                    
+//                    self.imageCache.setObject(result.value!, forKey: request!.URLString)
+//                    
+//                    cell.imageView.image = result.value
+//                } else {
+//                    
+//                }
+//            }
 
     
-    
-/*
-    override func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
-        return collectionView.dequeueReusableSupplementaryViewOfKind(kind, withReuseIdentifier: PhotoBrowserFooterViewIdentifier, forIndexPath: indexPath)
-    }
-
-*/
-    
+//    override func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
+//        return collectionView.dequeueReusableSupplementaryViewOfKind(kind, withReuseIdentifier: PhotoBrowserFooterViewIdentifier, forIndexPath: indexPath)
+//    }
 
     override func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        performSegueWithIdentifier("ShowPhoto", sender: (self.pictureObjects.objectAtIndex(indexPath.item) as! PictureElement).imageURL)
+//        performSegueWithIdentifier("ShowPhoto", sender: self.collectionView!.cellForItemAtIndexPath(indexPath))
+        self.performSegueWithIdentifier("ShowPhoto", sender: self)
     }
     
     func setupView() {
@@ -380,25 +400,20 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         
         // Configuring out collection view flow layout
         let layout = UICollectionViewFlowLayout()
-        let itemWidth = (view.bounds.size.width - 2) / 3
+        let itemWidth = (view.bounds.size.width) / 3
         layout.itemSize = CGSize(width: itemWidth, height: itemWidth)
         layout.minimumInteritemSpacing = 1.0
         layout.minimumLineSpacing = 1.0
 //        layout.footerReferenceSize = CGSize(width: picturesCollectionView!.bounds.size.width, height: 100.0)
         
-        picturesCollectionView!.collectionViewLayout = layout
+        collectionView!.collectionViewLayout = layout
         
         navigationItem.title = "Pictures"
-        
-//        picturesCollectionView!.registerClass(PhotoBrowserCollectionViewLoadingCell.classForCoder(), forSupplementaryViewOfKind: UICollectionElementKindSectionFooter, withReuseIdentifier: PhotoBrowserFooterViewIdentifier)
-        
-        customRefreshControl.tintColor = UIColor.whiteColor()
-        customRefreshControl.addTarget(self, action: "handleRefresh", forControlEvents: .ValueChanged)
-        self.picturesCollectionView!.addSubview(customRefreshControl)
+
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-        return CGSizeMake(120, 120)
+        return CGSizeMake(((self.collectionView?.frame.width)!*0.5)-2, self.collectionView!.frame.height/3)
     }
     
 
@@ -410,42 +425,51 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         if segue.identifier == "ShowPhoto" {
             
             let detailViewController = segue.destinationViewController as! PhotoViewerViewController
-            let myIndexPath = self.picturesCollectionView?.indexPathForCell(sender as! UICollectionViewCell)
-            let row = myIndexPath?.row
+            let indexPaths = self.collectionView!.indexPathsForSelectedItems()
+            let indexPath = indexPaths![0] as! NSIndexPath
             
-            detailViewController.imageURLForViewerController = sender!.stringValue
+            let item = indexPath.item
+            
+//            detailViewController.imageThroughSegue = 
+            
+//            detailViewController.imageURLForViewerController = pictureObjects.objectAtIndex(indexPath.item).imageURL
             
         }
     }
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
-        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.25) {
+        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.75) {
             populatePhotos()
         }
     }
     
     func populatePhotos() {
         
-/* This function can be used multiple times in a row to populate more photos since the "currentPage" index is increased by 1 at each iteration and the new photos are added to the "photos" set. */
-        
         if populatingPhotos {
             return
         }
         populatingPhotos = true
-        // Check the "Photos" part
+        
+        self.cellLoadingIndicator.startAnimating()
+        self.temporaryPictureObjects.removeAllObjects()
+        
         Alamofire.request(GWNetworking.Router.Pictures(self.currentPage)).responseJSON() { response in
-            
             if let JSON = response.result.value {
+                
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)) {
                 
                 var nodeIDArray : [Int]
+                
                 if (JSON .isKindOfClass(NSDictionary)) {
                     
                     for node in JSON as! Dictionary<String, AnyObject> {
+                        
                         let nodeIDValue = node.0
                         var lastItem : Int = 0
+                        
                         self.nodeIDArray.addObject(nodeIDValue)
-                        if let pictureElement : PictureElement = PictureElement(title: "init", nodeID: 0, timeStamp: 0, imageURL: "init", author: "init", issueNumber: "init", volumeNumber: "init") {
+                        
+                        if let pictureElement : PictureElement = PictureElement(title: "Picture", nodeID: 0, timeStamp: 0, imageURL: "http://goldenwords.ca/sites/all/themes/custom/gw/logo.png", author: "Staff", issueNumber: "Issue # error", volumeNumber: "Volume # error") {
                             
                             pictureElement.title = node.1["title"] as! String
                             pictureElement.nodeID = Int(nodeIDValue)!
@@ -453,28 +477,57 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
                             let timeStampString = node.1["revision_timestamp"] as! String
                             pictureElement.timeStamp = Int(timeStampString)!
                             
-                            pictureElement.imageURL = String(node.1["image_url"])
-                            pictureElement.author = String(node.1["author"]) as! String
-                            pictureElement.issueNumber = String(node.1["issue_int"])
-                            pictureElement.volumeNumber = String(node.1["volume_int"])
+                            if let imageURL = node.1["image_url"] as? String {
+                                pictureElement.imageURL = imageURL
+                            }
                             
-                            lastItem = self.pictureObjects.count
-                            self.pictureObjects.addObject(pictureElement)
-                            let timeStampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
-                            self.pictureObjects.sortUsingDescriptors([timeStampSortDescriptor])
-                            let indexPaths = (lastItem..<self.pictureObjects.count).map { NSIndexPath(forItem: $0, inSection: 0) }
+                            if let author = node.1["author"] as? String {
+                                pictureElement.author = author
+                            }
+                            
+                            if let issueNumber = node.1["issue_int"] as? String {
+                                pictureElement.issueNumber = issueNumber
+                            }
+                            
+                            if let volumeNumber = node.1["volume_int"] as? String {
+                                pictureElement.volumeNumber = volumeNumber
+                            }
+                            
+                            if self.pictureObjects.containsObject(pictureElement) {
+                                // do not add the pictureElement to the set of pictures
+                            } else {
+                            lastItem = self.temporaryPictureObjects.count // Using a temporary set to not handle the dataSource set directly (safer).
+                            self.temporaryPictureObjects.addObject(pictureElement)
+                            }
+                            
+                            let indexPaths = (lastItem..<self.temporaryPictureObjects.count).map { NSIndexPath(forItem: $0, inSection: 0) }
                         }
-                        // print(self.pictureObjects.count)
-                        // print(self.pictureObjects)
+                        
                     }
+                    
+                    /* Sorting the elements in order of newest to oldest (as the array index increases] */
+                    let timeStampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
+                    self.temporaryPictureObjects.sortUsingDescriptors([timeStampSortDescriptor])
+                    
                 }
                 dispatch_async(dispatch_get_main_queue()) {
-                    self.picturesCollectionView.reloadData()
+                    
+//                    self.pictureObjects = self.temporaryPictureObjects
+                    for object in self.temporaryPictureObjects {
+                        self.pictureObjects.addObject(object)
+                    }
+                    
+                    self.temporaryPictureObjects.removeAllObjects()
+                    
+                    self.collectionView!.reloadData()
+                    self.cellLoadingIndicator.stopAnimating()
+                    self.goldenWordsRefreshControl.endRefreshing()
+
+                    self.currentPage++
+                    self.populatingPhotos = false
                 }
-                self.currentPage++
             }
         }
-            self.populatingPhotos = false
     }
 }
     
@@ -482,37 +535,23 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
     
     func handleRefresh() {
         
-        // This is where we decide what happens when we use the refresh control (pull to refresh)
+        goldenWordsRefreshControl.beginRefreshing()
         
-        // We have to reload the data (i.e. get the new pictures from the server)
+        self.pictureObjects.removeAllObjects()
+        self.temporaryPictureObjects.removeAllObjects()
         
-        customRefreshControl.beginRefreshing()
-        
-//        let currentNumberOfPages : Int = self.currentPage
-//        
-//        self.pictureObjects.removeAllObjects()
+        self.collectionView!.reloadData()
         
         self.currentPage = 0
         
-//        repeat {
-//        
-//            populatePhotos()
-//        
-//            self.currentPage++
-//        
-//        }
-//        
-//            while self.currentPage <= currentNumberOfPages
-
-        self.populatingPhotos = false
+//        self.cellLoadingIndicator.startAnimating()
+        self.picturesCollectionView.bringSubviewToFront(cellLoadingIndicator)
         
+        self.populatingPhotos = false
         populatePhotos()
         
-//        self.picturesCollectionView!.reloadData()
+//        self.cellLoadingIndicator.stopAnimating()
         
-        customRefreshControl.endRefreshing()
-        
-//        populatePhotos()
         
     }
 }

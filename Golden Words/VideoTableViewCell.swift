@@ -7,12 +7,16 @@
 //
 
 import UIKit
+import Alamofire
 
 class VideoTableViewCell: UITableViewCell {
     
-    @IBOutlet weak var videoThumbnail: UIImageView!
-    @IBOutlet weak var videoHeadline: UILabel!
-    @IBOutlet weak var videoPublishDate: UILabel!
+    @IBOutlet weak var videoThumbnailImage: UIImageView!
+    @IBOutlet weak var videoHeadlineLabel: UILabel!
+    @IBOutlet weak var videoPublishDateLabel: UILabel!
+    
+    var request: Alamofire.Request?
+
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -20,9 +24,9 @@ class VideoTableViewCell: UITableViewCell {
     }
     
     func addSubviews(view: UIView) {
-        addSubview(videoThumbnail)
-        addSubview(videoHeadline)
-        addSubview(videoPublishDate)
+        addSubview(videoThumbnailImage)
+        addSubview(videoHeadlineLabel)
+        addSubview(videoPublishDateLabel)
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
@@ -30,5 +34,4 @@ class VideoTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
 }

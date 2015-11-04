@@ -16,10 +16,11 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate {
     let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
     
     var imageURLForViewerController: String = ""
+    var imageThroughSegue = UIImage()
     
-    let scrollView = UIScrollView()
-    let imageView = UIImageView()
-    let spinner = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
+    @IBOutlet weak var imageView: UIImageView!
+    
+    let spinner = UIActivityIndicatorView(activityIndicatorStyle: .White)
     
     var photoInfo: PictureElement?
 
@@ -28,45 +29,53 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate {
         
         setupView()
         loadPhoto()
-    
     }
     
     func setupView() {
-        spinner.center = CGPoint(x: view.center.x, y: view.center.y - view.bounds.origin.y / 2.0)
+        spinner.center = self.imageView.center
+//        spinner.center = CGPoint(x: view.center.x, y: view.center.y - view.bounds.origin.y / 2.0)
         spinner.color = goldenWordsYellow
         spinner.hidesWhenStopped = true
         spinner.startAnimating()
         view.addSubview(spinner)
         
-        scrollView.frame = view.bounds
-        scrollView.delegate = self
-        scrollView.minimumZoomScale = 1.0
-        scrollView.maximumZoomScale = 3.0
-        scrollView.zoomScale = 1.0
-        scrollView.addSubview(scrollView)
+//        scrollView.frame = view.bounds
+//        scrollView.delegate = self
+//        scrollView.minimumZoomScale = 1.0
+//        scrollView.maximumZoomScale = 3.0
+//        scrollView.zoomScale = 1.0
+//        view.addSubview(scrollView)
         
-        imageView.contentMode = .ScaleAspectFill
-        scrollView.addSubview(imageView)
+//        imageView.contentMode = .ScaleAspectFit
+//        scrollView.addSubview(imageView)
         
         let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "handleDoubleTap:")
         doubleTapRecognizer.numberOfTapsRequired = 2
         doubleTapRecognizer.numberOfTouchesRequired = 1
-        scrollView.addGestureRecognizer(doubleTapRecognizer)
+        view.addGestureRecognizer(doubleTapRecognizer)
     }
     
     func loadPhoto() {
+//        
+//        Alamofire.request(.GET, imageURLForViewerController).responseImage { response in
+//            
+//            if let image = response.result.value {
+//                print("image downloaded : \(image)")
+//                
+//                self.imageView.image = image
+//                self.imageView.frame = self.centerFrameFromImage(image)
+//                self.spinner.stopAnimating()
+//                self.centerScrollViewContents()
+//            }
+//        }
         
-        Alamofire.request(.GET, imageURLForViewerController).responseImage { response in
-            
-            if let image = response.result.value {
-                print("image downloaded : \(image)")
-                
-                self.imageView.image = image
-                self.imageView.frame = self.centerFrameFromImage(image)
-                self.spinner.stopAnimating()
-                self.centerScrollViewContents()
-            }
-        }
+        let image = UIImage(named: "AppIcon.png")
+        
+        self.imageView.image = UIImage(named: "AppIcon.png")
+        self.imageView.frame = self.view.frame
+        self.view.bringSubviewToFront(imageView)
+        self.spinner.stopAnimating()
+//        self.centerScrollViewContents()
     }
  
     override func viewWillAppear(animated: Bool) {
@@ -162,70 +171,70 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate {
     
     // MARK: Zooming
     
-    func handleDoubleTap(recognizer: UITapGestureRecognizer!) {
-        let pointInView = recognizer.locationInView(self.imageView)
-        self.zoomInZoomOut(pointInView)
-    }
-
-    func centerFrameFromImage(image: UIImage?) -> CGRect {
-        if image == nil {
-            return CGRectZero
-        }
-        
-        let scaleFactor = scrollView.frame.size.width / image!.size.width
-        let newHeight = image!.size.height * scaleFactor
-        
-        var newImageSize = CGSize(width: scrollView.frame.size.width, height: newHeight)
-        
-        newImageSize.height = min(scrollView.frame.size.height, newImageSize.height)
-        
-        let centerFrame = CGRect(x: 0.0, y: scrollView.frame.size.height/2 - newImageSize.height/2 , width: newImageSize.height, height: newImageSize.height)
-        
-        return centerFrame
-    }
-    
-    func scrollViewDidZoom(scrollView: UIScrollView) {
-        self.centerScrollViewContents()
-    }
-    
-    func centerScrollViewContents() {
-        let boundsSize = scrollView.frame
-        var contentsFrame = self.imageView.frame
-        
-        if contentsFrame.size.width < boundsSize.width {
-            contentsFrame.origin.x = (boundsSize.width - contentsFrame.size.width) / 2.0
-        } else {
-            contentsFrame.origin.x = 0.0
-        }
-        
-        if contentsFrame.size.height < boundsSize.height {
-            contentsFrame.origin.y = (boundsSize.height - scrollView.scrollIndicatorInsets.top - scrollView.scrollIndicatorInsets.bottom - contentsFrame.size.height) / 2.0
-        } else {
-            contentsFrame.origin.y = 0.0
-        }
-        
-        self.imageView.frame = contentsFrame
-    }
-    
-    func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
-        return self.imageView
-    }
-    
-    // Zooming function
-    func zoomInZoomOut(point: CGPoint!) {
-        let newZoomScale = self.scrollView.zoomScale > (self.scrollView.maximumZoomScale/2) ? self.scrollView.minimumZoomScale : self.scrollView.maximumZoomScale
-        
-        let scrollViewSize = self.scrollView.bounds.size
-        
-        let width = scrollViewSize.width / newZoomScale
-        let height = scrollViewSize.height / newZoomScale
-        let x = point.x - (width / 2.0)
-        let y = point.y - (height / 2.0)
-        
-        let rectToZoom = CGRect(x: x, y: y, width: width, height: height)
-        
-        self.scrollView.zoomToRect(rectToZoom, animated: true)
-    }
+//    func handleDoubleTap(recognizer: UITapGestureRecognizer!) {
+//        let pointInView = recognizer.locationInView(self.imageView)
+//        self.zoomInZoomOut(pointInView)
+//    }
+//
+//    func centerFrameFromImage(image: UIImage?) -> CGRect {
+//        if image == nil {
+//            return CGRectZero
+//        }
+//        
+//        let scaleFactor = scrollView.frame.size.width / image!.size.width
+//        let newHeight = image!.size.height * scaleFactor
+//        
+//        var newImageSize = CGSize(width: scrollView.frame.size.width, height: newHeight)
+//        
+//        newImageSize.height = min(scrollView.frame.size.height, newImageSize.height)
+//        
+//        let centerFrame = CGRect(x: 0.0, y: scrollView.frame.size.height/2 - newImageSize.height/2 , width: newImageSize.height, height: newImageSize.height)
+//        
+//        return centerFrame
+//    }
+//    
+//    func scrollViewDidZoom(scrollView: UIScrollView) {
+//        self.centerScrollViewContents()
+//    }
+//    
+//    func centerScrollViewContents() {
+//        let boundsSize = scrollView.frame
+//        var contentsFrame = self.imageView.frame
+//        
+//        if contentsFrame.size.width < boundsSize.width {
+//            contentsFrame.origin.x = (boundsSize.width - contentsFrame.size.width) / 2.0
+//        } else {
+//            contentsFrame.origin.x = 0.0
+//        }
+//        
+//        if contentsFrame.size.height < boundsSize.height {
+//            contentsFrame.origin.y = (boundsSize.height - scrollView.scrollIndicatorInsets.top - scrollView.scrollIndicatorInsets.bottom - contentsFrame.size.height) / 2.0
+//        } else {
+//            contentsFrame.origin.y = 0.0
+//        }
+//        
+//        self.imageView.frame = contentsFrame
+//    }
+//    
+//    func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
+//        return self.imageView
+//    }
+//    
+//    // Zooming function
+//    func zoomInZoomOut(point: CGPoint!) {
+//        let newZoomScale = self.scrollView.zoomScale > (self.scrollView.maximumZoomScale/2) ? self.scrollView.minimumZoomScale : self.scrollView.maximumZoomScale
+//        
+//        let scrollViewSize = self.scrollView.bounds.size
+//        
+//        let width = scrollViewSize.width / newZoomScale
+//        let height = scrollViewSize.height / newZoomScale
+//        let x = point.x - (width / 2.0)
+//        let y = point.y - (height / 2.0)
+//        
+//        let rectToZoom = CGRect(x: x, y: y, width: width, height: height)
+//        
+//        self.scrollView.zoomToRect(rectToZoom, animated: true)
+//    }
 
     /*
     // MARK: - Navigation

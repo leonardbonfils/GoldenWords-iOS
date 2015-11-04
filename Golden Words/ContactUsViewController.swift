@@ -8,15 +8,39 @@
 
 import UIKit
 import MessageUI
+import Instructions
 
-class ContactUsViewController: UIViewController, MFMailComposeViewControllerDelegate {
+class ContactUsViewController: UIViewController, MFMailComposeViewControllerDelegate, CoachMarksControllerDataSource, CoachMarksControllerDelegate {
 
     @IBOutlet weak var menuButton:UIBarButtonItem!
     
     let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
     
+    let coachMarksController = CoachMarksController()
+
+    let pointOfInterest = UIView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let firstLaunch = NSUserDefaults.standardUserDefaults().boolForKey("FirstLaunch")
+        if firstLaunch {
+            print("Not first launch")
+        } else {
+            print("First launch, setting NSUserDefault.")
+            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "FirstLaunch")
+        }
+        
+        // Configuring the coachMarksController
+        self.coachMarksController.datasource = self
+        self.coachMarksController.overlayBlurEffectStyle = UIBlurEffectStyle.Dark
+        self.coachMarksController.allowOverlayTap = true
+        
+        var coachMark = coachMarksController.coachMarkForView(self.view.viewWithTag(1)) {
+            (frame: CGRect) -> UIBezierPath in
+            return UIBezierPath(rect: frame)
+        }
+        
         
         self.navigationController?.navigationBar.barTintColor = goldenWordsYellow
         
@@ -45,7 +69,35 @@ class ContactUsViewController: UIViewController, MFMailComposeViewControllerDele
         // Do any additional setup after loading the view.
     }
     
+    func numberOfCoachMarksForCoachMarksController(coachMarksController: CoachMarksController) -> Int {
+        if NSUserDefaults.standardUserDefaults().boolForKey("FirstLaunch") {
+            return 0
+        } else {
+            return 1
+        }
+    }
+    
+    func coachMarksController(coachMarksController: CoachMarksController, coachMarksForIndex index: Int) -> CoachMark {
+        return coachMarksController.coachMarkForView(self.view.viewWithTag(1))
+    }
+    
+    func coachMarksController(coachMarksController: CoachMarksController, coachMarkViewsForIndex index: Int, coachMark: CoachMark) -> (bodyView: CoachMarkBodyView, arrowView: CoachMarkArrowView?) {
+        let coachViews = coachMarksController.defaultCoachViewsWithArrow(true, arrowOrientation: coachMark.arrowOrientation)
+    
+        coachViews.bodyView.hintLabel.text = "Tap on any button to email GW Staff"
+        coachViews.bodyView.hintLabel.font = UIFont(name: "AvenirNext-Medium", size: 14)
+        coachViews.bodyView.hintLabel.textColor = UIColor.blackColor()
+        
+        coachViews.bodyView.nextLabel.text = "Got it!"
+        coachViews.bodyView.nextLabel.font = UIFont(name: "AvenirNext-DemiBold", size: 14)
+        coachViews.bodyView.nextLabel.textColor = goldenWordsYellow
+        
+        return (bodyView: coachViews.bodyView, arrowView: coachViews.arrowView)
+    }
+    
+    
     @IBAction func editorsContactButton(sender: UIButton) {
+        
         var emailTitle = "GW feedback"
         var messageBody = ""
         var toRecipients = ["eds@goldenwords.net"]
@@ -104,6 +156,7 @@ class ContactUsViewController: UIViewController, MFMailComposeViewControllerDele
     
     func mailComposeController(controller: MFMailComposeViewController, didFinishWithResult result: MFMailComposeResult, error: NSError?) {
         self.dismissViewControllerAnimated(true, completion: nil)
+        self.coachMarksController.stop()
     }
     
     override func didReceiveMemoryWarning() {
@@ -111,6 +164,16 @@ class ContactUsViewController: UIViewController, MFMailComposeViewControllerDele
         // Dispose of any resources that can be recreated.
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let firstLaunch = NSUserDefaults.standardUserDefaults().boolForKey("FirstLaunch")
+        if firstLaunch {
+            self.coachMarksController.startOn(self)
+        } else {
+            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "FirstLaunch")
+        }
+    }
 
     /*
     // MARK: - Navigation

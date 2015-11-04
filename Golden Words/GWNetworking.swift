@@ -80,6 +80,7 @@ enum Router : URLRequestConvertible {
     case News(Int)
     case Random(Int)
     case Pictures(Int)
+    case Videos(Int)
     
     var URLRequest: NSMutableURLRequest {
         let path : String
@@ -98,6 +99,8 @@ enum Router : URLRequestConvertible {
                 return ("/list/random/\(randomSection * 10)")
             case .Pictures (let page):
                 return ("/list/pictures/\(page)")
+            case .Videos (let page):
+                return ("/list/videos/\(page)")
             }
         }()
         
@@ -272,10 +275,9 @@ class RandomElement: NSObject {
 
 class PictureElement: NSObject {
     
-    
     var title: String           // title
     var nodeID: Int             // nid
-    var timeStamp: Int      // revision_timestamp
+    var timeStamp: Int          // revision_timestamp
     var imageURL: String        // image_url
     var author: String          // author
     
@@ -297,5 +299,37 @@ class PictureElement: NSObject {
         self.volumeNumber = volumeNumber
         
     }
-
 }
+    
+class VideoElement: NSObject {
+    
+    var title: String           // title
+    var nodeID: Int             // nid
+    var timeStamp: Int          // revision_timestamp
+    var videoURL: String        // video_url
+    var thumbnailURL: String    // NOT IN THE API - OBTAINED FROM STRING MANIPULATING ON videoURL
+    var author: String          // author
+    
+    var issueNumber: String     // issue_int
+    var volumeNumber: String    // volume_int
+    
+    init(title: String, nodeID: Int, timeStamp: Int, videoURL: String, thumbnailURL: String, author: String, issueNumber: String, volumeNumber: String) {
+        self.title = title
+        self.nodeID = nodeID
+        self.timeStamp = timeStamp
+        self.videoURL = videoURL
+        self.thumbnailURL = thumbnailURL
+        self.author = author
+        self.issueNumber = issueNumber
+        self.volumeNumber = volumeNumber
+        }
+    
+    override func isEqual(object: AnyObject!) -> Bool {
+        return (object as! VideoElement).nodeID == self.nodeID
+    }
+    
+    override var hash: Int {
+        return (self as VideoElement).nodeID
+    }
+}
+    
