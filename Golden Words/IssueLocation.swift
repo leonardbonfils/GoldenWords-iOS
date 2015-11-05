@@ -13,12 +13,17 @@ import Contacts
 
 class IssueLocation: NSObject, MKAnnotation {
     
-    let locationName: String
-    let coordinate: CLLocationCoordinate2D
+    var locationName: String
+    var campusName: String
+    var latitude: Float
+    var longitude: Float
+    var coordinate: CLLocationCoordinate2D
     
-    init(locationName: String, coordinate: CLLocationCoordinate2D) {
-        
+    init(locationName: String, campusName: String, latitude: Float, longitude: Float, coordinate: CLLocationCoordinate2D) {
         self.locationName = locationName
+        self.campusName = campusName
+        self.latitude = latitude
+        self.longitude = longitude
         self.coordinate = coordinate
         
         super.init()
@@ -48,6 +53,7 @@ class IssueLocation: NSObject, MKAnnotation {
         
         return mapItem
     }
+}
     
 //    class func fromJSON(json: [JSONValue]) -> IssueLocation {
 //        
@@ -74,6 +80,3 @@ class IssueLocation: NSObject, MKAnnotation {
 //            return .Green
 //        }
 //    }
-    
-        
-}

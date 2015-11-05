@@ -113,6 +113,9 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
             // Fallback on earlier versions
         }
         
+//        currentIssueTableView.rowHeight = UITableViewAutomaticDimension
+//        currentIssueTableView.estimatedRowHeight = 80
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 

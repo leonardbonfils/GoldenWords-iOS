@@ -81,6 +81,7 @@ enum Router : URLRequestConvertible {
     case Random(Int)
     case Pictures(Int)
     case Videos(Int)
+    case MapObjects
     
     var URLRequest: NSMutableURLRequest {
         let path : String
@@ -101,6 +102,8 @@ enum Router : URLRequestConvertible {
                 return ("/list/pictures/\(page)")
             case .Videos (let page):
                 return ("/list/videos/\(page)")
+            case .MapObjects:
+                return ("/locations")
             }
         }()
         
@@ -331,5 +334,9 @@ class VideoElement: NSObject {
     override var hash: Int {
         return (self as VideoElement).nodeID
     }
+    
+// I did not add a class for the issue locations here because it was already declared in a different file (IssueLocation.swift).
+// I simply added a route for issue locations in the router.
+    
 }
     

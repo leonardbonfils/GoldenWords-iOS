@@ -8,8 +8,8 @@
 
 
 import UIKit
-import YouTubePlayer
 import Alamofire
+import SwiftyJSON
 
 class VideosViewController: UITableViewController {
     
@@ -370,9 +370,14 @@ class VideosViewController: UITableViewController {
                                     videoElement.videoURL = videoURL
                                 }
                                 
-//                                let videoID = videoElement.videoURL.substringFromIndex(<#T##index: Index##Index#>)
+                                let location = videoElement.videoURL.characters.count - 11
+                                var videoID = videoElement.videoURL.substringFromIndex(videoElement.videoURL.startIndex.advancedBy(location))
                                 
-//                                 = videoElement.videoURL.substringFromIndex((videoElement.videoURL.characters.count)-11)
+                                
+                                if let thumbnailURL = "http://i1.ytimg.com/vi/" + videoID + "/maxresdefault.jpg" as? String {
+                                    videoElement.thumbnailURL = thumbnailURL
+                                }
+
                                 
                                 if let author = node.1["author"] as? String {
                                     videoElement.author = author

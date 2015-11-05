@@ -21,6 +21,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     
     // Hamburger button declaration
     @IBOutlet weak var menuButton:UIBarButtonItem!
+
+    var populatingMapObjects = false
     
     var loadingIndicator = UIActivityIndicatorView()
     
@@ -30,6 +32,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     var locationManager: CLLocationManager?
     
     /* Really ugly code where I declare all of my static data */
+    /*
     let coordinatesARC = IssueLocation(locationName: "ARC", coordinate: CLLocationCoordinate2D(latitude: 44.22928743712073, longitude: -76.49416565895079))
     let coordinatesJDUC = IssueLocation(locationName: "JDUC", coordinate: CLLocationCoordinate2D(latitude: 44.22838027067406  , longitude: -76.49507761001587))
     let coordinatesStaufferLibrary = IssueLocation(locationName: "Stauffer Library", coordinate: CLLocationCoordinate2D(latitude: 44.228418710213944, longitude: -76.49615049362183))
@@ -49,6 +52,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     let coordinatesVictoriaHall = IssueLocation(locationName: "Victoria Hall", coordinate: CLLocationCoordinate2D(latitude: 44.22550492192426, longitude: -76.49863958358765))
     let coordinatesStirlingHall = IssueLocation(locationName: "Stirling Hall", coordinate: CLLocationCoordinate2D(latitude: 44.22463613919133, longitude: -76.49767398834229))
     let coordinatesWestCampus = IssueLocation(locationName: "Jean Royce Hall", coordinate: CLLocationCoordinate2D(latitude: 44.22438242146097, longitude: -76.51471138000487))
+    */
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -80,9 +84,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         
         mapView.setRegion(coordinateRegion, animated: true)
         
-//        populateMapObjects()
-//        loadObjectsIntoMap()
-        
         self.loadingIndicator.backgroundColor = goldenWordsYellow
         self.loadingIndicator.hidesWhenStopped = true
         self.loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
@@ -91,13 +92,10 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         self.view.addSubview(loadingIndicator)
         self.view.bringSubviewToFront(loadingIndicator)
         
-//        let ARCAnnotation = MKPointAnnotation()
-//        ARCAnnotation.title = "ARC"
-//        ARCAnnotation.subtitle = "ARC Subtitle"
-//        ARCAnnotation.coordinate = coordinatesARC.coordinate
+        populateMapObjects()
+//        loadObjectsIntoMapView()
         
-//        mapView.addAnnotation(ARCAnnotation)
-        
+/*
         // Adding all annotations to the map view
         mapView.addAnnotation(coordinatesARC)
         mapView.addAnnotation(coordinatesJDUC)
@@ -118,20 +116,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         mapView.addAnnotation(coordinatesVictoriaHall)
         mapView.addAnnotation(coordinatesStirlingHall)
         mapView.addAnnotation(coordinatesWestCampus)
-        
-        // loadInitialData()
-//        mapView.addAnnotations(issueLocations)
+*/
         
         // Show user location and start updating user location
         mapView.showsUserLocation = true
         locationManager?.startUpdatingLocation()
-        
-//        // Show a sample issue location on the Map
-//        let IssueLocation = IssueLocation(locationName: "Stirling Hall, West Entrance", coordinate: CLLocationCoordinate2D(latitude: 44.22468034747186, longitude: -76.49805217981339))
-//        
-//        mapView.addAnnotation(IssueLocation)
-
-        // Do any additional setup after loading the view.
     }
 
     
@@ -201,12 +190,89 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     
     func populateMapObjects() {
     
+        if populatingMapObjects {
+            return
+        }
         
-    
-    
-    
-    }
-    
+        populatingMapObjects = true
+        
+        self.loadingIndicator.startAnimating()
+        
+        Alamofire.request(GWNetworking.Router.MapObjects).responseJSON() { response in
+            if let JSON = response.result.value {
+                
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)) {
+                    
+                    /* Making an array of all the node IDs from the JSON file */
+                    
+                    if (JSON .isKindOfClass(NSArray)) {
+                        
+                        for location in JSON as! Dictionary<String,AnyObject> {
+
+                            if let issueLocation: IssueLocation = IssueLocation(locationName: "Center of the universe", campusName: "Queen's University", latitude: 44.22661586877309, longitude: -76.49380087852478, coordinate: CLLocationCoordinate2D(latitude: 44.22661586877309, longitude: -76.49380087852478)) {
+                                
+//                                if let locationName = 
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                                
+                            
+//                            if let locationName = location.0["name"] as? String {
+//                                issueLocation.locationName = locationName
+//                            }
+//                        
+//                            if let latitude = location.0["coordinates"][1] as? Int {
+//                                issueLocation.latitude = latitude
+//                            }
+//                        
+//                            if let longitude = location.0["coordinates"][0] as? Int {
+//                                issueLocation.longitude = longitude
+//                            }
+                                
+
+                        }
+                    }
+                }
+            }
+        }
     
     
     
@@ -220,4 +286,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     }
     */
     
+        }
+    }
 }
