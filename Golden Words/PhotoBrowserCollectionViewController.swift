@@ -98,7 +98,7 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         
         self.cellLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
         self.cellLoadingIndicator.color = goldenWordsYellow
-        self.cellLoadingIndicator.center = (self.collectionView?.center)!
+        self.cellLoadingIndicator.center = (self.view?.center)!
         self.collectionView!.addSubview(cellLoadingIndicator)
         self.collectionView!.bringSubviewToFront(cellLoadingIndicator)
 

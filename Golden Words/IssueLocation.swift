@@ -15,11 +15,11 @@ class IssueLocation: NSObject, MKAnnotation {
     
     var locationName: String
     var campusName: String
-    var latitude: Float
-    var longitude: Float
+    var latitude: Double
+    var longitude: Double
     var coordinate: CLLocationCoordinate2D
     
-    init(locationName: String, campusName: String, latitude: Float, longitude: Float, coordinate: CLLocationCoordinate2D) {
+    init(locationName: String, campusName: String, latitude: Double, longitude: Double, coordinate: CLLocationCoordinate2D) {
         self.locationName = locationName
         self.campusName = campusName
         self.latitude = latitude
@@ -31,7 +31,7 @@ class IssueLocation: NSObject, MKAnnotation {
     }
     
     var subtitle: String? {
-        if (locationName == "Jean Royce Hall") {
+        if (latitude == 44.22438242146097) {
             return "West Campus"
         } else {
             return "Main Campus"

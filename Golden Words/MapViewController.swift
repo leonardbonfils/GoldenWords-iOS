@@ -25,34 +25,10 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     var populatingMapObjects = false
     
     var loadingIndicator = UIActivityIndicatorView()
-    
-    var temporaryMapObjects = NSMutableOrderedSet(capacity: 1000)
-    var mapObjects = NSMutableOrderedSet(capacity: 1000)
+
+    var mapObjects = [IssueLocation]()
     
     var locationManager: CLLocationManager?
-    
-    /* Really ugly code where I declare all of my static data */
-    /*
-    let coordinatesARC = IssueLocation(locationName: "ARC", coordinate: CLLocationCoordinate2D(latitude: 44.22928743712073, longitude: -76.49416565895079))
-    let coordinatesJDUC = IssueLocation(locationName: "JDUC", coordinate: CLLocationCoordinate2D(latitude: 44.22838027067406  , longitude: -76.49507761001587))
-    let coordinatesStaufferLibrary = IssueLocation(locationName: "Stauffer Library", coordinate: CLLocationCoordinate2D(latitude: 44.228418710213944, longitude: -76.49615049362183))
-    let coordinatesWalterLightHall = IssueLocation(locationName: "Walter Light Hall", coordinate: CLLocationCoordinate2D(latitude: 44.22794205814507, longitude: -76.49166584014893))
-    let coordinatesDupuisHall = IssueLocation(locationName: "Dupuis Hall", coordinate: CLLocationCoordinate2D(latitude: 44.22867241054762, longitude: -76.4927065372467))
-    let coordinatesHumphreyHall = IssueLocation(locationName: "Humphrey Hall", coordinate: CLLocationCoordinate2D(latitude: 44.22688879714365, longitude:  -76.49212718009949))
-    let coordinatesBiosciencesComplex = IssueLocation(locationName: "Biosciences Complex", coordinate: CLLocationCoordinate2D(latitude: 44.226327562781904, longitude: -76.49117231369019))
-    let coordinatesBMH = IssueLocation(locationName: "Beamish-Munro Hall", coordinate: CLLocationCoordinate2D(latitude: 44.228195760533175, longitude: -76.49271726608276 ))
-    let coordinatesBotterellHall = IssueLocation(locationName: "Botterell Hall", coordinate: CLLocationCoordinate2D(latitude: 44.22447468258034, longitude: -76.49160146713257))
-    let coordinatesEtheringtonHall = IssueLocation(locationName: "Etherington Hall", coordinate: CLLocationCoordinate2D(latitude: 44.224282471751785, longitude: -76.49390816688538))
-    let coordinatesJefferyHall = IssueLocation(locationName: "Jeffery Hall", coordinate: CLLocationCoordinate2D(latitude: 44.22590855555731, longitude: -76.49605393409729))
-    let coordinatesEllisHall = IssueLocation(locationName: "Ellis Hall", coordinate: CLLocationCoordinate2D(latitude: 44.22636984774898, longitude: -76.49602174758911))
-    let coordinatesMackintoshCorryHall = IssueLocation(locationName: "Mackintosh-Corry Hall", coordinate: CLLocationCoordinate2D(latitude: 44.22677731951135, longitude: -76.49697124958038))
-    let coordinatesChernoffHall = IssueLocation(locationName: "Chernoff Hall", coordinate: CLLocationCoordinate2D(latitude: 44.22436704459368, longitude: -76.49884343147278))
-    let coordinatesLeggetHall = IssueLocation(locationName: "Legget Hall", coordinate: CLLocationCoordinate2D(latitude: 44.22362126170883, longitude: -76.49749159812927))
-    let coordinatesLeonardHall = IssueLocation(locationName: "Leonard Hall", coordinate: CLLocationCoordinate2D(latitude: 44.22429016019697, longitude: -76.50065660476685))
-    let coordinatesVictoriaHall = IssueLocation(locationName: "Victoria Hall", coordinate: CLLocationCoordinate2D(latitude: 44.22550492192426, longitude: -76.49863958358765))
-    let coordinatesStirlingHall = IssueLocation(locationName: "Stirling Hall", coordinate: CLLocationCoordinate2D(latitude: 44.22463613919133, longitude: -76.49767398834229))
-    let coordinatesWestCampus = IssueLocation(locationName: "Jean Royce Hall", coordinate: CLLocationCoordinate2D(latitude: 44.22438242146097, longitude: -76.51471138000487))
-    */
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -93,31 +69,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         self.view.bringSubviewToFront(loadingIndicator)
         
         populateMapObjects()
-//        loadObjectsIntoMapView()
-        
-/*
-        // Adding all annotations to the map view
-        mapView.addAnnotation(coordinatesARC)
-        mapView.addAnnotation(coordinatesJDUC)
-        mapView.addAnnotation(coordinatesStaufferLibrary)
-        mapView.addAnnotation(coordinatesWalterLightHall)
-        mapView.addAnnotation(coordinatesDupuisHall)
-        mapView.addAnnotation(coordinatesHumphreyHall)
-        mapView.addAnnotation(coordinatesBiosciencesComplex)
-        mapView.addAnnotation(coordinatesBMH)
-        mapView.addAnnotation(coordinatesBotterellHall)
-        mapView.addAnnotation(coordinatesEtheringtonHall)
-        mapView.addAnnotation(coordinatesJefferyHall)
-        mapView.addAnnotation(coordinatesEllisHall)
-        mapView.addAnnotation(coordinatesMackintoshCorryHall)
-        mapView.addAnnotation(coordinatesChernoffHall)
-        mapView.addAnnotation(coordinatesLeggetHall)
-        mapView.addAnnotation(coordinatesLeonardHall)
-        mapView.addAnnotation(coordinatesVictoriaHall)
-        mapView.addAnnotation(coordinatesStirlingHall)
-        mapView.addAnnotation(coordinatesWestCampus)
-*/
-        
+
         // Show user location and start updating user location
         mapView.showsUserLocation = true
         locationManager?.startUpdatingLocation()
@@ -198,83 +150,70 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         
         self.loadingIndicator.startAnimating()
         
+        var index = 0
+
+        
         Alamofire.request(GWNetworking.Router.MapObjects).responseJSON() { response in
             if let JSON = response.result.value {
                 
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)) {
                     
+//                    print (JSON[0]["name"])
+                    
                     /* Making an array of all the node IDs from the JSON file */
                     
                     if (JSON .isKindOfClass(NSArray)) {
-                        
-                        for location in JSON as! Dictionary<String,AnyObject> {
+                    
+                    
+                        for _ in JSON as! [Dictionary<String,AnyObject>] {
 
                             if let issueLocation: IssueLocation = IssueLocation(locationName: "Center of the universe", campusName: "Queen's University", latitude: 44.22661586877309, longitude: -76.49380087852478, coordinate: CLLocationCoordinate2D(latitude: 44.22661586877309, longitude: -76.49380087852478)) {
                                 
-//                                if let locationName = 
                                 
+                                if let locationName = JSON[index]["name"] as? String {
+                                    issueLocation.locationName = locationName
+                                }
                                 
+                                print(issueLocation.locationName)
                                 
+                                if let latitude = JSON[index]["coordinates"]!![1] as? Double {
+                                    issueLocation.latitude = latitude
+                                }
                                 
+                                if let longitude = JSON[index]["coordinates"]!![0] as? Double {
+                                    issueLocation.longitude = longitude
+                                }
                                 
+                                issueLocation.coordinate = CLLocationCoordinate2D(latitude: issueLocation.latitude, longitude: issueLocation.longitude)
                                 
+                                index = index+1
                                 
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                                
-                            
-//                            if let locationName = location.0["name"] as? String {
-//                                issueLocation.locationName = locationName
-//                            }
-//                        
-//                            if let latitude = location.0["coordinates"][1] as? Int {
-//                                issueLocation.latitude = latitude
-//                            }
-//                        
-//                            if let longitude = location.0["coordinates"][0] as? Int {
-//                                issueLocation.longitude = longitude
-//                            }
-                                
-
+                                self.mapObjects.append(issueLocation)
                         }
                     }
                 }
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        
+                        self.loadingIndicator.stopAnimating()
+                        self.populatingMapObjects = false
+                        print(self.mapObjects.count)
+                        
+                        for mapObject in self.mapObjects {
+                            
+                            let temporaryMapAnnotation = IssueLocation(locationName: mapObject.locationName, campusName: "Main Campus", latitude: mapObject.latitude, longitude: mapObject.longitude, coordinate: mapObject.coordinate)
+                            
+                            if (temporaryMapAnnotation.longitude < -76.50921821594238) {
+                                temporaryMapAnnotation.campusName = "West Campus"
+                            }
+                            
+                            self.mapView.addAnnotation(temporaryMapAnnotation)
+                        }
+                }
             }
         }
-    
-    
+    }
+}
     
     /*
     // MARK: - Navigation
@@ -286,6 +225,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     }
     */
     
-        }
-    }
+    
+    
 }
