@@ -82,6 +82,7 @@ enum Router : URLRequestConvertible {
     case Pictures(Int)
     case Videos(Int)
     case MapObjects
+    case SpecificIssue(Int, Int)
     
     var URLRequest: NSMutableURLRequest {
         let path : String
@@ -104,6 +105,8 @@ enum Router : URLRequestConvertible {
                 return ("/list/videos/\(page)")
             case .MapObjects:
                 return ("/locations")
+            case .SpecificIssue(let volume, let issue):
+                return ("/issue/\(volume)/\(issue)")
             }
         }()
         
@@ -126,13 +129,13 @@ class IssueElement: NSObject {
     var title: String           // title
     var nodeID: Int             // nid
     var timeStamp: Int          // revision_timestamp
-    var imageURL: String      // image_url
-    var author: String?          // author
+    var imageURL: String        // image_url
+    var author: String?         // author
     
     var issueNumber: String     // issue_int
     var volumeNumber: String    // volume_int
     
-    var articleContent: String // html_content
+    var articleContent: String  // html_content
     
     var coverImageInteger: String // Variable that indicates whether this is the cover page or not (1 for cover, 0 for everything else)
     
@@ -168,14 +171,14 @@ class EditorialElement: NSObject {
     
     var title: String           // title
     var nodeID: Int             // nid
-    var timeStamp: Int       // revision_timestamp
-    var imageURL: String       // image_url
-    var author: String       // author
+    var timeStamp: Int          // revision_timestamp
+    var imageURL: String        // image_url
+    var author: String          // author
     
     var issueNumber: String     // issue_int
     var volumeNumber: String    // volume_int
     
-    var articleContent: String // html_content
+    var articleContent: String  // html_content
     
     /* To get an NSDate objec from Unix timestamp
     var date = NSDate(timeIntervalSince1970: timeStamp) */
@@ -204,15 +207,15 @@ class EditorialElement: NSObject {
 class NewsElement: NSObject {
     
     var title: String           // title
-    var nodeID: Int          // nid
-    var timeStamp: Int       // revision_timestamp
-    var imageURL: String       // image_url
+    var nodeID: Int             // nid
+    var timeStamp: Int          // revision_timestamp
+    var imageURL: String        // image_url
     var author: String          // author
     
     var issueNumber: String     // issue_int
     var volumeNumber: String    // volume_int
     
-    var articleContent: String // html_content
+    var articleContent: String  // html_content
     
     // To get an NSDate objec from Unix timestamp
     // var date = NSDate(timeIntervalSince1970: timeStamp)
@@ -334,9 +337,29 @@ class VideoElement: NSObject {
     override var hash: Int {
         return (self as VideoElement).nodeID
     }
+}
     
-// I did not add a class for the issue locations here because it was already declared in a different file (IssueLocation.swift).
-// I simply added a route for issue locations in the router.
+class VolumeAndIssueNumberElement: NSObject {
+        
+    var volumeNumber: String    // Volume (Volume is a simple key-value pair)
+    var issueNumber: String     // Issues[index] (Issues is an array of strings)
+    var randomID: Int
+    
+    init(volumeNumber: String, issueNumber: String, randomID: Int) {
+        self.volumeNumber = volumeNumber
+        self.issueNumber = issueNumber
+        self.randomID = randomID
+    }
+    
+    override func isEqual(object: AnyObject!) -> Bool {
+        return (object as! VolumeAndIssueNumberElement).issueNumber == self.issueNumber
+    }
+    
+    override var hash: Int {
+        return (self as VolumeAndIssueNumberElement).randomID
+    }
     
 }
     
+// I did not add a class for the issue locations here because it was already declared in a different file (IssueLocation.swift).
+// I simply added a route for issue locations in the router.

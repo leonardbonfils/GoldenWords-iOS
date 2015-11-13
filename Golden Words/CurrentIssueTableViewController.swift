@@ -591,7 +591,7 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
                             
                             self.nodeIDArray.addObject(nodeIDValue)
                             
-                            if let issueElement : IssueElement = IssueElement(title: "Just another Golden Words article", nodeID: 0, timeStamp: 0, imageURL: "init", author: "Staff", issueNumber: "Issue # error", volumeNumber: "Volume # error", articleContent: "Could not retrieve article content", coverImageInteger: "init", coverImage: UIImage()) {
+                            if let issueElement : IssueElement = IssueElement(title: "Just another Golden Words article", nodeID: 0, timeStamp: 1442239200, imageURL: "http://goldenwords.ca/sites/all/themes/custom/gw/logo.png", author: "Staff", issueNumber: "Issue # error", volumeNumber: "Volume # error", articleContent: "Looks like the server is acting up again!", coverImageInteger: "init", coverImage: UIImage()) {
                                 
                                 issueElement.title = node.1["title"] as! String
                                 issueElement.nodeID = Int(nodeIDValue)!
@@ -623,7 +623,7 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
 //                                }
 //                                issueElement.coverImageInteger = String(node.1["cover_image"]) // addition specific to the Current Issue View Controller
                                 
-                                if issueElement.articleContent.characters.count > 40 {
+                                if issueElement.articleContent.characters.count > 50 {
                                     lastItem = self.temporaryCurrentIssueObjects.count
                                     self.temporaryCurrentIssueObjects.addObject(issueElement)
                                     // print(issueElement.nodeID)

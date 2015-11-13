@@ -325,7 +325,7 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
             cell.request?.cancel()
             
             // Using image cache system to make sure the table view works even when rapidly scrolling down the screen.
-            if let image = self.imageCache.objectForKey(imageURL) as? UIImage {
+            if var image = self.imageCache.objectForKey(imageURL) as? UIImage {
                 
                 cell.imageView.image = image
                 
@@ -333,7 +333,7 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
                 
                 cell.imageView.image = nil
                 cell.request = Alamofire.request(.GET, imageURL).responseImage() { response in
-                    if let image = response.result.value {
+                    if var image = response.result.value {
 //                        self.imageCache.setObject(response.result.value!, forKey: response.request!.URLString)
                         self.imageCache.setObject(response.result.value!, forKey: imageURL)
                         if cell.imageView.image == nil {
@@ -428,11 +428,7 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
             let indexPaths = self.collectionView!.indexPathsForSelectedItems()
             let indexPath = indexPaths![0] as! NSIndexPath
             
-            let item = indexPath.item
-            
-//            detailViewController.imageThroughSegue = 
-            
-//            detailViewController.imageURLForViewerController = pictureObjects.objectAtIndex(indexPath.item).imageURL
+            detailViewController.imageURLForViewerController = pictureObjects.objectAtIndex(indexPath.item).imageURL
             
         }
     }

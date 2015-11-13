@@ -173,9 +173,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                                 if let locationName = JSON[index]["name"] as? String {
                                     issueLocation.locationName = locationName
                                 }
-                                
-                                print(issueLocation.locationName)
-                                
+
                                 if let latitude = JSON[index]["coordinates"]!![1] as? Double {
                                     issueLocation.latitude = latitude
                                 }

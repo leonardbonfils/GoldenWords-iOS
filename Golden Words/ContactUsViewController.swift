@@ -23,13 +23,13 @@ class ContactUsViewController: UIViewController, MFMailComposeViewControllerDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let firstLaunch = NSUserDefaults.standardUserDefaults().boolForKey("FirstLaunch")
-        if firstLaunch {
-            print("Not first launch")
-        } else {
-            print("First launch, setting NSUserDefault.")
-            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "FirstLaunch")
-        }
+//        let firstLaunch = NSUserDefaults.standardUserDefaults().boolForKey("FirstLaunch")
+//        if firstLaunch {
+//            print("Not first launch")
+//        } else {
+//            print("First launch, setting NSUserDefault.")
+//            NSUserDefaults.standardUserDefaults().setBool(true, forKey: "FirstLaunch")
+//        }
         
         // Configuring the coachMarksController
         self.coachMarksController.datasource = self
