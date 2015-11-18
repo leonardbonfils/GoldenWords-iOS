@@ -14,8 +14,6 @@ class ContactUsViewController: UIViewController, MFMailComposeViewControllerDele
 
     @IBOutlet weak var menuButton:UIBarButtonItem!
     
-    let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
-    
     let coachMarksController = CoachMarksController()
 
     let pointOfInterest = UIView()
@@ -42,7 +40,7 @@ class ContactUsViewController: UIViewController, MFMailComposeViewControllerDele
         }
         
         
-        self.navigationController?.navigationBar.barTintColor = goldenWordsYellow
+        self.navigationController?.navigationBar.barTintColor = UIColor.goldenWordsYellow()
         
         // Configuring the revealViewcontroller
         if self.revealViewController() != nil {
@@ -90,7 +88,7 @@ class ContactUsViewController: UIViewController, MFMailComposeViewControllerDele
         
         coachViews.bodyView.nextLabel.text = "Got it!"
         coachViews.bodyView.nextLabel.font = UIFont(name: "AvenirNext-DemiBold", size: 14)
-        coachViews.bodyView.nextLabel.textColor = goldenWordsYellow
+        coachViews.bodyView.nextLabel.textColor = UIColor.goldenWordsYellow()
         
         return (bodyView: coachViews.bodyView, arrowView: coachViews.arrowView)
     }

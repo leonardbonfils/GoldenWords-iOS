@@ -14,9 +14,6 @@ class MenuController: UITableViewController {
     
     @IBOutlet weak var mainIconTableViewCell: UITableViewCell!
     
-    // Defining the right yellow for the application
-    let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
-        
 //    var overlayView: UIView = UIView()
 //    
 //    override func viewDidAppear(animated: Bool) {

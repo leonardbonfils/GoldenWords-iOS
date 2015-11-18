@@ -6,6 +6,8 @@
 //  Copyright © 2015 Léonard Bonfils. All rights reserved.
 //
 
+/*
+
 import UIKit
 
 @IBDesignable class BWCircularSliderView: UIView {
@@ -35,6 +37,9 @@ import UIKit
         // Add the slider as subview of this view
         self.addSubview(slider)
         
+//        self.alpha = 0.0
+//        self.backgroundColor = UIColor.blueColor()
+        
     }
     #endif
     
@@ -45,5 +50,6 @@ import UIKit
         print("Value changed \(slider.angle)")
     }
 
-
 }
+
+*/

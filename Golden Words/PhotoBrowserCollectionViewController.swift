@@ -12,8 +12,6 @@ import AlamofireImage
 
 class PhotoBrowserCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
-    let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
-    
     @IBOutlet weak var menuButton:UIBarButtonItem!
     
     @IBOutlet var picturesCollectionView: UICollectionView!
@@ -62,7 +60,7 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
 
         self.collectionView!.registerClass(PhotoBrowserCollectionViewCell.self, forCellWithReuseIdentifier: PhotoBrowserCellIdentifier)
         
-        self.cellLoadingIndicator.backgroundColor = goldenWordsYellow
+        self.cellLoadingIndicator.backgroundColor = UIColor.goldenWordsYellow()
         self.cellLoadingIndicator.hidesWhenStopped = true
         
         // Hamburger menu button setup
@@ -81,7 +79,7 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         
         // Creating and configuring the goldenWordsRefreshControl subview
         goldenWordsRefreshControl = UIRefreshControl()
-        goldenWordsRefreshControl.backgroundColor = goldenWordsYellow
+        goldenWordsRefreshControl.backgroundColor = UIColor.goldenWordsYellow()
         goldenWordsRefreshControl.tintColor = UIColor.whiteColor()
         self.collectionView!.addSubview(goldenWordsRefreshControl)
         
@@ -97,7 +95,7 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         self.dateFormatter.dateFormat = "dd/MM/yy"
         
         self.cellLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
-        self.cellLoadingIndicator.color = goldenWordsYellow
+        self.cellLoadingIndicator.color = UIColor.goldenWordsYellow()
         self.cellLoadingIndicator.center = (self.view?.center)!
         self.collectionView!.addSubview(cellLoadingIndicator)
         self.collectionView!.bringSubviewToFront(cellLoadingIndicator)
@@ -434,7 +432,7 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
     }
     
     override func scrollViewDidScroll(scrollView: UIScrollView) {
-        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.75) {
+        if (scrollView.contentOffset.y + view.frame.size.height > scrollView.contentSize.height * 0.25) {
             populatePhotos()
         }
     }
@@ -446,8 +444,10 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         }
         populatingPhotos = true
         
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        
         self.cellLoadingIndicator.startAnimating()
-        self.temporaryPictureObjects.removeAllObjects()
+//        self.temporaryPictureObjects.removeAllObjects()
         
         Alamofire.request(GWNetworking.Router.Pictures(self.currentPage)).responseJSON() { response in
             if let JSON = response.result.value {
@@ -516,6 +516,9 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
                     self.temporaryPictureObjects.removeAllObjects()
                     
                     self.collectionView!.reloadData()
+                
+                    UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+
                     self.cellLoadingIndicator.stopAnimating()
                     self.goldenWordsRefreshControl.endRefreshing()
 
@@ -541,7 +544,7 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         self.currentPage = 0
         
 //        self.cellLoadingIndicator.startAnimating()
-        self.picturesCollectionView.bringSubviewToFront(cellLoadingIndicator)
+//        self.picturesCollectionView.bringSubviewToFront(cellLoadingIndicator)
         
         self.populatingPhotos = false
         populatePhotos()

@@ -58,19 +58,6 @@ import Alamofire
 //}
 
 struct GWNetworking {
-    
-    /*
-    
-    enum ImageSize: Int {
-        case Tiny = 1
-        case Small = 2
-        case Medium = 3
-        case Large = 4
-        case XLarge = 5
-    }
-    
-        */
-
 
 enum Router : URLRequestConvertible {
     static let baseURLString = MyGlobalVariables.baseURL
@@ -100,9 +87,9 @@ enum Router : URLRequestConvertible {
             case .Random (let randomSection):
                 return ("/list/random/\(randomSection * 10)")
             case .Pictures (let page):
-                return ("/list/pictures/\(page)")
+                return ("/list/pictures/\(page * 10)")
             case .Videos (let page):
-                return ("/list/videos/\(page)")
+                return ("/list/videos/\(page * 10)")
             case .MapObjects:
                 return ("/locations")
             case .SpecificIssue(let volume, let issue):

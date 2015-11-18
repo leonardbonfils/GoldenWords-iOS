@@ -9,9 +9,7 @@
 import UIKit
 import Alamofire
 
-class NewsTableViewController: UITableViewController {
-
-    let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
+class NewsTableViewController: UITableViewController, UIViewControllerPreviewingDelegate {
     
     // Hamburger button declaration
     @IBOutlet weak var menuButton:UIBarButtonItem!
@@ -75,7 +73,7 @@ class NewsTableViewController: UITableViewController {
         
         // Creating and configuring the goldenWordsRefreshControl subview
         goldenWordsRefreshControl = UIRefreshControl()
-        goldenWordsRefreshControl.backgroundColor = goldenWordsYellow
+        goldenWordsRefreshControl.backgroundColor = UIColor.goldenWordsYellow()
         goldenWordsRefreshControl.tintColor = UIColor.whiteColor()
 //        goldenWordsRefreshControl.addTarget(self, action: "handleRefresh", forControlEvents: .ValueChanged)
         newsTableView.addSubview(goldenWordsRefreshControl)
@@ -101,11 +99,20 @@ class NewsTableViewController: UITableViewController {
         tableView.estimatedRowHeight = 50
         
         self.cellLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
-        self.cellLoadingIndicator.color = goldenWordsYellow
+        self.cellLoadingIndicator.color = UIColor.goldenWordsYellow()
         let indicatorCenter = CGPoint(x: self.newsTableView.center.x, y: self.newsTableView.center.y - 50)
         self.cellLoadingIndicator.center = indicatorCenter
         self.newsTableView.addSubview(cellLoadingIndicator)
         self.newsTableView.bringSubviewToFront(cellLoadingIndicator)
+        
+        // Checking for 3D Touch Support
+        if #available(iOS 9.0, *) {
+            if (traitCollection.forceTouchCapability == .Available){
+                registerForPreviewingWithDelegate(self, sourceView: view)
+            }
+        } else {
+            // Fallback on earlier versions
+        }
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -121,97 +128,6 @@ class NewsTableViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    /*
-    func loadCustomRefreshContents() {
-        let refreshContents = NSBundle.mainBundle().loadNibNamed("RefreshContents", owner: self, options: nil)
-        
-        customView = refreshContents[0] as! UIView
-        customView.frame = customRefreshControl!.bounds
-        
-        for (var i=0; i < customView.subviews.count; i++) {
-            labelsArray.append(customView.viewWithTag(i+1) as! UILabel)
-            
-            customRefreshControl!.addSubview(customView)
-        }
-    }
-    
-    func animateRefreshStep1() {
-        isAnimating = true
-        
-        UIView.animateWithDuration(0.1, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: { () -> Void in
-            
-            // Selecting the UILabel object in the labelsArray array, and applying the animation
-            self.labelsArray[self.currentLabelIndex].transform = CGAffineTransformMakeRotation(CGFloat(M_PI_4))
-            self.labelsArray[self.currentLabelIndex].textColor = self.getNextColor()
-            
-            }, completion: { (finished) -> Void in
-                
-                UIView.animateWithDuration(0.05, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: { () -> Void in
-                    
-                    self.labelsArray[self.currentLabelIndex].transform = CGAffineTransformIdentity
-                    self.labelsArray[self.currentLabelIndex].textColor = UIColor.blackColor()
-                    
-                    }, completion: { (finished) -> Void in
-                        ++self.currentLabelIndex
-                        
-                        if self.currentLabelIndex < self.labelsArray.count {
-                            self.animateRefreshStep1()
-                        }
-                        else {
-                            self.animateRefreshStep2()
-                        }
-                })
-        })
-    }
-    
-    func animateRefreshStep2() {
-        UIView.animateWithDuration(0.35, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: { () -> Void in
-            self.labelsArray[0].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[1].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[2].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[3].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[4].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[5].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[6].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[7].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[8].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[9].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[10].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            
-            
-            }, completion: { (finished) -> Void in
-                UIView.animateWithDuration(0.25, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: { () -> Void in
-                    self.labelsArray[0].transform = CGAffineTransformIdentity
-                    self.labelsArray[1].transform = CGAffineTransformIdentity
-                    self.labelsArray[2].transform = CGAffineTransformIdentity
-                    self.labelsArray[3].transform = CGAffineTransformIdentity
-                    self.labelsArray[4].transform = CGAffineTransformIdentity
-                    self.labelsArray[5].transform = CGAffineTransformIdentity
-                    self.labelsArray[6].transform = CGAffineTransformIdentity
-                    self.labelsArray[7].transform = CGAffineTransformIdentity
-                    self.labelsArray[8].transform = CGAffineTransformIdentity
-                    self.labelsArray[9].transform = CGAffineTransformIdentity
-                    self.labelsArray[10].transform = CGAffineTransformIdentity
-                    
-                    
-                    }, completion: { (finished) -> Void in
-                        if self.customRefreshControl!.refreshing {
-                            self.currentLabelIndex = 0
-                            self.animateRefreshStep1()
-                        } else {
-                            self.isAnimating = false
-                            self.currentLabelIndex = 0
-                            for var i=0; i<self.labelsArray.count; i++ {
-                                self.labelsArray[i].textColor = UIColor.blackColor()
-                                self.labelsArray[i].transform = CGAffineTransformIdentity
-                            }
-                        }
-                })
-        })
-        
-    }
-    */
-    
     override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         if goldenWordsRefreshControl.refreshing {
             if !isAnimating {
@@ -221,30 +137,9 @@ class NewsTableViewController: UITableViewController {
         }
     }
     
-//    func getNextColor() -> UIColor {
-//        var colorsArray: [UIColor] = [goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow]
-//        
-//        if currentColorIndex == colorsArray.count {
-//            currentColorIndex = 0
-//        }
-//        
-//        let returnColor = colorsArray[currentColorIndex]
-//        ++currentColorIndex
-//        
-//        return returnColor
-//    }
-    
     func holdRefreshControl() {
         timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
     }
-    
-    /*
-    func endOfWork() {
-        goldenWordsRefreshControl!.endRefreshing()
-        
-        timer.invalidate()
-        timer = nil
-    } */
 
     // MARK: - Table view data source
     
@@ -289,13 +184,10 @@ class NewsTableViewController: UITableViewController {
             let nodeID = newsObject.nodeID ?? 0
             
             
-//            cell.newsHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
             cell.newsHeadlineLabel.text = title
             
-//            cell.newsAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
             cell.newsAuthorLabel.text = author
             
-//            cell.newsPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
             cell.newsPublishDateLabel.text = timeStampDateString
             
         } else {
@@ -305,37 +197,54 @@ class NewsTableViewController: UITableViewController {
             cell.newsPublishDateLabel.text = nil
         }
         
-        /*
-        
-        let title = (newsObjects.objectAtIndex(indexPath.row) as! NewsElement).title
-        let timeStamp = (newsObjects.objectAtIndex(indexPath.row) as! NewsElement).timeStamp
-        let imageURL = (newsObjects.objectAtIndex(indexPath.row) as! NewsElement).imageURL
-        let author = (newsObjects.objectAtIndex(indexPath.row) as! NewsElement).author
-        
-        let issueNumber = (newsObjects.objectAtIndex(indexPath.row) as! NewsElement).issueNumber
-        let volumeNumber = (newsObjects.objectAtIndex(indexPath.row) as! NewsElement).volumeNumber
-        
-        let articleContent = (newsObjects.objectAtIndex(indexPath.row) as! NewsElement).articleContent
-        
-        
-        cell.newsHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
-        cell.newsHeadlineLabel.text = title
-        
-        cell.newsAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-        cell.newsAuthorLabel.text = author
-        
-        cell.newsPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-        cell.newsPublishDateLabel.text = String(timeStamp)
-        
-        cell.newsVolumeAndIssueLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-        cell.newsVolumeAndIssueLabel.text = "Volume \(volumeNumber) - Issue \(issueNumber)"
-        
-        */
-        
         return cell
 
-
     }
+    
+    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        
+        guard let indexPath = tableView?.indexPathForRowAtPoint(location) else { return nil }
+        
+        guard let cell = tableView?.cellForRowAtIndexPath(indexPath) else { return nil }
+        
+        guard let detailViewController = storyboard?.instantiateViewControllerWithIdentifier("NewsDetailViewControllerIdentifier") as? NewsDetailViewController else { return nil }
+        
+        if let newsObject = newsObjects.objectAtIndex(indexPath.row) as? NewsElement {
+            
+            let title = newsObject.title ?? ""
+            
+            let author = newsObject.author ?? ""
+            
+            let articleContent = newsObject.articleContent ?? ""
+            
+            let currentIssueHeadlineFor3DTouch = title
+            let currentIssueAuthorFor3DTouch = author
+            let currentIssueArticleContentFor3DTouch = articleContent
+            
+            detailViewController.newsArticleTitleThroughSegue = currentIssueHeadlineFor3DTouch
+            detailViewController.newsArticleAuthorThroughSegue = currentIssueAuthorFor3DTouch
+            detailViewController.newsArticleArticleContentThroughSegue = currentIssueArticleContentFor3DTouch
+            
+            detailViewController.preferredContentSize = CGSize(width: 0.0, height: 600)
+            
+            if #available(iOS 9.0, *) {
+                previewingContext.sourceRect = cell.frame
+            } else {
+                // Fallback on earlier versions
+            }
+            
+        }
+        
+        return detailViewController
+        
+    }
+    
+    
+    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
+        
+        showViewController(viewControllerToCommit, sender: self)
+    }
+
 
 
 
@@ -421,6 +330,8 @@ class NewsTableViewController: UITableViewController {
         }
         populatingNewsArticles = true
         
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        
         self.cellLoadingIndicator.startAnimating()
         
         Alamofire.request(GWNetworking.Router.News(self.currentPage)).responseJSON() { response in
@@ -487,6 +398,8 @@ class NewsTableViewController: UITableViewController {
                     dispatch_async(dispatch_get_main_queue()) {
                         self.newsObjects = self.temporaryNewsObjects
                         self.newsTableView.reloadData()
+                        
+                        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
                         
                         self.cellLoadingIndicator.stopAnimating()
                         self.currentPage++

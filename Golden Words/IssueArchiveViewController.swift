@@ -11,9 +11,7 @@ import Alamofire
 import SwiftyJSON
 import Instructions
 
-class IssueArchiveViewController: UIViewController, iCarouselDataSource, iCarouselDelegate, CoachMarksControllerDataSource, CoachMarksControllerDelegate {
-    
-    let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
+class IssueArchiveViewController: UIViewController, iCarouselDataSource, iCarouselDelegate {
     
     @IBOutlet weak var menuButton:UIBarButtonItem!
     
@@ -37,11 +35,12 @@ class IssueArchiveViewController: UIViewController, iCarouselDataSource, iCarous
     
     var loadingIndicator = UIActivityIndicatorView()
     
-    var donePopulatingVolumeAndIssueNumbers = false
+//    var donePopulatingVolumeAndIssueNumbers = false
+//    var donePopulatingCoverPictureObjectsAndSpecificIssueObjects = false
     
-    let coachMarksController = CoachMarksController()
-    
-    let pointOfInterest = UIView()
+//    let coachMarksController = CoachMarksController()
+//    
+//    let pointOfInterest = UIView()
     
     @IBOutlet var carousel: iCarousel!
     
@@ -54,6 +53,8 @@ class IssueArchiveViewController: UIViewController, iCarouselDataSource, iCarous
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.view.backgroundColor = UIColor.blackColor()
+
         // Hamburger button configuration
         if self.revealViewController() != nil {
             menuButton.target = self.revealViewController()
@@ -66,23 +67,27 @@ class IssueArchiveViewController: UIViewController, iCarouselDataSource, iCarous
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationItem.title = "Issue Archive"
         
-        self.loadingIndicator.backgroundColor = goldenWordsYellow
+        self.loadingIndicator.backgroundColor = UIColor.goldenWordsYellow()
         self.loadingIndicator.hidesWhenStopped = true
         self.loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
-        self.loadingIndicator.color = goldenWordsYellow
+        self.loadingIndicator.color = UIColor.goldenWordsYellow()
         self.loadingIndicator.center = self.view.center
         self.view.bringSubviewToFront(self.loadingIndicator)
         
         populateVolumeAndIssueNumbers()
         
-        if donePopulatingVolumeAndIssueNumbers {
+//        if donePopulatingVolumeAndIssueNumbers {
             populateCoverPictureObjectsAndSpecificIssueObjects()
-        }
+//        }
         
         // Configuring the iCarousel
+//        carousel.dataSource = self
+//        carousel.delegate = self
         carousel.type = .InvertedTimeMachine
-        carousel.reloadData()
+//        carousel.reloadData()
         
+        
+        /*
         // Configuring the coach marks controller
         self.coachMarksController.datasource = self
         self.coachMarksController.overlayBlurEffectStyle = UIBlurEffectStyle.Dark
@@ -92,8 +97,16 @@ class IssueArchiveViewController: UIViewController, iCarouselDataSource, iCarous
             (frame: CGRect) -> UIBezierPath in
             return UIBezierPath(rect: frame)
         }
+        
+        */
     }
 
+    override func viewDidAppear(animated: Bool) {
+//        UIView.animateWithDuration(0.3, animations: {
+//            self.view.subviews[1].alpha = 0
+//        })
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -103,13 +116,15 @@ class IssueArchiveViewController: UIViewController, iCarouselDataSource, iCarous
     
     func populateVolumeAndIssueNumbers() {
         
-        donePopulatingVolumeAndIssueNumbers = false
+//        donePopulatingVolumeAndIssueNumbers = false
         
         if populatingVolumeAndIssueNumbers {
             return
         }
         
         populatingVolumeAndIssueNumbers = true
+        
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         
         var topLevelArrayIndex = 0 // index used to iterate through the array of volumes.
         var issueArrayIndex = 0 // index used to iterate through the array of issues.
@@ -155,11 +170,13 @@ class IssueArchiveViewController: UIViewController, iCarouselDataSource, iCarous
         }
         // Indicate that we are done populating the volume and issue numbers into the volumeAndIssueNumbersObjects array
         
-        donePopulatingVolumeAndIssueNumbers = true
+//        donePopulatingVolumeAndIssueNumbers = true
         
     }
     
     func populateCoverPictureObjectsAndSpecificIssueObjects() {
+        
+//        donePopulatingCoverPictureObjectsAndSpecificIssueObjects = false
         
         if populatingSpecificIssueObjects {
             return
@@ -243,22 +260,30 @@ class IssueArchiveViewController: UIViewController, iCarouselDataSource, iCarous
                             
                             self.specificIssueObjects = self.temporarySpecificIssueObjects
                             self.populatingSpecificIssueObjects = false
+                            UIApplication.sharedApplication().networkActivityIndicatorVisible = false
                         }
                     }
                 }
             }
         }
+        
+//        donePopulatingCoverPictureObjectsAndSpecificIssueObjects = true
+        
     }
     
     // MARK: - iCarousel configuration
     
     func numberOfItemsInCarousel(carousel: iCarousel) -> Int {
-        return coverPictureObjects.count
+//        return coverPictureObjects.count
+        return 5
     }
     
     func carousel(carousel: iCarousel, viewForItemAtIndex index: Int, reusingView view: UIView?) -> UIView {
         
+//        if donePopulatingCoverPictureObjectsAndSpecificIssueObjects {
+        
         var itemView: customCarouselItemView
+        var imageView: UIImageView
         
 //        itemView = UIImageView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
 //        itemView.image = UIImage(named: "reveal Image")
@@ -266,16 +291,25 @@ class IssueArchiveViewController: UIViewController, iCarouselDataSource, iCarous
 
         if (view == nil) {
             itemView = customCarouselItemView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
-            itemView.contentMode = .ScaleAspectFit
+//            itemView.image = UIImage(named: "Round portrait")
+            itemView.contentMode = .Center
+            
+            imageView = UIImageView(frame: itemView.bounds)
+            imageView.backgroundColor = UIColor.clearColor()
+            imageView.tag = 1
+            itemView.addSubview(imageView)
+            
         } else {
-            itemView = view as! customCarouselItemView
+            itemView = view as! customCarouselItemView;
+            imageView = itemView.viewWithTag(1) as! UIImageView!
         }
         
-//        itemView.image = UIImage(named: "picture.png")
+//        imageView.image = UIImage(named: "Round portrait")
         
+
         itemView.request?.cancel()
         
-        let coverPictureAtIndex = coverPictureObjects.objectAtIndex(index) as! IssueElement
+        let coverPictureAtIndex = coverPictureObjects.objectAtIndex(index) as! IssueElement // problem is here
         let imageURL = coverPictureAtIndex.imageURL
         
         if var image = self.imageCache.objectForKey(imageURL) as? UIImage {
@@ -296,7 +330,12 @@ class IssueArchiveViewController: UIViewController, iCarouselDataSource, iCarous
     }
         
         return itemView
-    }
+            
+//        } else {
+//            
+//            return UIImageView(image: UIImage(named: "Round portrait"))
+//        }
+}
     
     func carousel(carousel: iCarousel, valueForOption option: iCarouselOption, withDefault value: CGFloat) -> CGFloat {
         if (option == .Spacing) {
@@ -307,6 +346,8 @@ class IssueArchiveViewController: UIViewController, iCarouselDataSource, iCarous
     }
     
     // MARK: - CoachMarks configuration
+    
+    /*
     
     func numberOfCoachMarksForCoachMarksController(coachMarksController: CoachMarksController) -> Int {
         return 1
@@ -325,8 +366,10 @@ class IssueArchiveViewController: UIViewController, iCarouselDataSource, iCarous
         
         coachViews.bodyView.nextLabel.text = "Got it!"
         coachViews.bodyView.nextLabel.font = UIFont(name: "AvenirNext-DemiBold", size: 14)
-        coachViews.bodyView.nextLabel.textColor = goldenWordsYellow
+        coachViews.bodyView.nextLabel.textColor = UIColor.goldenWordsYellow()
         
         return (bodyView: coachViews.bodyView, arrowView: coachViews.arrowView)
     }
+    
+    */
 }

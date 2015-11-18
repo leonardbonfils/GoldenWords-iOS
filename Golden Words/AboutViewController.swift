@@ -13,8 +13,6 @@ import SwiftyJSON
 
 class AboutViewController: UIViewController, MFMailComposeViewControllerDelegate {
     
-    let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
-    
     var loadingIndicator = UIActivityIndicatorView()
     
     var aboutGoldenWordsSummary = ""
@@ -27,10 +25,10 @@ class AboutViewController: UIViewController, MFMailComposeViewControllerDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.loadingIndicator.backgroundColor = goldenWordsYellow
+        self.loadingIndicator.backgroundColor = UIColor.goldenWordsYellow()
         self.loadingIndicator.hidesWhenStopped = true
         self.loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
-        self.loadingIndicator.color = goldenWordsYellow
+        self.loadingIndicator.color = UIColor.goldenWordsYellow()
         let indicatorCenter = self.view.center
         self.loadingIndicator.center = indicatorCenter
         self.view.addSubview(loadingIndicator)
@@ -63,6 +61,8 @@ class AboutViewController: UIViewController, MFMailComposeViewControllerDelegate
     
     func loadLatestSummary() {
         
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        
         self.loadingIndicator.startAnimating()
         
         Alamofire.request(.GET, "http://goldenwords.ca/contentasjson/node/9").responseJSON { response in
@@ -80,6 +80,7 @@ class AboutViewController: UIViewController, MFMailComposeViewControllerDelegate
                         
                     }
                     
+                    UIApplication.sharedApplication().networkActivityIndicatorVisible = false
                     self.loadingIndicator.stopAnimating()
                     self.aboutWebView.loadHTMLString(self.aboutGoldenWordsSummary, baseURL: nil)
 

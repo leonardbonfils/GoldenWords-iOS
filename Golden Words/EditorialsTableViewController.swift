@@ -9,9 +9,7 @@
 import UIKit
 import Alamofire
 
-class EditorialsTableViewController: UITableViewController {
-    
-    let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
+class EditorialsTableViewController: UITableViewController, UIViewControllerPreviewingDelegate {
     
     // Hamburger button declaration
     @IBOutlet weak var menuButton: UIBarButtonItem!
@@ -55,8 +53,6 @@ class EditorialsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-
-        
         // Hamburger button configuration
         if self.revealViewController() != nil {
             revealViewControllerIndicator = 1
@@ -74,7 +70,7 @@ class EditorialsTableViewController: UITableViewController {
         
         // Creating and configuring the goldenWordsRefreshControl subview
         goldenWordsRefreshControl = UIRefreshControl()
-        goldenWordsRefreshControl.backgroundColor = goldenWordsYellow
+        goldenWordsRefreshControl.backgroundColor = UIColor.goldenWordsYellow()
         goldenWordsRefreshControl.tintColor = UIColor.whiteColor()
 //        goldenWordsRefreshControl.addTarget(self, action: "handleRefresh", forControlEvents: .ValueChanged)
         editorialsTableView.addSubview(goldenWordsRefreshControl)
@@ -82,8 +78,6 @@ class EditorialsTableViewController: UITableViewController {
         // Navigation set up
         navigationController?.setNavigationBarHidden(false, animated: true)
         navigationItem.title = "Editorials"
-        
-//        loadCustomRefreshContents()
         
         populateEditorials()
         
@@ -98,14 +92,23 @@ class EditorialsTableViewController: UITableViewController {
         
         tableView.estimatedRowHeight = 50
         
-        self.cellLoadingIndicator.backgroundColor = goldenWordsYellow
+        self.cellLoadingIndicator.backgroundColor = UIColor.goldenWordsYellow()
         self.cellLoadingIndicator.hidesWhenStopped = true
         self.cellLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
-        self.cellLoadingIndicator.color = goldenWordsYellow
+        self.cellLoadingIndicator.color = UIColor.goldenWordsYellow()
         let indicatorCenter = CGPoint(x: self.editorialsTableView.center.x, y: self.editorialsTableView.center.y - 50)
         self.cellLoadingIndicator.center = indicatorCenter
         self.editorialsTableView.addSubview(cellLoadingIndicator)
         self.editorialsTableView.bringSubviewToFront(cellLoadingIndicator)
+        
+        // Checking for 3D Touch Support
+        if #available(iOS 9.0, *) {
+            if (traitCollection.forceTouchCapability == .Available) {
+                registerForPreviewingWithDelegate(self, sourceView: view)
+            }
+        } else {
+            // Fallback on earlier versions
+        }
         
 
         // Uncomment the following line to preserve selection between presentations
@@ -123,96 +126,6 @@ class EditorialsTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    /*
-    func loadCustomRefreshContents() {
-        let refreshContents = NSBundle.mainBundle().loadNibNamed("RefreshContents", owner: self, options: nil)
-        
-        customView = refreshContents[0] as! UIView
-        customView.frame = customRefreshControl.bounds
-        
-        for (var i=0; i < customView.subviews.count; i++) {
-            labelsArray.append(customView.viewWithTag(i+1) as! UILabel)
-            
-        customRefreshControl.addSubview(customView)
-        }
-    }
-    
-    func animateRefreshStep1() {
-        isAnimating = true
-        
-        UIView.animateWithDuration(0.1, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: { () -> Void in
-            
-            // Selecting the UILabel object in the labelsArray array, and applying the animation
-            self.labelsArray[self.currentLabelIndex].transform = CGAffineTransformMakeRotation(CGFloat(M_PI_4))
-            self.labelsArray[self.currentLabelIndex].textColor = self.getNextColor()
-            
-            }, completion: { (finished) -> Void in
-                
-                UIView.animateWithDuration(0.05, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: { () -> Void in
-                    
-                    self.labelsArray[self.currentLabelIndex].transform = CGAffineTransformIdentity
-                    self.labelsArray[self.currentLabelIndex].textColor = UIColor.blackColor()
-                    
-                    }, completion: { (finished) -> Void in
-                    ++self.currentLabelIndex
-                        
-                        if self.currentLabelIndex < self.labelsArray.count {
-                            self.animateRefreshStep1()
-                        }
-                        else {
-                            self.animateRefreshStep2()
-                        }
-                    })
-        })
-    }
-    
-    func animateRefreshStep2() {
-        UIView.animateWithDuration(0.35, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: { () -> Void in
-            self.labelsArray[0].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[1].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[2].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[3].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[4].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[5].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[6].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[7].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[8].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[9].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[10].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            
-            
-            }, completion: { (finished) -> Void in
-                UIView.animateWithDuration(0.25, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: { () -> Void in
-                    self.labelsArray[0].transform = CGAffineTransformIdentity
-                    self.labelsArray[1].transform = CGAffineTransformIdentity
-                    self.labelsArray[2].transform = CGAffineTransformIdentity
-                    self.labelsArray[3].transform = CGAffineTransformIdentity
-                    self.labelsArray[4].transform = CGAffineTransformIdentity
-                    self.labelsArray[5].transform = CGAffineTransformIdentity
-                    self.labelsArray[6].transform = CGAffineTransformIdentity
-                    self.labelsArray[7].transform = CGAffineTransformIdentity
-                    self.labelsArray[8].transform = CGAffineTransformIdentity
-                    self.labelsArray[9].transform = CGAffineTransformIdentity
-                    self.labelsArray[10].transform = CGAffineTransformIdentity
-                    
-                    
-                    }, completion: { (finished) -> Void in
-                        if self.customRefreshControl.refreshing {
-                            self.currentLabelIndex = 0
-                            self.animateRefreshStep1()
-                        } else {
-                            self.isAnimating = false
-                            self.currentLabelIndex = 0
-                            for var i=0; i<self.labelsArray.count; i++ {
-                                self.labelsArray[i].textColor = UIColor.blackColor()
-                                self.labelsArray[i].transform = CGAffineTransformIdentity
-                            }
-                        }
-                })
-        })
-        
-    }
-    */
     
     override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         if goldenWordsRefreshControl.refreshing {
@@ -224,29 +137,9 @@ class EditorialsTableViewController: UITableViewController {
         }
     }
     
-//    func getNextColor() -> UIColor {
-//        var colorsArray: [UIColor] = [goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow]
-//        
-//        if currentColorIndex == colorsArray.count {
-//            currentColorIndex = 0
-//        }
-//        
-//        let returnColor = colorsArray[currentColorIndex]
-//        ++currentColorIndex
-//        
-//        return returnColor
-//    }
-    
     func holdRefreshControl() {
         timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
     }
-    
-//    func endOfWork() {
-//        customRefreshControl.endRefreshing()
-//        
-//        timer.invalidate()
-//        timer = nil
-//    }
     
     // MARK: - Table view data source
     
@@ -260,15 +153,9 @@ class EditorialsTableViewController: UITableViewController {
         return (editorialObjects.count)
     }
     
-    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let row = indexPath.row
-//        
-//        guard let cell = tableView.dequeueReusableCellWithIdentifier(EditorialTableCellIdentifier, forIndexPath: indexPath) as? EditorialsTableViewCell else {
-//            print ("error: editorialsTableView cell is not of class EditorialsTableViewCell, we will use RandomTableViewCell instead")
-//            return tableView.dequeueReusableCellWithIdentifier(EditorialTableCellIdentifier, forIndexPath: indexPath) as! RandomTableViewCell
-//        }
         
         let cell = tableView.dequeueReusableCellWithIdentifier(EditorialTableCellIdentifier, forIndexPath: indexPath) as! EditorialsTableViewCell
         
@@ -290,13 +177,10 @@ class EditorialsTableViewController: UITableViewController {
             let nodeID = editorialObject.nodeID ?? 0
             
             
-//            cell.editorialHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
             cell.editorialHeadlineLabel.text = title
             
-//            cell.editorialAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
             cell.editorialAuthorLabel.text = author
             
-//            cell.editorialPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
             cell.editorialPublishDateLabel.text = timeStampDateString
             
         } else {
@@ -311,48 +195,52 @@ class EditorialsTableViewController: UITableViewController {
         
         }
         
-        
-        /*
-        
-        let title = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).title
-        
-        let timeStamp = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).timeStamp
-        let timeStampDateObject = NSDate(timeIntervalSince1970: NSTimeInterval(Int((editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).timeStamp)))
-        timeStampDateString = dateFormatter.stringFromDate(timeStampDateObject)
-        
-/*        let imageURL = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).imageURL */
-        
-        let author : String! = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).author!
-        
-        let issueNumber = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).issueNumber
-        let volumeNumber = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).volumeNumber
-        
-        let articleContent = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).articleContent
-        
-        let nodeID = (editorialObjects.objectAtIndex(indexPath.row) as! EditorialElement).nodeID
-        
-        /* Unlike the Pictures Collection View, there is no need to create another Alamofire request here, since we already have all the content we want from the JSON we downloaded. There is no URL that we wish to place a request to to get extra content. */
-        
-        cell.editorialHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
-        cell.editorialHeadlineLabel.text = title
-        
-        cell.editorialAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-        cell.editorialAuthorLabel.text = author
-        
-        cell.editorialPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-        cell.editorialPublishDateLabel.text = timeStampDateString */
-        
-/*        cell.editorialVolumeAndIssueLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-        cell.editorialVoluameAndIssueLabel.text = "Volume \(volumeNumber) - Issue \(issueNumber)" */
-        
-        
         return cell
         
-//        if cell.editorialHeadlineLabel.text == nil {
-//            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
-//        }
     }
     
+    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        
+        guard let indexPath = tableView?.indexPathForRowAtPoint(location) else { return nil }
+        
+        guard let cell = tableView?.cellForRowAtIndexPath(indexPath) else { return nil }
+        
+        guard let detailViewController = storyboard?.instantiateViewControllerWithIdentifier("EditorialsDetailViewControllerIdentifier") as? EditorialsDetailViewController else { return nil }
+        
+        if let editorialObject = editorialObjects.objectAtIndex(indexPath.row) as? EditorialElement {
+            
+            let title = editorialObject.title ?? ""
+            
+            let author = editorialObject.author ?? ""
+            
+            let articleContent = editorialObject.articleContent ?? ""
+            
+            let currentIssueHeadlineFor3DTouch = title
+            let currentIssueAuthorFor3DTouch = author
+            let currentIssueArticleContentFor3DTouch = articleContent
+            
+            detailViewController.editorialTitleThroughSegue = currentIssueHeadlineFor3DTouch
+            detailViewController.editorialAuthorThroughSegue = currentIssueAuthorFor3DTouch
+            detailViewController.editorialArticleContentThroughSegue = currentIssueArticleContentFor3DTouch
+            
+            detailViewController.preferredContentSize = CGSize(width: 0.0, height: 600)
+            
+            if #available(iOS 9.0, *) {
+                previewingContext.sourceRect = cell.frame
+            } else {
+                // Fallback on earlier versions
+            }
+        }
+        
+        return detailViewController
+        
+    }
+    
+    
+    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
+        
+        showViewController(viewControllerToCommit, sender: self)
+    }
     
     
     
@@ -408,16 +296,12 @@ class EditorialsTableViewController: UITableViewController {
             let myIndexPath = self.tableView.indexPathForSelectedRow
             let row = myIndexPath?.row
             
-            
             // Passing the article information through the segue
             detailViewController.editorialTitleThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).title
-//            detailViewController.editorialPublishDateThroughSegue = timeStampDateString
             detailViewController.editorialVolumeIndexThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).volumeNumber
             detailViewController.editorialIssueIndexThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).issueNumber
             detailViewController.editorialAuthorThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).author
             detailViewController.editorialArticleContentThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).articleContent
-            
-//            detailViewController.editorialTitleThroughSegue = editorialHeadline[row!]
             
         }
     }
@@ -434,6 +318,8 @@ class EditorialsTableViewController: UITableViewController {
             return
         }
         populatingEditorials = true
+        
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         
         self.cellLoadingIndicator.startAnimating()
         
@@ -506,6 +392,8 @@ class EditorialsTableViewController: UITableViewController {
                         self.editorialObjects = self.temporaryEditorialObjects
                         self.editorialsTableView.reloadData()
                         
+                        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+                        
                         self.cellLoadingIndicator.stopAnimating()
                         
                         self.currentPage++
@@ -517,7 +405,7 @@ class EditorialsTableViewController: UITableViewController {
     }
 }
 
-        func handleRefresh() {
+    func handleRefresh() {
             
             goldenWordsRefreshControl.beginRefreshing()
             

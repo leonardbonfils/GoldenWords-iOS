@@ -13,9 +13,7 @@ import Alamofire
 import SwiftyJSON
 
 class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDelegate {
-    
-    let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
-    
+        
     // Map View outlet declaration
     @IBOutlet weak var mapView: MKMapView!
     
@@ -60,10 +58,10 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         
         mapView.setRegion(coordinateRegion, animated: true)
         
-        self.loadingIndicator.backgroundColor = goldenWordsYellow
+        self.loadingIndicator.backgroundColor = UIColor.goldenWordsYellow()
         self.loadingIndicator.hidesWhenStopped = true
         self.loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
-        self.loadingIndicator.color = goldenWordsYellow
+        self.loadingIndicator.color = UIColor.goldenWordsYellow()
         let indicatorCenter = self.view.center
         self.view.addSubview(loadingIndicator)
         self.view.bringSubviewToFront(loadingIndicator)
@@ -148,6 +146,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         
         populatingMapObjects = true
         
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        
         self.loadingIndicator.startAnimating()
         
         var index = 0
@@ -193,6 +193,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                     
                     dispatch_async(dispatch_get_main_queue()) {
                         
+                        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
                         self.loadingIndicator.stopAnimating()
                         self.populatingMapObjects = false
                         print(self.mapObjects.count)

@@ -9,9 +9,7 @@
 import UIKit
 
 class CurrentIssueDetailViewController: UIViewController {
-    
-    let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
-    
+        
     @IBOutlet weak var currentIssueNavigationItem: UINavigationItem!
     
     @IBOutlet weak var currentIssueDetailWebView: UIWebView!
@@ -45,12 +43,12 @@ class CurrentIssueDetailViewController: UIViewController {
         currentIssueDetailAuthorLabel.text! = currentIssueAuthorThroughSegue!
         currentIssueDetailPublishDateLabel.text = currentIssuePublishDateThroughSegue
         
-        /*
-        
-        Version 1.1 feature - 3D Touch Link Preview
-        editorialDetailWebView.allowsLinkPreview = true
-        
-        */
+        // Allowing webView link previews
+        if #available(iOS 9.0, *) {
+            currentIssueDetailWebView.allowsLinkPreview = true
+        } else {
+            // Fallback on earlier versions
+        }
         
         currentIssueDetailWebView.dataDetectorTypes = UIDataDetectorTypes.None
         currentIssueDetailWebView.loadHTMLString(currentIssueArticleContentThroughSegue!, baseURL: nil)

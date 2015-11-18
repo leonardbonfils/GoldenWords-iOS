@@ -10,8 +10,6 @@ import UIKit
 
 class RandomDetailViewController: UIViewController {
     
-    let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
-    
     @IBOutlet weak var randomDetailNavigationItem: UINavigationItem!
     
     @IBOutlet weak var randomDetailWebView: UIWebView!
@@ -49,9 +47,13 @@ class RandomDetailViewController: UIViewController {
         randomArticleDetailAuthorLabel.text = randomArticleAuthorThroughSegue
 //        randomArticleDetailPublishDateLabel.text = randomArticlePublishDateThroughSegue
         randomArticleDetailVolumeAndIssueLabel.text = "V.\(randomArticleVolumeIndexThroughSegue!) - Issue \(randomArticleIssueIndexThroughSegue!)"
-        
-//        // Version 1.1 feature - 3D Touch Link Preview
-//        randomDetailWebView.allowsLinkPreview = true
+
+        // Allowing webView link previews
+        if #available(iOS 9.0, *) {
+            randomDetailWebView.allowsLinkPreview = true
+        } else {
+            // Fallback on earlier versions
+        }
         
         randomDetailWebView.dataDetectorTypes = UIDataDetectorTypes.None
         randomDetailWebView.loadHTMLString(randomArticleArticleContentThroughSegue!, baseURL: nil)
@@ -64,6 +66,18 @@ class RandomDetailViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    @available(iOS 9.0, *)
+    override func previewActionItems() -> [UIPreviewActionItem] {
+        
+        let saveArticleAction = UIPreviewAction(title: "Save Article", style: .Default) { (action, viewController) -> Void in
+            /* Save the article to the device's storage permanently */
+            print("You saved Article \(self.randomArticleArticleContentThroughSegue)")
+        }
+        
+        return [saveArticleAction]
+        
     }
     
     func handleSwipes(sender:UISwipeGestureRecognizer) {

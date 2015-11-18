@@ -10,8 +10,6 @@ import UIKit
 
 class EditorialsDetailViewController: UIViewController {
     
-    let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
-    
     @IBOutlet weak var editorialDetailNavigationItem: UINavigationItem!
 
     @IBOutlet weak var editorialDetailWebView: UIWebView!
@@ -45,15 +43,14 @@ class EditorialsDetailViewController: UIViewController {
         
         editorialDetailHeadlineLabel.text = editorialTitleThroughSegue
         editorialDetailAuthorLabel.text = editorialAuthorThroughSegue
-//        editorialDetailPublishDateLabel.text = editorialPublishDateThroughSegue
         editorialDetailVolumeAndIssueLabel.text = "V.\(editorialVolumeIndexThroughSegue!) - Issue \(editorialIssueIndexThroughSegue!)"
         
-        /*
-        
-        Version 1.1 feature - 3D Touch Link Preview
-        editorialDetailWebView.allowsLinkPreview = true
-
-        */
+        // Allowing webView link previews
+        if #available(iOS 9.0, *) {
+            editorialDetailWebView.allowsLinkPreview = true
+        } else {
+            // Fallback on earlier versions
+        }
         
         /*
         let justifiedArticleContent = "<p style=\"text-align:justify\"> \(editorialArticleContentThroughSegue) </p>"
@@ -87,6 +84,17 @@ class EditorialsDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    @available(iOS 9.0, *)
+    override func previewActionItems() -> [UIPreviewActionItem] {
+        
+        let saveArticleAction = UIPreviewAction(title: "Save Article", style: .Default) { (action, viewController) -> Void in
+            /* Save the article to the device's storage permanently */
+            print("You saved Article \(self.editorialArticleContentThroughSegue)")
+        }
+        
+        return [saveArticleAction]
+        
+    }
     
     func handleSwipes(sender:UISwipeGestureRecognizer) {
         

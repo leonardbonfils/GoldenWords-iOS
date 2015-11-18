@@ -13,8 +13,6 @@ import SwiftyJSON
 
 class VideosViewController: UITableViewController {
     
-    let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
-    
     // Hamburger button declaration
     @IBOutlet weak var menuButton: UIBarButtonItem!
     
@@ -76,7 +74,7 @@ class VideosViewController: UITableViewController {
         
         // Creating and configuring the goldenWordsRefreshControl subview
         goldenWordsRefreshControl = UIRefreshControl()
-        goldenWordsRefreshControl.backgroundColor = goldenWordsYellow
+        goldenWordsRefreshControl.backgroundColor = UIColor.goldenWordsYellow()
         goldenWordsRefreshControl.tintColor = UIColor.whiteColor()
         videosTableView.addSubview(goldenWordsRefreshControl)
         
@@ -93,11 +91,11 @@ class VideosViewController: UITableViewController {
 
         tableView.estimatedRowHeight = 50
         
-        self.cellLoadingIndicator.backgroundColor = goldenWordsYellow
+        self.cellLoadingIndicator.backgroundColor = UIColor.goldenWordsYellow()
         self.cellLoadingIndicator.hidesWhenStopped = true
         self.cellLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
-        self.cellLoadingIndicator.color = goldenWordsYellow
-        let indicatorCenter = CGPoint(x: self.videosTableView.center.x, y: self.videosTableView.center.y - 130)
+        self.cellLoadingIndicator.color = UIColor.goldenWordsYellow()
+        self.cellLoadingIndicator.center = self.videosTableView.center
         self.videosTableView.addSubview(cellLoadingIndicator)
         self.videosTableView.bringSubviewToFront(cellLoadingIndicator)
 
@@ -339,6 +337,8 @@ class VideosViewController: UITableViewController {
         }
         populatingVideos = true
         
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        
         self.cellLoadingIndicator.startAnimating()
         
         Alamofire.request(GWNetworking.Router.Videos(currentPage)).responseJSON() { response in
@@ -411,6 +411,8 @@ class VideosViewController: UITableViewController {
                         }
                         self.videosTableView.reloadData()
                         
+                        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+
                         self.cellLoadingIndicator.stopAnimating()
                         
                         self.currentPage++

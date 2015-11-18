@@ -6,9 +6,9 @@
 //  Copyright © 2015 Léonard Bonfils. All rights reserved.
 //
 
-import UIKit
+/*
 
-let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
+import UIKit
 
 struct Config {
     
@@ -95,9 +95,19 @@ class BWCircularSlider: UIControl {
     override func beginTrackingWithTouch(touch: UITouch, withEvent event: UIEvent?) -> Bool {
         super.beginTrackingWithTouch(touch, withEvent: event)
         
-//        self.hidden = true
+        UIView.animateWithDuration(0.25, animations: {
+            self.alpha = 0.05
+            self.subviews[0].alpha = 1
+            self.textField?.alpha = 1
+        })
+        
+        self.subviews[0].alpha = 1
+        self.textField?.alpha = 1
+        
 //        self.textField?.hidden = false
         
+
+                
         return true
     }
     
@@ -117,6 +127,10 @@ class BWCircularSlider: UIControl {
     override func endTrackingWithTouch(touch: UITouch?, withEvent event: UIEvent?) {
         super.endTrackingWithTouch(touch, withEvent: event)
 //        self.hidden = false
+        
+        UIView.animateWithDuration(0.25, animations: {
+            self.alpha = 1.0
+        })
     }
     
     
@@ -268,3 +282,5 @@ class BWCircularSlider: UIControl {
 
 
 }
+
+*/

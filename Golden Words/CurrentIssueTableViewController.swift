@@ -12,8 +12,6 @@ import AlamofireImage
 
 class CurrentIssueTableViewController: UITableViewController, UIViewControllerPreviewingDelegate {
     
-    let goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
-    
     // Hamburger menu declaration
     @IBOutlet weak var menuButton: UIBarButtonItem!
     
@@ -57,13 +55,11 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
     var imageCache = NSCache()
     
     var cellLoadingIndicator = UIActivityIndicatorView()
-    
-    // Refresh control variables - end
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.cellLoadingIndicator.backgroundColor = goldenWordsYellow
+        self.cellLoadingIndicator.backgroundColor = UIColor.goldenWordsYellow()
         self.cellLoadingIndicator.hidesWhenStopped = true
         
         if self.revealViewController() != nil {
@@ -81,7 +77,7 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
         
         // Creating and configuring the goldenWordsRefreshControl subview
         goldenWordsRefreshControl = UIRefreshControl()
-        goldenWordsRefreshControl.backgroundColor = goldenWordsYellow
+        goldenWordsRefreshControl.backgroundColor = UIColor.goldenWordsYellow()
         goldenWordsRefreshControl.tintColor = UIColor.whiteColor()
         currentIssueTableView.addSubview(goldenWordsRefreshControl)
         
@@ -98,7 +94,7 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
         self.dateFormatter.dateFormat = "dd/MM/yy"
         
         self.cellLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
-        self.cellLoadingIndicator.color = goldenWordsYellow
+        self.cellLoadingIndicator.color = UIColor.goldenWordsYellow()
         let indicatorCenter = CGPoint(x: self.currentIssueTableView.center.x, y: self.currentIssueTableView.center.y - 50)
         self.cellLoadingIndicator.center = indicatorCenter
         self.currentIssueTableView.addSubview(cellLoadingIndicator)
@@ -573,6 +569,8 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
         
         populatingCurrentIssue = true
         
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        
         self.cellLoadingIndicator.startAnimating()
         
         Alamofire.request(GWNetworking.Router.Issue).responseJSON() { response in
@@ -646,6 +644,9 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
                     dispatch_async(dispatch_get_main_queue()) {
                         self.currentIssueObjects = self.temporaryCurrentIssueObjects
                         self.currentIssueTableView.reloadData()
+                        
+                        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+
                 
                         self.cellLoadingIndicator.stopAnimating()
                         
