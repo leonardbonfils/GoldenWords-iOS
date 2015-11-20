@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 import AlamofireImage
 
-class PhotoBrowserCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class PhotoBrowserCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate {
     
     @IBOutlet weak var menuButton:UIBarButtonItem!
     
@@ -99,6 +99,10 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         self.cellLoadingIndicator.center = (self.view?.center)!
         self.collectionView!.addSubview(cellLoadingIndicator)
         self.collectionView!.bringSubviewToFront(cellLoadingIndicator)
+        
+        if (traitCollection.forceTouchCapability == .Available) {
+            registerForPreviewingWithDelegate(self, sourceView: view)
+        }
 
 //        self.scrollViewDidScrollLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
 //        self.scrollViewDidScrollLoadingIndicator.color = goldenWordsYellow
@@ -345,6 +349,51 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         return cell
 }
     
+    
+    
+    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+        
+        guard let indexPath = collectionView?.indexPathForItemAtPoint(location) else { return nil }
+        
+        guard let cell = collectionView?.cellForItemAtIndexPath(indexPath) as? PhotoBrowserCollectionViewCell else { return nil }
+        
+        guard let detailViewController = storyboard?.instantiateViewControllerWithIdentifier("PhotoViewerViewControllerIdentifier") as? PhotoViewerViewController else { return nil }
+        
+        if let pictureObject = pictureObjects.objectAtIndex(indexPath.row) as? PictureElement {
+            
+            let imageURL = pictureObject.imageURL ?? ""
+            
+            let pictureImageURLFor3DTouch = imageURL
+            
+            Alamofire.request(.GET, pictureImageURLFor3DTouch).responseImage { response in
+                
+                if let image = response.result.value {
+                    print("image downloaded : \(image)")
+                    
+                    detailViewController.imageToStore = image
+                    detailViewController.imageView.image = image
+                    
+                }
+            }
+            
+            detailViewController.preferredContentSize = CGSize(width: 0, height: 0)
+            
+            previewingContext.sourceRect = cell.imageView.frame
+            
+        }
+        
+        return detailViewController
+        
+    }
+    
+    
+    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
+        
+        showViewController(viewControllerToCommit, sender: self)
+    }
+    
+    
+    
 //        cell.request?.cancel()
 //        
 //        // Using image cache system to make sure the table view works even when rapidly scrolling down the screen.
@@ -538,10 +587,10 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         
         self.pictureObjects.removeAllObjects()
         self.temporaryPictureObjects.removeAllObjects()
-        
-        self.collectionView!.reloadData()
-        
+                
         self.currentPage = 0
+        
+        // self.collectionView!.reloadData()
         
 //        self.cellLoadingIndicator.startAnimating()
 //        self.picturesCollectionView.bringSubviewToFront(cellLoadingIndicator)

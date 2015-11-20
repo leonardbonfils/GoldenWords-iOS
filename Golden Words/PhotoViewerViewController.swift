@@ -162,6 +162,17 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate {
         return imageView
     }
     
+    override func previewActionItems() -> [UIPreviewActionItem] {
+        
+        let savePicture = UIPreviewAction(title: "Save", style: .Default) { (action, viewController) -> Void in
+        }
+        
+        let sharePicture = UIPreviewAction(title: "Share", style: .Default) { (action, viewController) -> Void in
+        }
+        
+        return [savePicture, sharePicture]
+    }
+    
     
     
 //    override func viewDidLoad() {

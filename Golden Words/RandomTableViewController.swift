@@ -105,13 +105,9 @@ class RandomTableViewController: UITableViewController, UIViewControllerPreviewi
         self.randomTableView.bringSubviewToFront(cellLoadingIndicator)
         
         // Checking for 3D Touch Support
-        if #available(iOS 9.0, *) {
-            if (traitCollection.forceTouchCapability == .Available){
+        if (traitCollection.forceTouchCapability == .Available){
                 registerForPreviewingWithDelegate(self, sourceView: view)
             }
-        } else {
-            // Fallback on earlier versions
-        }
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -221,11 +217,7 @@ class RandomTableViewController: UITableViewController, UIViewControllerPreviewi
             
             detailViewController.preferredContentSize = CGSize(width: 0.0, height: 600)
             
-            if #available(iOS 9.0, *) {
-                previewingContext.sourceRect = cell.frame
-            } else {
-                // Fallback on earlier versions
-            }
+            previewingContext.sourceRect = cell.frame
             
         }
         

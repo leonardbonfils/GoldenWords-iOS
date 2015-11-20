@@ -106,13 +106,9 @@ class NewsTableViewController: UITableViewController, UIViewControllerPreviewing
         self.newsTableView.bringSubviewToFront(cellLoadingIndicator)
         
         // Checking for 3D Touch Support
-        if #available(iOS 9.0, *) {
             if (traitCollection.forceTouchCapability == .Available){
                 registerForPreviewingWithDelegate(self, sourceView: view)
             }
-        } else {
-            // Fallback on earlier versions
-        }
         
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -217,21 +213,17 @@ class NewsTableViewController: UITableViewController, UIViewControllerPreviewing
             
             let articleContent = newsObject.articleContent ?? ""
             
-            let currentIssueHeadlineFor3DTouch = title
-            let currentIssueAuthorFor3DTouch = author
-            let currentIssueArticleContentFor3DTouch = articleContent
+            let newsArticleHeadlineFor3DTouch = title
+            let newsArticleAuthorFor3DTouch = author
+            let newsArticleArticleContentFor3DTouch = articleContent
             
-            detailViewController.newsArticleTitleThroughSegue = currentIssueHeadlineFor3DTouch
-            detailViewController.newsArticleAuthorThroughSegue = currentIssueAuthorFor3DTouch
-            detailViewController.newsArticleArticleContentThroughSegue = currentIssueArticleContentFor3DTouch
+            detailViewController.newsArticleTitleThroughSegue = newsArticleHeadlineFor3DTouch
+            detailViewController.newsArticleAuthorThroughSegue = newsArticleAuthorFor3DTouch
+            detailViewController.newsArticleArticleContentThroughSegue = newsArticleArticleContentFor3DTouch
             
             detailViewController.preferredContentSize = CGSize(width: 0.0, height: 600)
             
-            if #available(iOS 9.0, *) {
                 previewingContext.sourceRect = cell.frame
-            } else {
-                // Fallback on earlier versions
-            }
             
         }
         

@@ -14,6 +14,7 @@ import UIKit
 struct MyGlobalVariables {
     static var baseURL = "http://goldenwords.ca/api/get"
     static var goldenWordsYellow = UIColor(red: 247.00/255.0, green: 192.00/255.0, blue: 51.00/255.0, alpha: 0.5)
+    static var viewControllerToDisplay = ""
 
 }
 

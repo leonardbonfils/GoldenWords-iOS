@@ -44,11 +44,7 @@ class CurrentIssueDetailViewController: UIViewController {
         currentIssueDetailPublishDateLabel.text = currentIssuePublishDateThroughSegue
         
         // Allowing webView link previews
-        if #available(iOS 9.0, *) {
-            currentIssueDetailWebView.allowsLinkPreview = true
-        } else {
-            // Fallback on earlier versions
-        }
+        currentIssueDetailWebView.allowsLinkPreview = true
         
         currentIssueDetailWebView.dataDetectorTypes = UIDataDetectorTypes.None
         currentIssueDetailWebView.loadHTMLString(currentIssueArticleContentThroughSegue!, baseURL: nil)
@@ -62,7 +58,6 @@ class CurrentIssueDetailViewController: UIViewController {
     }
     
 
-    @available(iOS 9.0, *)
     override func previewActionItems() -> [UIPreviewActionItem] {
         
         let saveArticleAction = UIPreviewAction(title: "Save Article", style: .Default) { (action, viewController) -> Void in

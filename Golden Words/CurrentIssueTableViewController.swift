@@ -101,13 +101,10 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
         self.currentIssueTableView.bringSubviewToFront(cellLoadingIndicator)
         
         // Checking for 3D Touch Support
-        if #available(iOS 9.0, *) {
             if (traitCollection.forceTouchCapability == .Available){
                 registerForPreviewingWithDelegate(self, sourceView: view)
             }
-        } else {
-            // Fallback on earlier versions
-        }
+
         
 //        currentIssueTableView.rowHeight = UITableViewAutomaticDimension
 //        currentIssueTableView.estimatedRowHeight = 80
@@ -365,11 +362,7 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
             
             detailViewController.preferredContentSize = CGSize(width: 0.0, height: 600)
             
-            if #available(iOS 9.0, *) {
                 previewingContext.sourceRect = cell.frame
-            } else {
-                // Fallback on earlier versions
-            }
             
         }
         

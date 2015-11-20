@@ -62,5 +62,32 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIApplicationShortcutItems</key>
+	<array>
+		<dict>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>3D Touch Picture</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Pictures</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.LeonardBonfils.GoldenWords.Pictures</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>3D Touch Video</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Videos</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.LeonardBonfils.GoldenWords.Videos</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconFile</key>
+			<string>3D Touch Saved Articles</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Saved Articles</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.LeonardBonfils.GoldenWords.SavedArticles</string>
+		</dict>
+	</array>
 </dict>
 </plist>

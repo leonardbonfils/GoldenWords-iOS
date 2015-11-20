@@ -52,11 +52,7 @@ class NewsDetailViewController: UIViewController {
         newsArticleDetailVolumeAndIssueLabel.text = "V.\(newsArticleVolumeIndexThroughSegue!) - Issue \(newsArticleIssueIndexThroughSegue!) "
         
         // Allowing webView link previews
-        if #available(iOS 9.0, *) {
-            newsDetailWebView.allowsLinkPreview = true
-        } else {
-            // Fallback on earlier versions
-        }
+        newsDetailWebView.allowsLinkPreview = true
         
         newsDetailWebView.dataDetectorTypes = UIDataDetectorTypes.None
         newsDetailWebView.loadHTMLString(newsArticleArticleContentThroughSegue!, baseURL: nil)
@@ -69,7 +65,6 @@ class NewsDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @available(iOS 9.0, *)
     override func previewActionItems() -> [UIPreviewActionItem] {
         
         let saveArticleAction = UIPreviewAction(title: "Save Article", style: .Default) { (action, viewController) -> Void in

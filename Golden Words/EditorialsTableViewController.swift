@@ -102,14 +102,9 @@ class EditorialsTableViewController: UITableViewController, UIViewControllerPrev
         self.editorialsTableView.bringSubviewToFront(cellLoadingIndicator)
         
         // Checking for 3D Touch Support
-        if #available(iOS 9.0, *) {
             if (traitCollection.forceTouchCapability == .Available) {
                 registerForPreviewingWithDelegate(self, sourceView: view)
             }
-        } else {
-            // Fallback on earlier versions
-        }
-        
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -187,7 +182,7 @@ class EditorialsTableViewController: UITableViewController, UIViewControllerPrev
             
             cell.editorialHeadlineLabel.text = nil
             cell.editorialAuthorLabel.text = nil
-            cell.editorialPublishDateLabel.text = nil
+//            cell.editorialPublishDateLabel.text = nil
             
 //            var noInternetConnectionAlert = UIAlertController(title: "No Internet Connection", message: "Could not retrieve data from Golden Words servers", preferredStyle: UIAlertControllerStyle.Alert)
 //            noInternetConnectionAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
@@ -215,21 +210,17 @@ class EditorialsTableViewController: UITableViewController, UIViewControllerPrev
             
             let articleContent = editorialObject.articleContent ?? ""
             
-            let currentIssueHeadlineFor3DTouch = title
-            let currentIssueAuthorFor3DTouch = author
-            let currentIssueArticleContentFor3DTouch = articleContent
+            let editorialHeadlineFor3DTouch = title
+            let editorialAuthorFor3DTouch = author
+            let editorialArticleContentFor3DTouch = articleContent
             
-            detailViewController.editorialTitleThroughSegue = currentIssueHeadlineFor3DTouch
-            detailViewController.editorialAuthorThroughSegue = currentIssueAuthorFor3DTouch
-            detailViewController.editorialArticleContentThroughSegue = currentIssueArticleContentFor3DTouch
+            detailViewController.editorialTitleThroughSegue = editorialHeadlineFor3DTouch
+            detailViewController.editorialAuthorThroughSegue = editorialAuthorFor3DTouch
+            detailViewController.editorialArticleContentThroughSegue = editorialArticleContentFor3DTouch
             
             detailViewController.preferredContentSize = CGSize(width: 0.0, height: 600)
             
-            if #available(iOS 9.0, *) {
-                previewingContext.sourceRect = cell.frame
-            } else {
-                // Fallback on earlier versions
-            }
+            previewingContext.sourceRect = cell.frame
         }
         
         return detailViewController
