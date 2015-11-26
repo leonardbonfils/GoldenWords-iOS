@@ -358,7 +358,7 @@ class VideosViewController: UITableViewController {
                             
                             self.nodeIDArray.addObject(nodeIDValue)
                             
-                            if let videoElement: VideoElement = VideoElement(title: "Golden Words Video", nodeID: 0, timeStamp: 0, videoURL: "https://www.youtube.com/watch?v=XvK-5emkgLs", thumbnailURL:  "http://goldenwords.ca/sites/all/themes/custom/gw/logo.png", author: "Staff", issueNumber: "Issue # error", volumeNumber: "Volume # error") {
+                            if let videoElement: VideoElement = VideoElement(title: "Golden Words Video", nodeID: 0, timeStamp: 1442239200, videoURL: "https://www.youtube.com/watch?v=XvK-5emkgLs", thumbnailURL:  "http://goldenwords.ca/sites/all/themes/custom/gw/logo.png", author: "Staff", issueNumber: "Issue # error", volumeNumber: "Volume # error") {
                                 
                                 videoElement.title = node.1["title"] as! String
                                 videoElement.nodeID = Int(nodeIDValue)!

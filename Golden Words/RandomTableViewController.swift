@@ -191,6 +191,11 @@ class RandomTableViewController: UITableViewController, UIViewControllerPreviewi
         return cell
     }
     
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let row = indexPath.row
+        tableView.cellForRowAtIndexPath(indexPath)?.setSelected(false, animated: true)
+    }
+    
     func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         
         guard let indexPath = tableView?.indexPathForRowAtPoint(location) else { return nil }
@@ -333,7 +338,7 @@ class RandomTableViewController: UITableViewController, UIViewControllerPreviewi
                             
                             self.nodeIDArray.addObject(nodeIDValue)
                             
-                            if let randomElement : RandomElement = RandomElement(title: "Just another Golden Words article", nodeID: 0, timeStamp: 0, imageURL: "init", author: "Staff", issueNumber: "Issue # error", volumeNumber: "Volume # error", articleContent: "Could not retrieve article content") {
+                            if let randomElement : RandomElement = RandomElement(title: "Just another Golden Words article", nodeID: 0, timeStamp: 1442239200, imageURL: "init", author: "Staff", issueNumber: "Issue # error", volumeNumber: "Volume # error", articleContent: "Could not retrieve article content") {
                                 
                                 randomElement.title = node.1["title"] as! String
                                 randomElement.nodeID = Int(nodeIDValue)!

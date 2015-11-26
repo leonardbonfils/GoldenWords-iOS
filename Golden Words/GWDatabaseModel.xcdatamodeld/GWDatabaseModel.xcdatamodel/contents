@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="9057" systemVersion="15B42" minimumToolsVersion="Xcode 7.0">
+    <entity name="Article" representedClassName=".Article" syncable="YES">
+        <attribute name="articleArticleContent" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="articleAuthor" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="articleImageURL" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="articleIssueNumber" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="articleTimeStamp" optional="YES" attributeType="Integer 64" defaultValueString="0" syncable="YES"/>
+        <attribute name="articleTitle" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="articleVolumeNumber" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="Article" positionX="-27" positionY="18" width="128" height="150"/>
+    </elements>
+</model>

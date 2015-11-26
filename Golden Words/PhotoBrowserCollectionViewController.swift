@@ -514,7 +514,7 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
                         
                         self.nodeIDArray.addObject(nodeIDValue)
                         
-                        if let pictureElement : PictureElement = PictureElement(title: "Picture", nodeID: 0, timeStamp: 0, imageURL: "http://goldenwords.ca/sites/all/themes/custom/gw/logo.png", author: "Staff", issueNumber: "Issue # error", volumeNumber: "Volume # error") {
+                        if let pictureElement : PictureElement = PictureElement(title: "Picture", nodeID: 0, timeStamp: 1442239200, imageURL: "http://goldenwords.ca/sites/all/themes/custom/gw/logo.png", author: "Staff", issueNumber: "Issue # error", volumeNumber: "Volume # error") {
                             
                             pictureElement.title = node.1["title"] as! String
                             pictureElement.nodeID = Int(nodeIDValue)!

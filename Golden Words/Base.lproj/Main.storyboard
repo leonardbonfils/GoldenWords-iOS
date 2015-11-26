@@ -5,6 +5,7 @@
         <capability name="Alignment constraints to the first baseline" minToolsVersion="6.0"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Navigation items with more than one left or right bar item" minToolsVersion="7.0"/>
     </dependencies>
     <scenes>
         <!--Reveal View Controller-->
@@ -71,7 +72,7 @@
         <!--Editorials-->
         <scene sceneID="JeR-SP-3HX">
             <objects>
-                <tableViewController storyboardIdentifier="Saved Articles" title="Editorials" id="nYt-2I-xA5" customClass="EditorialsTableViewController" customModule="Golden_Words" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="Editorials" title="Editorials" id="nYt-2I-xA5" customClass="EditorialsTableViewController" customModule="Golden_Words" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="95" sectionHeaderHeight="22" sectionFooterHeight="22" id="Iuk-e9-otq">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -511,7 +512,7 @@
         <!--News-->
         <scene sceneID="3Qv-nl-cSC">
             <objects>
-                <tableViewController title="News" id="RM8-ZN-QjX" customClass="NewsTableViewController" customModule="Golden_Words" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="News" title="News" id="RM8-ZN-QjX" customClass="NewsTableViewController" customModule="Golden_Words" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="112" sectionHeaderHeight="22" sectionFooterHeight="22" id="LqV-Zb-zvA">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -621,7 +622,7 @@
         <!--Random-->
         <scene sceneID="rbN-V3-6Jt">
             <objects>
-                <tableViewController title="Random" id="LVb-Tj-fKk" customClass="RandomTableViewController" customModule="Golden_Words" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController storyboardIdentifier="Random" title="Random" id="LVb-Tj-fKk" customClass="RandomTableViewController" customModule="Golden_Words" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="112" sectionHeaderHeight="22" sectionFooterHeight="22" id="CDn-5G-BIG">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -909,14 +910,14 @@
         <!--Saved Articles-->
         <scene sceneID="90h-5g-VJk">
             <objects>
-                <tableViewController title="Saved Articles" id="UY4-CN-VWj" customClass="SavedArticlesTableViewController" customModule="Golden_Words" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="Ha1-EN-aba">
+                <tableViewController storyboardIdentifier="Saved Articles" title="Saved Articles" id="UY4-CN-VWj" customClass="SavedArticlesTableViewController" customModule="Golden_Words" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="Ha1-EN-aba">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleAspectFit" selectionStyle="default" indentationWidth="10" reuseIdentifier="RandomTableCellIdentifier" rowHeight="121" id="n57-Vd-NyR" customClass="RandomTableViewCell" customModule="Golden_Words" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleAspectFit" selectionStyle="default" indentationWidth="10" reuseIdentifier="SavedArticlesTableCellIdentifier" rowHeight="121" id="n57-Vd-NyR" customClass="SavedArticlesTableViewCell" customModule="Golden_Words" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="92" width="600" height="121"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="n57-Vd-NyR" id="Y0E-po-zpL">
@@ -992,10 +993,10 @@
                                     <constraint firstAttribute="bottom" secondItem="gVW-M5-7CX" secondAttribute="bottom" constant="4" id="Zp8-hz-7up"/>
                                 </constraints>
                                 <connections>
-                                    <outlet property="randomAuthorLabel" destination="VEz-aI-7nH" id="hGV-BX-atc"/>
-                                    <outlet property="randomHeadlineLabel" destination="ry8-FM-3jl" id="ShS-Ab-5nA"/>
-                                    <outlet property="randomPublishDateLabel" destination="u4D-be-Xii" id="QYm-gq-W0E"/>
-                                    <segue destination="7RF-Jy-ePR" kind="show" id="xLM-fc-q6u"/>
+                                    <outlet property="savedArticlesAuthorLabel" destination="VEz-aI-7nH" id="BbB-yo-wsi"/>
+                                    <outlet property="savedArticlesHeadlineLabel" destination="ry8-FM-3jl" id="IpZ-z1-lml"/>
+                                    <outlet property="savedArticlesPublishDateLabel" destination="u4D-be-Xii" id="Lac-mM-ME1"/>
+                                    <segue destination="7RF-Jy-ePR" kind="show" identifier="ShowSavedArticleDetails" id="xLM-fc-q6u"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -1004,7 +1005,18 @@
                             <outlet property="delegate" destination="UY4-CN-VWj" id="9eS-bJ-ZAe"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Saved Articles" id="pVn-Hg-ioR"/>
+                    <navigationItem key="navigationItem" title="Saved Articles" id="7Li-JS-Lsh">
+                        <barButtonItem key="leftBarButtonItem" image="Thinner Hamburger Icon" id="AK9-UO-duD"/>
+                        <barButtonItem key="rightBarButtonItem" image="Delete" id="6ih-2x-0uU">
+                            <connections>
+                                <action selector="deleteAllSavedArticles:" destination="UY4-CN-VWj" id="7nA-wP-Svb"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="deleteButton" destination="6ih-2x-0uU" id="5zw-ME-hWR"/>
+                        <outlet property="menuButton" destination="AK9-UO-duD" id="Ij3-Mm-pdm"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="v9O-Lq-KWe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1645,13 +1657,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="sectionIndexBackgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <label key="tableHeaderView" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="N3j-vy-03y">
                             <rect key="frame" x="0.0" y="64" width="600" height="33"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <animations/>
-                            <color key="backgroundColor" red="0.11282051282051264" green="0.11282051282051264" blue="0.11282051282051264" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                            <rect key="contentStretch" x="0.0" y="0.0" width="0.0" height="0.0"/>
                             <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="19"/>
                             <color key="textColor" red="0.96078431610000004" green="0.74509805439999999" blue="0.25098040700000002" alpha="1" colorSpace="calibratedRGB"/>
+                            <size key="shadowOffset" width="0.0" height="0.0"/>
                             <variation key="widthClass=compact">
                                 <fontDescription key="fontDescription" name="AvenirNext-Regular" family="Avenir Next" pointSize="16"/>
                             </variation>
@@ -1906,7 +1921,20 @@
                             </mask>
                         </variation>
                     </view>
-                    <navigationItem key="navigationItem" title="(Current Issue) Article Title" id="MpB-2o-AGP"/>
+                    <navigationItem key="navigationItem" title="(Current Issue) Article Title" id="MpB-2o-AGP">
+                        <rightBarButtonItems>
+                            <barButtonItem image="Share" id="IsJ-hJ-ePF">
+                                <connections>
+                                    <action selector="shareArticle:" destination="wD5-kF-59X" id="hqd-iN-imU"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem image="Cloud Download" id="pwr-Xa-sDQ">
+                                <connections>
+                                    <action selector="saveArticle:" destination="wD5-kF-59X" id="44n-KM-Pv1"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
+                    </navigationItem>
                     <connections>
                         <outlet property="currentIssueDetailAuthorLabel" destination="y8N-YI-bAX" id="lZu-ad-q8b"/>
                         <outlet property="currentIssueDetailHeadlineLabel" destination="2RX-sZ-mWJ" id="sFi-ij-5FP"/>
@@ -2678,7 +2706,7 @@
         <!--Saved Articles - Detail-->
         <scene sceneID="1R2-GA-PhO">
             <objects>
-                <viewController title="Saved Articles - Detail" id="7RF-Jy-ePR" customClass="SavedArticlesDetailViewController" customModule="Golden_Words" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SavedArticlesDetailViewControllerIdentifier" title="Saved Articles - Detail" id="7RF-Jy-ePR" customClass="SavedArticlesDetailViewController" customModule="Golden_Words" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="8ng-Fp-QYS"/>
                         <viewControllerLayoutGuide type="bottom" id="AID-K7-x0G"/>
@@ -2828,13 +2856,13 @@
                             </mask>
                         </variation>
                     </view>
-                    <navigationItem key="navigationItem" title="News Article Title" id="2ji-hY-Hbb"/>
+                    <navigationItem key="navigationItem" title="Saved Article Title" id="2ji-hY-Hbb"/>
                     <connections>
-                        <outlet property="newsArticleDetailAuthorLabel" destination="frT-7c-QGu" id="8xk-8F-Yft"/>
-                        <outlet property="newsArticleDetailHeadlineLabel" destination="Gux-zU-9H5" id="QwB-xF-fdO"/>
-                        <outlet property="newsArticleDetailVolumeAndIssueLabel" destination="v5u-ll-u8J" id="tYI-U0-ugm"/>
-                        <outlet property="newsDetailNavigationItem" destination="2ji-hY-Hbb" id="VDc-X9-KCM"/>
-                        <outlet property="newsDetailWebView" destination="fCf-If-mzn" id="sha-mC-2ly"/>
+                        <outlet property="savedArticleDetailAuthorLabel" destination="frT-7c-QGu" id="9ry-hq-dbQ"/>
+                        <outlet property="savedArticleDetailHeadlineLabel" destination="Gux-zU-9H5" id="ric-UN-3hP"/>
+                        <outlet property="savedArticleDetailNavigationItem" destination="2ji-hY-Hbb" id="wZ7-ey-hqz"/>
+                        <outlet property="savedArticleDetailWebView" destination="fCf-If-mzn" id="4WC-L3-IX1"/>
+                        <outlet property="savedArticleVolumeAndIssueLabel" destination="v5u-ll-u8J" id="icI-ee-bak"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oWc-8G-wIJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2844,10 +2872,13 @@
     </scenes>
     <resources>
         <image name="Business (Yellow) Manager" width="30" height="30"/>
+        <image name="Cloud Download" width="22" height="22"/>
+        <image name="Delete" width="22" height="22"/>
         <image name="Developer" width="30" height="30"/>
         <image name="Editors" width="30" height="30"/>
         <image name="Operations (Yellow) Manager" width="30" height="30"/>
         <image name="Round portrait" width="140" height="140"/>
+        <image name="Share" width="22" height="22"/>
         <image name="Thinner Hamburger Icon" width="25" height="25"/>
         <image name="about" width="52" height="40"/>
         <image name="archive" width="40" height="40"/>
@@ -2865,5 +2896,5 @@
     <inferredMetricsTieBreakers>
         <segue reference="EvQ-OT-TRV"/>
     </inferredMetricsTieBreakers>
-    <color key="tintColor" red="0.95122300390000003" green="0.7905881240834961" blue="0.095810012109756482" alpha="1" colorSpace="calibratedRGB"/>
+    <color key="tintColor" red="0.96862745098039216" green="0.75294117647058822" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
 </document>

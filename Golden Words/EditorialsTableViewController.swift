@@ -182,7 +182,7 @@ class EditorialsTableViewController: UITableViewController, UIViewControllerPrev
             
             cell.editorialHeadlineLabel.text = nil
             cell.editorialAuthorLabel.text = nil
-//            cell.editorialPublishDateLabel.text = nil
+            cell.editorialPublishDateLabel.text = nil
             
 //            var noInternetConnectionAlert = UIAlertController(title: "No Internet Connection", message: "Could not retrieve data from Golden Words servers", preferredStyle: UIAlertControllerStyle.Alert)
 //            noInternetConnectionAlert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
@@ -192,6 +192,11 @@ class EditorialsTableViewController: UITableViewController, UIViewControllerPrev
         
         return cell
         
+    }
+    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let row = indexPath.row
+        tableView.cellForRowAtIndexPath(indexPath)?.setSelected(false, animated: true)
     }
     
     func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
@@ -276,7 +281,7 @@ class EditorialsTableViewController: UITableViewController, UIViewControllerPrev
     */
 
     
-    // MARK: - Navigation
+    // MARK: - Data loading
 
 //     In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -331,7 +336,7 @@ class EditorialsTableViewController: UITableViewController, UIViewControllerPrev
                         
                         self.nodeIDArray.addObject(nodeIDValue)
                         
-                        if let editorialElement : EditorialElement = EditorialElement(title: "Just another Golden Words article", nodeID: 0, timeStamp: 0, imageURL: "init", author: "Staff", issueNumber: "Issue # error", volumeNumber: "Volume # error", articleContent: "Could not retrieve article content") {
+                        if let editorialElement : EditorialElement = EditorialElement(title: "Just another Golden Words article", nodeID: 0, timeStamp: 1442239200, imageURL: "init", author: "Staff", issueNumber: "Issue # error", volumeNumber: "Volume # error", articleContent: "Could not retrieve article content") {
                         
                                 editorialElement.title = node.1["title"] as! String
                                 editorialElement.nodeID = Int(nodeIDValue)!

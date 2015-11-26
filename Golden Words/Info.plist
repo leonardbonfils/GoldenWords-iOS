@@ -46,22 +46,12 @@
 	<string>Copyright © 2015 Léonard Bonfils. All rights reserved.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This will allow you to get directions to the nearest Golden Words paper issue.</string>
-	<key>UIMainStoryboardFile</key>
-	<string>Main</string>
-	<key>UIRequiredDeviceCapabilities</key>
+	<key>UIAppFonts</key>
 	<array>
-		<string>armv7</string>
+		<string>ClearSans-Bold.ttf</string>
+		<string>ClearSans-Light.ttf</string>
+		<string>ClearSans-Regular.ttf</string>
 	</array>
-	<key>UIStatusBarHidden</key>
-	<false/>
-	<key>UIStatusBarStyle</key>
-	<string>UIStatusBarStyleDefault</string>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
 	<key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>
@@ -89,5 +79,21 @@
 			<string>com.LeonardBonfils.GoldenWords.SavedArticles</string>
 		</dict>
 	</array>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UIStatusBarHidden</key>
+	<false/>
+	<key>UIStatusBarStyle</key>
+	<string>UIStatusBarStyleDefault</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 </dict>
 </plist>

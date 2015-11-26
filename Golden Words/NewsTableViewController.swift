@@ -197,6 +197,11 @@ class NewsTableViewController: UITableViewController, UIViewControllerPreviewing
 
     }
     
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let row = indexPath.row
+        tableView.cellForRowAtIndexPath(indexPath)?.setSelected(false, animated: true)
+    }
+    
     func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         
         guard let indexPath = tableView?.indexPathForRowAtPoint(location) else { return nil }
@@ -344,7 +349,7 @@ class NewsTableViewController: UITableViewController, UIViewControllerPreviewing
                             
                             self.nodeIDArray.addObject(nodeIDValue)
                             
-                            if let newsArticleElement : NewsElement = NewsElement(title: "Just another Golden Words article", nodeID: 0, timeStamp: 0, imageURL: "init", author: "Staff", issueNumber: "Issue # error", volumeNumber: "Volume # error", articleContent: "Could not retrieve article content") {
+                            if let newsArticleElement : NewsElement = NewsElement(title: "Just another Golden Words article", nodeID: 0, timeStamp: 1442239200, imageURL: "init", author: "Staff", issueNumber: "Issue # error", volumeNumber: "Volume # error", articleContent: "Could not retrieve article content") {
                                 
                                 newsArticleElement.title = node.1["title"] as! String
                                 newsArticleElement.nodeID = Int(nodeIDValue)!

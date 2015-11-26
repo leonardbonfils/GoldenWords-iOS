@@ -57,6 +57,24 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate {
         spinner.startAnimating()
         view.addSubview(spinner)
         
+        // Making it snow on Christmas Day!
+        let date = NSDate()
+        let calendar = NSCalendar.currentCalendar()
+        let components = calendar.components(NSCalendarUnit.Month.union(NSCalendarUnit.Day).union(NSCalendarUnit.Minute), fromDate: date)
+        
+        let month = components.month
+        let day = components.day
+        let hour = components.hour
+        
+        if (month == 11) && (day == 23) {
+            print("It's Christmas Day and we're gonna make it snow!")
+            let snowflakeView = SnowflakesView(frame: self.view.frame)
+            self.view.addSubview(snowflakeView)
+        } else {
+            print("It's not Christmas Day and we're going to patiently wait until Dec. 25th to make it snow")
+        }
+        // End of Christmas Day-specific code
+        
         updateZoom()
         updateConstraints()
         

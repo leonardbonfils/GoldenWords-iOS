@@ -69,7 +69,7 @@ class NewsDetailViewController: UIViewController {
         
         let saveArticleAction = UIPreviewAction(title: "Save Article", style: .Default) { (action, viewController) -> Void in
             /* Save the article to the device's storage permanently */
-            print("You saved Article \(self.newsArticleArticleContentThroughSegue)")
+            print("You saved Article \(self.newsArticleTitleThroughSegue)")
         }
         
         return [saveArticleAction]

@@ -49,11 +49,7 @@ class RandomDetailViewController: UIViewController {
         randomArticleDetailVolumeAndIssueLabel.text = "V.\(randomArticleVolumeIndexThroughSegue!) - Issue \(randomArticleIssueIndexThroughSegue!)"
 
         // Allowing webView link previews
-        if #available(iOS 9.0, *) {
-            randomDetailWebView.allowsLinkPreview = true
-        } else {
-            // Fallback on earlier versions
-        }
+        randomDetailWebView.allowsLinkPreview = true
         
         randomDetailWebView.dataDetectorTypes = UIDataDetectorTypes.None
         randomDetailWebView.loadHTMLString(randomArticleArticleContentThroughSegue!, baseURL: nil)
@@ -68,12 +64,11 @@ class RandomDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    @available(iOS 9.0, *)
     override func previewActionItems() -> [UIPreviewActionItem] {
         
         let saveArticleAction = UIPreviewAction(title: "Save Article", style: .Default) { (action, viewController) -> Void in
             /* Save the article to the device's storage permanently */
-            print("You saved Article \(self.randomArticleArticleContentThroughSegue)")
+            print("You saved Article \(self.randomArticleTitleThroughSegue)")
         }
         
         return [saveArticleAction]

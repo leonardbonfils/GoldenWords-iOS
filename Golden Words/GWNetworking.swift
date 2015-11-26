@@ -108,7 +108,6 @@ enum Router : URLRequestConvertible {
     }
 }
 
-
 class IssueElement: NSObject {
     
     /* All JSON variable name equivalents are commented to the right of each Swift variable */

@@ -25,6 +25,9 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
     var currentIssueObjects = NSMutableOrderedSet(capacity: 1000)
     
     var goldenWordsRefreshControl = UIRefreshControl()
+    // Replacing goldenWordsRefreshControl with the custom "dg" loadingView.
+    // goldenWordsRefreshControl.startAnimating() will be replaced by self?.tableView.dg_startAnimating()
+    // goldenWordsRefreshControl.stopAnimating() will be replaced by self?.tableView.dg_stopLoading()
     
     var revealViewControllerIndicator : Int = 0
     
@@ -55,11 +58,16 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
     var imageCache = NSCache()
     
     var cellLoadingIndicator = UIActivityIndicatorView()
-        
+    
+    override func viewWillAppear(animated: Bool) {
+        self.navigationItem.titleView?.backgroundColor = UIColor.opaqueGoldenWordsYellow()
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.None
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        self.cellLoadingIndicator.backgroundColor = UIColor.goldenWordsYellow()
+        
+        self.cellLoadingIndicator.backgroundColor = MyGlobalVariables.loadingIndicatorColor
         self.cellLoadingIndicator.hidesWhenStopped = true
         
         if self.revealViewController() != nil {
@@ -78,8 +86,8 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
         // Creating and configuring the goldenWordsRefreshControl subview
         goldenWordsRefreshControl = UIRefreshControl()
         goldenWordsRefreshControl.backgroundColor = UIColor.goldenWordsYellow()
-        goldenWordsRefreshControl.tintColor = UIColor.whiteColor()
-        currentIssueTableView.addSubview(goldenWordsRefreshControl)
+        goldenWordsRefreshControl.tintColor = UIColor.blackColor() // this used to be UIColor.whiteColor()
+//        currentIssueTableView.addSubview(goldenWordsRefreshControl)
         
         // Navigation set up
         navigationController?.setNavigationBarHidden(false, animated: true)
@@ -94,7 +102,7 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
         self.dateFormatter.dateFormat = "dd/MM/yy"
         
         self.cellLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
-        self.cellLoadingIndicator.color = UIColor.goldenWordsYellow()
+        self.cellLoadingIndicator.color = MyGlobalVariables.loadingIndicatorColor
         let indicatorCenter = CGPoint(x: self.currentIssueTableView.center.x, y: self.currentIssueTableView.center.y - 50)
         self.cellLoadingIndicator.center = indicatorCenter
         self.currentIssueTableView.addSubview(cellLoadingIndicator)
@@ -105,6 +113,16 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
                 registerForPreviewingWithDelegate(self, sourceView: view)
             }
 
+        let loadingView = DGElasticPullToRefreshLoadingViewCircle()
+        loadingView.tintColor = UIColor.blackColor()
+        
+        tableView.dg_addPullToRefreshWithActionHandler({ [weak self] () -> Void in
+            self!.handleRefresh()
+//            self!.holdRefreshControl()
+            self!.tableView.dg_stopLoading()
+            }, loadingView: loadingView)
+            tableView.dg_setPullToRefreshFillColor(UIColor.opaqueGoldenWordsYellow())
+            tableView.dg_setPullToRefreshBackgroundColor(UIColor.blackColor())
         
 //        currentIssueTableView.rowHeight = UITableViewAutomaticDimension
 //        currentIssueTableView.estimatedRowHeight = 80
@@ -115,10 +133,18 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
+    
+    override func viewDidLayoutSubviews() {
+        self.view.backgroundColor = UIColor.blackColor()
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    deinit {
+        tableView.dg_removePullToRefresh()
     }
     
     /*
@@ -222,19 +248,21 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
             }
         }
     }
-
-//    func getNextColor() -> UIColor {
-//        var colorsArray: [UIColor] = [goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow]
-//        
-//        if currentColorIndex == colorsArray.count {
-//            currentColorIndex = 0
-//        }
-//        
-//        let returnColor = colorsArray[currentColorIndex]
-//        ++currentColorIndex
-//        
-//        return returnColor
-//    }
+    
+    /*
+    func getNextColor() -> UIColor {
+        var colorsArray: [UIColor] = [goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow]
+        
+        if currentColorIndex == colorsArray.count {
+            currentColorIndex = 0
+        }
+        
+        let returnColor = colorsArray[currentColorIndex]
+        ++currentColorIndex
+        
+        return returnColor
+    }
+    */
     
     func holdRefreshControl() {
         timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
@@ -292,6 +320,8 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
                 headerVolumeAndIssueLabel.text = "Volume \(firstElementInIssue.volumeNumber) - Issue \(firstElementInIssue.issueNumber)"
             }
             
+
+            
             /*
             if row == 0 {
                 
@@ -331,10 +361,23 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
             cell.currentIssueArticlesHeadlineLabel.text = nil
             cell.currentIssueArticlesAuthorLabel.text = nil
 //            cell.currentIssueArticlesPublishDateLabel.text = nil
-            
+        
     }
         return cell
 }
+    
+//    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+//        let row = indexPath.row
+//        tableView.cellForRowAtIndexPath(indexPath)?.setSelected(false, animated: true)
+//    }
+    
+    func closeCallback() {
+        
+    }
+    
+    func cancelCallback() {
+        
+    }
     
     func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         
@@ -345,6 +388,8 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
         guard let detailViewController = storyboard?.instantiateViewControllerWithIdentifier("CurrentIssueDetailViewControllerIdentifier") as? CurrentIssueDetailViewController else { return nil }
         
         if let currentIssueObject = currentIssueObjects.objectAtIndex(indexPath.row) as? IssueElement {
+            
+            let nodeID = currentIssueObject.nodeID ?? 714
             
             let title = currentIssueObject.title ?? ""
             
@@ -362,7 +407,7 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
             
             detailViewController.preferredContentSize = CGSize(width: 0.0, height: 600)
             
-                previewingContext.sourceRect = cell.frame
+            previewingContext.sourceRect = cell.frame
             
         }
         
@@ -547,12 +592,14 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
             let row = myIndexPath?.row
             
             detailViewController.currentIssueArticleTitleThroughSegue = currentIssueObjects.objectAtIndex((myIndexPath?.row)!).title
-            detailViewController.currentIssuePublishDateThroughSegue = timeStampDateString
+            detailViewController.currentIssueTimeStampThroughSegue = currentIssueObjects.objectAtIndex((myIndexPath?.row)!).timeStamp
             detailViewController.currentIssueAuthorThroughSegue = currentIssueObjects.objectAtIndex((myIndexPath?.row)!).author
             detailViewController.currentIssueArticleContentThroughSegue = currentIssueObjects.objectAtIndex((myIndexPath?.row)!).articleContent
+            detailViewController.currentIssueNodeIDThroughSegue = currentIssueObjects.objectAtIndex((myIndexPath?.row)!).nodeID
+            detailViewController.currentIssueIssueIndexThroughSegue = currentIssueObjects.objectAtIndex((myIndexPath?.row)!).issueNumber
+            detailViewController.currentIssueVolumeIndexThroughSegue = currentIssueObjects.objectAtIndex((myIndexPath?.row)!).volumeNumber
             
         }
-  
     }
     
     func populateCurrentIssue() {
@@ -639,31 +686,46 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
                         self.currentIssueTableView.reloadData()
                         
                         UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-
                 
                         self.cellLoadingIndicator.stopAnimating()
                         
                         self.populatingCurrentIssue = false
                 }
             }
-        }
+            } else {
+                
+                let customIcon = UIImage(named: "Danger")
+                let downloadErrorAlertView = JSSAlertView().show(self, title: "Download failed", text: "Please connect to the Internet and try again.", buttonText:  "OK", color: UIColor.redColor(), iconImage: customIcon)
+                downloadErrorAlertView.addAction(self.closeCallback)
+                downloadErrorAlertView.setTitleFont("ClearSans-Bold")
+                downloadErrorAlertView.setTextFont("ClearSans")
+                downloadErrorAlertView.setButtonFont("ClearSans-Light")
+                downloadErrorAlertView.setTextTheme(.Light)
+                
+                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+                
+                self.cellLoadingIndicator.stopAnimating()
+                
+                self.populatingCurrentIssue = false
+                
+            }
     }
 }
    
     func handleRefresh() {
         
-        goldenWordsRefreshControl.beginRefreshing()
+//        goldenWordsRefreshControl.beginRefreshing()
         
-        self.cellLoadingIndicator.startAnimating()
-        self.currentIssueTableView.bringSubviewToFront(cellLoadingIndicator)
+//        self.cellLoadingIndicator.startAnimating()
+//        self.currentIssueTableView.bringSubviewToFront(cellLoadingIndicator)
         
         self.populatingCurrentIssue = false
         
         populateCurrentIssue()
         
-        self.cellLoadingIndicator.stopAnimating()
+//        self.cellLoadingIndicator.stopAnimating()
         
-        goldenWordsRefreshControl.endRefreshing()
+//        goldenWordsRefreshControl.endRefreshing()
         
     }
     

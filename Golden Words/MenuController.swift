@@ -92,12 +92,14 @@ class MenuController: UITableViewController {
         if let mainIconTableViewCell = gesture.view as? UITableViewCell {
             // print("Image tapped 5 times")
             
-            // Producing an alert view to notify the user of the easter egg
-            var alertView = UIAlertView()
-            alertView.addButtonWithTitle("My life is useless")
-            alertView.title = "Easter egg unlocked"
-            alertView.message = "Congratulations, you just wasted 3 seconds of your life!"
-            alertView.show()
+            // Producing a JSSAlertView() to notify the user of the easter egg
+            let customIcon = UIImage(named: "Demon")
+            let stupidEasterEggAlertView = JSSAlertView().show(self, title: "HEY!", text: "This is iOS! Stop tapping that button like an idiot!", buttonText:  "Fine...", color: UIColor.redColor(), iconImage: customIcon)
+//            stupidEasterEggAlertView.addAction(self.closeCallback)
+            stupidEasterEggAlertView.setTitleFont("ClearSans-Bold")
+            stupidEasterEggAlertView.setTextFont("ClearSans")
+            stupidEasterEggAlertView.setButtonFont("ClearSans-Light")
+            stupidEasterEggAlertView.setTextTheme(.Dark)
             
             // 
             
