@@ -41,7 +41,7 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate {
         doubleTapRecognizer.numberOfTouchesRequired = 1
         view.addGestureRecognizer(doubleTapRecognizer)
         
-        self.imageView.image = self.imageToStore
+//        self.imageView.image = self.imageToStore
         self.spinner.stopAnimating()
         scrollView.delegate = self
         updateZoom()
@@ -66,7 +66,7 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate {
         let day = components.day
         let hour = components.hour
         
-        if (month == 11) && (day == 23) {
+        if (month == 12) && (day == 25) {
             print("It's Christmas Day and we're gonna make it snow!")
             let snowflakeView = SnowflakesView(frame: self.view.frame)
             self.view.addSubview(snowflakeView)
@@ -91,7 +91,8 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate {
             if let image = response.result.value {
                 print("image downloaded : \(image)")
                 
-                self.imageToStore = image
+//                self.imageToStore = image
+                self.imageView.image = image
 //                                self.imageView.frame = self.scrollView.frame
                 //                self.spinner.stopAnimating()
                 //                self.centerScrollViewContents()
@@ -109,22 +110,6 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate {
                 self?.updateZoom()
                 }, completion: nil)
     }
-    
-    //
-    // Update zoom scale and constraints with animation on iOS 7.
-    //
-    // DEPRECATION NOTICE:
-    //
-    // This method is deprecated in iOS 8.0 and it is here just for iOS 7.
-    // You can safely remove this method if you are not supporting iOS 7.
-    // Or if you do support iOS 7 you can leave it here as it will be ignored by the newer iOS versions.
-    //
-//    override func willAnimateRotationToInterfaceOrientation(
-//        toInterfaceOrientation: UIInterfaceOrientation, duration: NSTimeInterval) {
-//            
-//            super.willAnimateRotationToInterfaceOrientation(toInterfaceOrientation, duration: duration)
-//            updateZoom()
-//    }
     
     func updateConstraints() {
         if let image = imageView.image {
@@ -179,7 +164,8 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate {
     func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
         return imageView
     }
-    
+
+/*
     override func previewActionItems() -> [UIPreviewActionItem] {
         
         let savePicture = UIPreviewAction(title: "Save", style: .Default) { (action, viewController) -> Void in
@@ -190,86 +176,10 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate {
         
         return [savePicture, sharePicture]
     }
+*/
     
-    
-    
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        
-////        setupView()
-////        loadPhoto()
-//        
-//        
-//        
-//        
-//        
-//        
-//        
-//    }
     
 
-//    func setupView() {
-//        spinner.center = self.imageView.center
-////        spinner.center = CGPoint(x: view.center.x, y: view.center.y - view.bounds.origin.y / 2.0)
-//        spinner.color = UIColor.goldenWordsYellow()
-//        spinner.hidesWhenStopped = true
-//        spinner.startAnimating()
-//        view.addSubview(spinner)
-//        
-//        scrollView.frame = view.bounds
-//        scrollView.delegate = self
-//        scrollView.minimumZoomScale = 1.0
-//        scrollView.maximumZoomScale = 3.0
-//        scrollView.zoomScale = 1.0
-//        view.addSubview(scrollView)
-//        
-//        imageView.contentMode = .ScaleAspectFit
-//        scrollView.addSubview(imageView)
-//        
-//        let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: "handleDoubleTap:")
-//        doubleTapRecognizer.numberOfTapsRequired = 2
-//        doubleTapRecognizer.numberOfTouchesRequired = 1
-//        view.addGestureRecognizer(doubleTapRecognizer)
-//    }
-        
-//        self.imageView.frame = self.view.frame
-//        self.view.bringSubviewToFront(imageView)
-//        self.spinner.stopAnimating()
-//        self.centerScrollViewContents()
-
-//
-//    override func viewWillAppear(animated: Bool) {
-//        super.viewWillAppear(animated)
-//        
-//        if photoInfo != nil {
-//            navigationController?.setToolbarHidden(false, animated: true)
-//        }
-//    }
-//    
-//    override func viewWillDisappear(animated: Bool) {
-//        super.viewWillDisappear(animated)
-//        navigationController?.setToolbarHidden(true, animated: true)
-//    }
-    
-    /*
-    func addButtonBar() {
-        var items = [UIBarButtonItem]()
-        
-        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .FlexibleSpace, target: nil, action: nil)
-        
-        items.append(barButtonItemWithImageNamed("hamburger", title: nil, action: "showDetails"))
-        
-//        if (photoInfo?.commentsCount > 0) {
-//            items.append(barButtonItemWithImageNamed("bubble", title: "\(photoInfo?.commentsCount ?? 0)", action: "showComments"))
-//        }
-        
-        items.append(flexibleSpace)
-        items.append(UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Action, target: self, action: "showActions"))
-        items.append(flexibleSpace)
-        
-        self.setToolbarItems(items, animated: true)
-        navigationController?.setToolbarHidden(false, animated: true)
-    } */
     
     
     override func didReceiveMemoryWarning() {
@@ -277,109 +187,13 @@ class PhotoViewerViewController: UIViewController, UIScrollViewDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    /*
-    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
-        return UIModalPresentationStyle.OverCurrentContext
-    }
-    
-    func presentationController(controller: UIPresentationController, viewControllerForAdaptivePresentationStyle style:UIModalPresentationStyle) -> UIViewController? {
-        let navController = UINavigationController(rootViewController: controller.presentedViewController)
-        
-        return navController
-    }
-    
-    func barButtonItemWithImageNamed(imageName: String?, title: String?, action: Selector? = nil) -> UIBarButtonItem {
-        let button = UIButton(type: .Custom)
-        
-        if imageName != nil {
-            button.setImage(UIImage(named: imageName!)!.imageWithRenderingMode(.AlwaysTemplate), forState: .Normal)
-        }
-        
-        if title != nil {
-            button.setTitle(title, forState: .Normal)
-            button.titleEdgeInsets = UIEdgeInsets(top: 0.0, left: 10.0, bottom: 0.0, right: 0.0)
-            
-            let font = UIFont.preferredFontForTextStyle(UIFontTextStyleFootnote)
-            button.titleLabel?.font = font
-        }
-        
-        let size = button.sizeThatFits(CGSize(width: 90.0, height: 30.0))
-        button.frame.size = CGSize(width: min(size.width + 10.0, 60), height: size.height)
-        
-        if action != nil {
-            button.addTarget(self, action: action!, forControlEvents: .TouchUpInside)
-        }
-        
-        let barButton = UIBarButtonItem(customView: button)
-        
-        return barButton
-    }
-    
-    func showActions() {
-        let actionSheet = UIActionSheet(title: nil, delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Download Photo")
-        actionSheet.showFromToolbar(((navigationController?.toolbar)!)!)
-    }
-    
-    func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
-        if buttonIndex == 1 {
-            downloadPhoto()
-        }
-    } */
-    
-    
-    
-    
     // MARK: Zooming
     
     func handleDoubleTap(recognizer: UITapGestureRecognizer!) {
         let pointInView = recognizer.locationInView(self.imageView)
         self.zoomInZoomOut(pointInView)
     }
-//
-//    func centerFrameFromImage(image: UIImage?) -> CGRect {
-//        if image == nil {
-//            return CGRectZero
-//        }
-//        
-//        let scaleFactor = scrollView.frame.size.width / image!.size.width
-//        let newHeight = image!.size.height * scaleFactor
-//        
-//        var newImageSize = CGSize(width: scrollView.frame.size.width, height: newHeight)
-//        
-//        newImageSize.height = min(scrollView.frame.size.height, newImageSize.height)
-//        
-//        let centerFrame = CGRect(x: 0.0, y: scrollView.frame.size.height/2 - newImageSize.height/2 , width: newImageSize.height, height: newImageSize.height)
-//        
-//        return centerFrame
-//    }
-//    
-//    func scrollViewDidZoom(scrollView: UIScrollView) {
-//        self.centerScrollViewContents()
-//    }
-//    
-//    func centerScrollViewContents() {
-//        let boundsSize = scrollView.frame
-//        var contentsFrame = self.imageView.frame
-//        
-//        if contentsFrame.size.width < boundsSize.width {
-//            contentsFrame.origin.x = (boundsSize.width - contentsFrame.size.width) / 2.0
-//        } else {
-//            contentsFrame.origin.x = 0.0
-//        }
-//        
-//        if contentsFrame.size.height < boundsSize.height {
-//            contentsFrame.origin.y = (boundsSize.height - scrollView.scrollIndicatorInsets.top - scrollView.scrollIndicatorInsets.bottom - contentsFrame.size.height) / 2.0
-//        } else {
-//            contentsFrame.origin.y = 0.0
-//        }
-//        
-//        self.imageView.frame = contentsFrame
-//    }
-//    
-//    func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
-//        return self.imageView
-//    }
-//    
+
     // Zooming function
     func zoomInZoomOut(point: CGPoint!) {
         let newZoomScale = self.scrollView.zoomScale > (self.scrollView.maximumZoomScale/2) ? self.scrollView.minimumZoomScale : self.scrollView.maximumZoomScale

@@ -8,12 +8,15 @@
 
 import UIKit
 import CoreData
+import Alamofire
+import AlamofireImage
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     var shortcutItem = UIApplicationShortcutItem?.self
+    var specificArticleObject = NSMutableOrderedSet(capacity: 1)
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         
@@ -31,6 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let shortcutItem = launchOptions?[UIApplicationLaunchOptionsShortcutItemKey] as? UIApplicationShortcutItem {
             
             performShortcutDelegate = false
+            handleShortcut(shortcutItem)
         }
         
         return performShortcutDelegate
@@ -38,36 +42,91 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
     }
     
+    // Code to directly show the right view when opening a specific article's URL from www.goldenwords.ca. Still can't figure out how to correctly parse the JSON.
+    
+    func application(app: UIApplication, openURL url: NSURL, options: [String : AnyObject]) -> Bool {
+        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
+        var detailViewControllerFromURL = storyboard.instantiateViewControllerWithIdentifier("CurrentIssueDetailViewControllerIdentifier") as! CurrentIssueDetailViewController
+        
+        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+        
+        let stringFromURL = String(url)
+        let location = stringFromURL.characters.count - 38
+        let articleID = stringFromURL.substringFromIndex(stringFromURL.startIndex.advancedBy(location))
+        print(articleID)
+        
+        Alamofire.request(GWNetworking.Router.SpecificArticle(Int(articleID)!)).responseJSON() { response in
+            let JSON = response.result.value as! Dictionary<String,AnyObject>
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0)) {
+                
+                if let specificArticleElement : IssueElement = IssueElement(title: "Just another Golden Words article", nodeID: 0, timeStamp: 1442239200, imageURL: "http://goldenwords.ca/sites/all/themes/custom/gw/logo.png", author: "Staff", issueNumber: "Issue # error", volumeNumber: "Volume # error", articleContent: "Looks like the server is acting up again!", coverImageInteger: "init", coverImage: UIImage()) {
+                    
+                    // get all the JSON values required to display the artile properly
+                    
+                    
+                    
+                    self.specificArticleObject.addObject(specificArticleElement)
+    
+                }
+            }
+        }
+        
+        if let object = specificArticleObject.objectAtIndex(0) as? IssueElement {
+            
+            detailViewControllerFromURL.currentIssueArticleTitleThroughSegue = object.title ?? ""
+            detailViewControllerFromURL.currentIssueTimeStampThroughSegue = object.timeStamp ?? 1442239200
+            detailViewControllerFromURL.currentIssueAuthorThroughSegue = object.author ?? "Staff"
+            detailViewControllerFromURL.currentIssueArticleContentThroughSegue = object.articleContent ?? "Looks like the server is acting up again!"
+            detailViewControllerFromURL.currentIssueNodeIDThroughSegue = object.nodeID ?? 0
+            detailViewControllerFromURL.currentIssueIssueIndexThroughSegue = object.issueNumber ?? "Issue # error"
+            detailViewControllerFromURL.currentIssueVolumeIndexThroughSegue = object.volumeNumber ?? "Volume # error"
+            
+        }
+        
+        self.window?.rootViewController = detailViewControllerFromURL // I would maybe need to create a separate navigation controller, and then display the detailViewControllerFromURL from there ? If I don't, I'm worried about the possibility of the back button not appearing properly.
+        self.window?.makeKeyAndVisible()
+    
+        return true
+    }
+//    */
+    
     func handleShortcut(shortcutItem: UIApplicationShortcutItem) -> Bool {
         
         var succeeded = false
         
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        var photoViewController = storyboard.instantiateViewControllerWithIdentifier("Pictures") as! PhotoBrowserCollectionViewController
-    
-        var rootViewController = self.window?.rootViewController
-        var revealViewController = self.window?.rootViewController?.revealViewController()
+        let storyboard = UIStoryboard.init(name: "Main", bundle: nil)
         
         if (shortcutItem.type == "com.LeonardBonfils.GoldenWords.Pictures") {
             
-//            self.window?.rootViewController?.storyboard?.instantiateViewControllerWithIdentifier("Pictures")
-//            revealViewController?.pushFrontViewController(, animated: true)
+            let rootViewController = storyboard.instantiateViewControllerWithIdentifier("revealViewController")
+            let navigationController = storyboard.instantiateViewControllerWithIdentifier("PicturesNavigationControllerIdentifier")
+//            let navigationController = storyboard.instantiateViewControllerWithIdentifier("Pictures") as! PhotoBrowserCollectionViewController
             
-//            rootViewController?.presentViewController(photoViewController, animated: true, completion: nil)
-            revealViewController?.pushFrontViewController(photoViewController, animated: true)
-            
+            self.window?.rootViewController = navigationController
+            self.window?.makeKeyAndVisible()
+        
             print("Pictures shortcut loaded")
-            MyGlobalVariables.viewControllerToDisplay = "Pictures"
             succeeded = true
         }
         
         else if (shortcutItem.type == "com.LeonardBonfils.GoldenWords.Videos") {
+            
+            let navigationController = storyboard.instantiateViewControllerWithIdentifier("VideosNavigationControllerIdentifier")
+            
+            self.window?.rootViewController = navigationController
+            self.window?.makeKeyAndVisible()
             
             print("Videos shortcut loaded")
             succeeded = true
         }
         
         else if (shortcutItem.type == "com.LeonardBonfils.GoldenWords.SavedArticles") {
+            
+            let navigationController = storyboard.instantiateViewControllerWithIdentifier("SavedArticlesNavigationControllerIdentifier")
+            
+            self.window?.rootViewController = navigationController
+            self.window?.makeKeyAndVisible()
             
             print("Saved Articles shortcut loaded")
             succeeded = true
@@ -100,15 +159,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
         
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        var photoViewController = storyboard.instantiateViewControllerWithIdentifier("Pictures") as! PhotoBrowserCollectionViewController
-        
-        var rootViewController = self.window?.rootViewController
-        var revealViewController = self.window?.rootViewController?.revealViewController()
-        
-        if MyGlobalVariables.viewControllerToDisplay == "Pictures" {
-            rootViewController?.presentViewController(photoViewController, animated: true, completion: nil)
-        }
+//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+//        var photoViewController = storyboard.instantiateViewControllerWithIdentifier("Pictures") as! PhotoBrowserCollectionViewController
+//        
+//        var rootViewController = self.window?.rootViewController
+//        var revealViewController = self.window?.rootViewController?.revealViewController()
+//        
+//        if MyGlobalVariables.viewControllerToDisplay == "Pictures" {
+//            rootViewController?.presentViewController(photoViewController, animated: true, completion: nil)
+//        }
     }
 
 //    func applicationDidBecomeActive(application: UIApplication) {

@@ -15,6 +15,8 @@ class EditorialsTableViewCell: UITableViewCell {
     @IBOutlet weak var editorialPublishDateLabel: UILabel!
 //    @IBOutlet weak var editorialVolumeAndIssueLabel: UILabel!
     
+//    @IBOutlet weak var view: TimeIndicatorView!
+    
     required init?(coder aDecoder: NSCoder!) {
         super.init(coder: aDecoder)
 /*        fatalError("init(coder:) could not be initialized") */
@@ -26,6 +28,7 @@ class EditorialsTableViewCell: UITableViewCell {
         addSubview(editorialHeadlineLabel)
         addSubview(editorialAuthorLabel)
         addSubview(editorialPublishDateLabel)
+//        addSubview(view)
 //        addSubview(editorialVolumeAndIssueLabel)
     }
     

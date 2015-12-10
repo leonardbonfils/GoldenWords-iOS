@@ -10,7 +10,7 @@ import UIKit
 import Alamofire
 import AlamofireImage
 
-class PhotoBrowserCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout, UIViewControllerPreviewingDelegate {
+class PhotoBrowserCollectionViewController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     
     @IBOutlet weak var menuButton:UIBarButtonItem!
     
@@ -53,10 +53,16 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
     
     var scrollViewDidScrollLoadingIndicator = UIActivityIndicatorView()
     
+    var downloadErrorAlertViewCount = 0
+    
+    var handleRefreshCalled = false
+    
 //    let PhotoBrowserFooterViewIdentifier = "PhotoBrowserFooterView" // Identifier used for the footer view (with Featured and Downloads)
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        downloadErrorAlertViewCount = 0
 
         self.collectionView!.registerClass(PhotoBrowserCollectionViewCell.self, forCellWithReuseIdentifier: PhotoBrowserCellIdentifier)
         
@@ -64,14 +70,14 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         self.cellLoadingIndicator.hidesWhenStopped = true
         
         // Hamburger menu button setup
-    if self.revealViewController() != nil {
+    if let revealViewControllerInstance = self.revealViewController() {
         revealViewControllerIndicator = 1
         menuButton.target = self.revealViewController()
         menuButton.action = "revealToggle:"
         self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-        }
         
-        self.revealViewController().rearViewRevealWidth = 280
+        revealViewControllerInstance.rearViewRevealWidth = 280
+        }
         
         // Preliminary refresh control "set up"
         collectionView!.delegate = self
@@ -100,9 +106,9 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         self.collectionView!.addSubview(cellLoadingIndicator)
         self.collectionView!.bringSubviewToFront(cellLoadingIndicator)
         
-        if (traitCollection.forceTouchCapability == .Available) {
-            registerForPreviewingWithDelegate(self, sourceView: view)
-        }
+//        if (traitCollection.forceTouchCapability == .Available) {
+//            registerForPreviewingWithDelegate(self, sourceView: view)
+//        }
 
 //        self.scrollViewDidScrollLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
 //        self.scrollViewDidScrollLoadingIndicator.color = goldenWordsYellow
@@ -251,7 +257,7 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
     */
     
     func holdRefreshControl() {
-        timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(MyGlobalVariables.holdRefreshControlTime, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
     }
     
 //    func endOfWork() {
@@ -272,39 +278,6 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
     }
     
     override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        
-        /*
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PhotoBrowserCellIdentifier, forIndexPath: indexPath) as! PhotoBrowserCollectionViewCell
-        
-        cell.imageView.image = UIImage(named: "reveal Image")
-        cell.backgroundColor = UIColor.blackColor()
-        
-        return cell
-        */
-  
-    
-//    let imageURL = (pictureObjects.objectAtIndex(indexPath.row) as! PictureElement).imageURL
-//    
-//    cell.imageView.image = nil
-//    cell.request?.cancel()
-//    
-//    cell.request = Alamofire.request(.GET, imageURL).responseImage() {
-//        (request, _, image, error) in
-//        if error == nil && image != nil {
-//        cell.imageView.image = image
-//    
-//        }
-//    }
-//    
-//        return cell
-        
-//        guard let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PhotoBrowserCellIdentifier, forIndexPath: indexPath) as? PhotoBrowserCollectionViewCell else {
-//            
-//            print("cell could not be initialized as PhotoBrowserCollectionViewCell, hence it will be casted to another default UICollectionViewCell type")
-//            return picturesCollectionView.dequeueReusableCellWithReuseIdentifier(PhotoBrowserCellIdentifier, forIndexPath: indexPath)
-//            
-//            
-//        }
         
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier(PhotoBrowserCellIdentifier, forIndexPath: indexPath) as! PhotoBrowserCollectionViewCell
         
@@ -349,7 +322,15 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         return cell
 }
     
+    func closeCallback() {
+        
+    }
     
+    func cancelCallback() {
+        
+    }
+    
+    /*
     
     func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         
@@ -391,6 +372,8 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         
         showViewController(viewControllerToCommit, sender: self)
     }
+    
+    */
     
     
     
@@ -495,8 +478,10 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
         
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         
-        self.cellLoadingIndicator.startAnimating()
-//        self.temporaryPictureObjects.removeAllObjects()
+        if handleRefreshCalled == false {
+            self.cellLoadingIndicator.startAnimating()
+        }
+        //        self.temporaryPictureObjects.removeAllObjects()
         
         Alamofire.request(GWNetworking.Router.Pictures(self.currentPage)).responseJSON() { response in
             if let JSON = response.result.value {
@@ -573,8 +558,31 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
 
                     self.currentPage++
                     self.populatingPhotos = false
+                    }
                 }
+            } else {
+                
+//                self.collectionView?.gestureRecognizers = nil
+                
+                if self.downloadErrorAlertViewCount < 1 {
+                
+                let customIcon = UIImage(named: "Danger")
+                let downloadErrorAlertView = JSSAlertView().show(self, title: "Download failed", text: "Please connect to the Internet and try again.", buttonText:  "OK", color: UIColor.redColor(), iconImage: customIcon)
+                downloadErrorAlertView.addAction(self.closeCallback)
+                downloadErrorAlertView.setTitleFont("ClearSans-Bold")
+                downloadErrorAlertView.setTextFont("ClearSans")
+                downloadErrorAlertView.setButtonFont("ClearSans-Light")
+                downloadErrorAlertView.setTextTheme(.Light)
+                 
+                self.downloadErrorAlertViewCount++
+                    
             }
+                // Latest change
+                UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+                self.cellLoadingIndicator.stopAnimating()
+                self.populatingPhotos = false
+                self.handleRefreshCalled = false
+                
         }
     }
 }
@@ -582,6 +590,8 @@ class PhotoBrowserCollectionViewController: UICollectionViewController, UICollec
     
     
     func handleRefresh() {
+        
+        handleRefreshCalled = true
         
         goldenWordsRefreshControl.beginRefreshing()
         

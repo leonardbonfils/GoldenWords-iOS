@@ -18,8 +18,8 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
     // Table View outlet used for the refresh control
     @IBOutlet var currentIssueTableView: UITableView!
     
-    // Volume # - Issue # header view label
-    @IBOutlet weak var headerVolumeAndIssueLabel: UILabel!
+    // Cover image outlet (table view header)
+    @IBOutlet weak var coverImage: CoverImageView!
     
     var temporaryCurrentIssueObjects = NSMutableOrderedSet(capacity: 1000)
     var currentIssueObjects = NSMutableOrderedSet(capacity: 1000)
@@ -57,15 +57,33 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
     
     var imageCache = NSCache()
     
+    var initialLoadingIndicator = UIRefreshControl()
+    
+    var handleRefreshCalled = false
+    
     var cellLoadingIndicator = UIActivityIndicatorView()
     
+    var downloadErrorAlertViewCount = 0
+    
+    var coverImageURL = ""
+        
     override func viewWillAppear(animated: Bool) {
         self.navigationItem.titleView?.backgroundColor = UIColor.opaqueGoldenWordsYellow()
+//        self.view.backgroundColor = UIColor.blackColor()
         self.tableView.separatorStyle = UITableViewCellSeparatorStyle.None
+        
+        initialLoadingIndicator.backgroundColor = UIColor.opaqueGoldenWordsYellow()
+        initialLoadingIndicator.tintColor = UIColor.opaqueGoldenWordsYellow()
+        initialLoadingIndicator.center = self.view.center
+    }
+    
+    override func viewDidAppear(animated: Bool) {
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.downloadErrorAlertViewCount = 0
         
         self.cellLoadingIndicator.backgroundColor = MyGlobalVariables.loadingIndicatorColor
         self.cellLoadingIndicator.hidesWhenStopped = true
@@ -86,8 +104,8 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
         // Creating and configuring the goldenWordsRefreshControl subview
         goldenWordsRefreshControl = UIRefreshControl()
         goldenWordsRefreshControl.backgroundColor = UIColor.goldenWordsYellow()
-        goldenWordsRefreshControl.tintColor = UIColor.blackColor() // this used to be UIColor.whiteColor()
-//        currentIssueTableView.addSubview(goldenWordsRefreshControl)
+        goldenWordsRefreshControl.tintColor = UIColor.whiteColor()
+        currentIssueTableView.addSubview(goldenWordsRefreshControl)
         
         // Navigation set up
         navigationController?.setNavigationBarHidden(false, animated: true)
@@ -113,29 +131,29 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
                 registerForPreviewingWithDelegate(self, sourceView: view)
             }
 
-        let loadingView = DGElasticPullToRefreshLoadingViewCircle()
-        loadingView.tintColor = UIColor.blackColor()
-        
-        tableView.dg_addPullToRefreshWithActionHandler({ [weak self] () -> Void in
-            self!.handleRefresh()
-//            self!.holdRefreshControl()
-            self!.tableView.dg_stopLoading()
-            }, loadingView: loadingView)
-            tableView.dg_setPullToRefreshFillColor(UIColor.opaqueGoldenWordsYellow())
-            tableView.dg_setPullToRefreshBackgroundColor(UIColor.blackColor())
+//        let loadingView = DGElasticPullToRefreshLoadingViewCircle()
+//        loadingView.tintColor = UIColor.blackColor()
+//        
+//        tableView.dg_addPullToRefreshWithActionHandler({ [weak self] () -> Void in
+//            self!.handleRefresh()
+////            self!.holdRefreshControl()
+//            self!.tableView.dg_stopLoading()
+//            }, loadingView: loadingView)
+//            tableView.dg_setPullToRefreshFillColor(UIColor.opaqueGoldenWordsYellow())
+//            tableView.dg_setPullToRefreshBackgroundColor(UIColor.blackColor())
         
 //        currentIssueTableView.rowHeight = UITableViewAutomaticDimension
 //        currentIssueTableView.estimatedRowHeight = 80
         
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
+         self.clearsSelectionOnViewWillAppear = true
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
     
     override func viewDidLayoutSubviews() {
-        self.view.backgroundColor = UIColor.blackColor()
+//        self.view.backgroundColor = UIColor.clearColor()
+//        self.initialLoadingIndicator.
     }
 
     override func didReceiveMemoryWarning() {
@@ -143,100 +161,28 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
         // Dispose of any resources that can be recreated.
     }
     
-    deinit {
-        tableView.dg_removePullToRefresh()
-    }
     
-    /*
-    func loadCustomRefreshContents() {
-        let refreshContents = NSBundle.mainBundle().loadNibNamed("RefreshContents", owner: self, options: nil)
-        
-        customView = refreshContents[0] as! UIView
-        customView.frame = customRefreshControl.bounds
-        
-        for (var i=0; i < customView.subviews.count; i++) {
-            labelsArray.append(customView.viewWithTag(i+1) as! UILabel)
-            
-            customRefreshControl.addSubview(customView)
-        }
-    }
+//    @IBAction func showCoverImageInImageViewer(sender: AnyObject) {
+//        
+////        performSegueWithIdentifier("ShowCoverImageInImageViewer", sender: nil)
+//        
+////        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+////        let PhotoViewerViewControllerForCoverImageSegue = storyboard.instantiateViewControllerWithIdentifier("PhotoViewerViewControllerIdentifier") as! PhotoViewerViewController
+////        let CurrentIssueTableViewControllerForCoverImageSegue = storyboard.instantiateViewControllerWithIdentifier("Current Issue") as! CurrentIssueTableViewController
+////        
+////        let segue = segueForUnwindingToViewController(PhotoViewerViewControllerForCoverImageSegue, fromViewController: CurrentIssueTableViewControllerForCoverImageSegue, identifier: "ShowCoverImageInImageViewer")
+////        let detailViewController = segue?.destinationViewController as! PhotoViewerViewController
+////        
+////        detailViewController.imageURLForViewerController = coverImageURL
+//        
+//        print("showCoverImageInImageViewer selector was just activated")
+//        
+//    }
     
-    func animateRefreshStep1() {
-        isAnimating = true
-        
-        UIView.animateWithDuration(0.1, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: { () -> Void in
-            
-            // Selecting the UILabel object in the labelsArray array, and applying the animation
-            self.labelsArray[self.currentLabelIndex].transform = CGAffineTransformMakeRotation(CGFloat(M_PI_4))
-            self.labelsArray[self.currentLabelIndex].textColor = self.getNextColor()
-            
-            }, completion: { (finished) -> Void in
-                
-                UIView.animateWithDuration(0.05, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: { () -> Void in
-                    
-                    self.labelsArray[self.currentLabelIndex].transform = CGAffineTransformIdentity
-                    self.labelsArray[self.currentLabelIndex].textColor = UIColor.blackColor()
-                    
-                    }, completion: { (finished) -> Void in
-                        ++self.currentLabelIndex
-                        
-                        if self.currentLabelIndex < self.labelsArray.count {
-                            self.animateRefreshStep1()
-                        }
-                        else {
-                            self.animateRefreshStep2()
-                        }
-                })
-        })
-    }
+//    deinit {
+//        tableView.dg_removePullToRefresh()
+//    }
     
-    func animateRefreshStep2() {
-        UIView.animateWithDuration(0.35, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: { () -> Void in
-            self.labelsArray[0].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[1].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[2].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[3].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[4].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[5].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[6].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[7].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[8].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[9].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[10].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            
-            
-            }, completion: { (finished) -> Void in
-                UIView.animateWithDuration(0.25, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: { () -> Void in
-                    self.labelsArray[0].transform = CGAffineTransformIdentity
-                    self.labelsArray[1].transform = CGAffineTransformIdentity
-                    self.labelsArray[2].transform = CGAffineTransformIdentity
-                    self.labelsArray[3].transform = CGAffineTransformIdentity
-                    self.labelsArray[4].transform = CGAffineTransformIdentity
-                    self.labelsArray[5].transform = CGAffineTransformIdentity
-                    self.labelsArray[6].transform = CGAffineTransformIdentity
-                    self.labelsArray[7].transform = CGAffineTransformIdentity
-                    self.labelsArray[8].transform = CGAffineTransformIdentity
-                    self.labelsArray[9].transform = CGAffineTransformIdentity
-                    self.labelsArray[10].transform = CGAffineTransformIdentity
-                    
-                    
-                    }, completion: { (finished) -> Void in
-                        if self.customRefreshControl.refreshing {
-                            self.currentLabelIndex = 0
-                            self.animateRefreshStep1()
-                        } else {
-                            self.isAnimating = false
-                            self.currentLabelIndex = 0
-                            for var i=0; i<self.labelsArray.count; i++ {
-                                self.labelsArray[i].textColor = UIColor.blackColor()
-                                self.labelsArray[i].transform = CGAffineTransformIdentity
-                            }
-                        }
-                })
-        })
-        
-    }
-    */
 
     override func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         if goldenWordsRefreshControl.refreshing {
@@ -249,23 +195,11 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
         }
     }
     
-    /*
-    func getNextColor() -> UIColor {
-        var colorsArray: [UIColor] = [goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow]
-        
-        if currentColorIndex == colorsArray.count {
-            currentColorIndex = 0
-        }
-        
-        let returnColor = colorsArray[currentColorIndex]
-        ++currentColorIndex
-        
-        return returnColor
-    }
-    */
+    
+    
     
     func holdRefreshControl() {
-        timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(MyGlobalVariables.holdRefreshControlTime, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
     }
 
     // MARK: - Table view data source
@@ -315,46 +249,10 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
 //            cell.currentIssueArticlesPublishDateLabel.text = timeStampDateString
             
             // This "if" statement serves the sole purpose of only updating the label's text once.
-            if row == 0 {
-                let firstElementInIssue = currentIssueObjects.objectAtIndex(0) as! IssueElement
-                headerVolumeAndIssueLabel.text = "Volume \(firstElementInIssue.volumeNumber) - Issue \(firstElementInIssue.issueNumber)"
-            }
-            
-
-            
-            /*
-            if row == 0 {
-                
-                cell.userInteractionEnabled = false
-                
-                // The URL isn't being obtained properly because the row is not right. I should sort the array first and then get the URL from row 0.
-                let imageURL = (currentIssueObjects.objectAtIndex(row) as! IssueElement).imageURL
-                
-                cell.currentIssueArticlesHeadlineLabel.textColor = UIColor.clearColor()
-                cell.currentIssueArticlesAuthorLabel.textColor = UIColor.clearColor()
-                cell.currentIssueArticlesPublishDateLabel.textColor = UIColor.clearColor()
-                
-                cell.request?.cancel()
-                
-                if let image = self.imageCache.objectForKey(imageURL) as? UIImage {
-                    cell.currentIssueArticlesBackgroundImageView.image = image
-                } else {
-                    cell.currentIssueArticlesBackgroundImageView.image = UIImage(named: "reveal Image")
-                    cell.request = Alamofire.request(.GET, imageURL).responseImage() { response in
-                        if response.result.error == nil && response.result.value != nil {
-                            self.imageCache.setObject(response.result.value!, forKey: response.request!.URLString)
-                            cell.currentIssueArticlesBackgroundImageView.image = response.result.value
-                        } else {
-            
-                        }
-                    }
-                }
-                cell.currentIssueArticlesBackgroundImageView.hidden = false
-            }
-            else {
-                cell.currentIssueArticlesBackgroundImageView.hidden = true
-        }
-        */
+//            if row == 0 {
+//                let firstElementInIssue = currentIssueObjects.objectAtIndex(0) as! IssueElement
+//                headerVolumeAndIssueLabel.text = "Volume \(firstElementInIssue.volumeNumber) - Issue \(firstElementInIssue.issueNumber)"
+//            }
     
     } else {
             
@@ -396,14 +294,20 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
             let author = currentIssueObject.author ?? ""
             
             let articleContent = currentIssueObject.articleContent ?? ""
-    
-            let currentIssueHeadlineFor3DTouch = title
-            let currentIssueAuthorFor3DTouch = author
-            let currentIssueArticleContentFor3DTouch = articleContent
             
-            detailViewController.currentIssueArticleTitleThroughSegue = currentIssueHeadlineFor3DTouch
-            detailViewController.currentIssueAuthorThroughSegue = currentIssueAuthorFor3DTouch
-            detailViewController.currentIssueArticleContentThroughSegue = currentIssueArticleContentFor3DTouch
+            let timestamp = currentIssueObject.timeStamp ?? 0
+            
+            let issueIndex = currentIssueObject.issueNumber ?? ""
+            
+            let volumeIndex = currentIssueObject.volumeNumber ?? ""
+            
+            detailViewController.currentIssueArticleTitleThroughSegue = title
+            detailViewController.currentIssueAuthorThroughSegue = author
+            detailViewController.currentIssueArticleContentThroughSegue = articleContent
+            detailViewController.currentIssueTimeStampThroughSegue = timestamp
+            detailViewController.currentIssueIssueIndexThroughSegue = issueIndex
+            detailViewController.currentIssueVolumeIndexThroughSegue = volumeIndex
+            detailViewController.currentIssueNodeIDThroughSegue = nodeID
             
             detailViewController.preferredContentSize = CGSize(width: 0.0, height: 600)
             
@@ -424,102 +328,6 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
     
         
         
-//        switch(row) {
-//            
-//            
-//        case 0:
-//            
-//            let cellWithCoverImage = tableView.dequeueReusableCellWithIdentifier(CurrentIssueFrontCoverTableCellIdentifier, forIndexPath: indexPath) as! CurrentIssueFrontCoverTableViewCell
-//            
-//            if let currentIssueFrontCoverObject = currentIssueObjects.objectAtIndex(indexPath.row) as? IssueElement {
-//                
-//                let title = currentIssueFrontCoverObject.title ?? ""
-//                
-//                let timeStampDateObject = NSDate(timeIntervalSince1970: NSTimeInterval(currentIssueFrontCoverObject.timeStamp))
-//                let timeStampDateString = dateFormatter.stringFromDate(timeStampDateObject)
-//                
-//                let issueNumber = currentIssueFrontCoverObject.issueNumber ?? ""
-//                let volumeNumber = currentIssueFrontCoverObject.volumeNumber ?? ""
-//                
-//                let nodeID = currentIssueFrontCoverObject.nodeID ?? 0
-//                
-//                let imageURL = currentIssueFrontCoverObject.imageURL ?? ""
-//                
-//                
-//                cellWithCoverImage.request?.cancel()
-//                
-//                if let coverImage = self.imageCache.objectForKey(imageURL) as? UIImage {
-//                    cellWithCoverImage.currentIssueFrontCoverImageView.image = coverImage
-//                } else {
-//                    cellWithCoverImage.currentIssueFrontCoverImageView.image = nil
-//                    cellWithCoverImage.request = Alamofire.request(.GET, imageURL).responseImage() { response in
-//                        if let coverImage = response.result.value {
-//                            self.imageCache.setObject(response.result.value!, forKey: imageURL)
-//                            cellWithCoverImage.currentIssueFrontCoverImageView.image = coverImage
-//                            
-//                        } else {
-//                            
-//                            return
-//                            
-//                        }
-//                    }
-//                }
-//            } else {
-//                
-//                break
-//            }
-//            
-//            return cellWithCoverImage
-//            
-//            // Populating data in the "Articles" type cells
-//            
-//            
-//        
-//        default:
-//            
-//            let cellWithoutCoverImage = tableView.dequeueReusableCellWithIdentifier(CurrentIssueArticlesTableCellIdentifier, forIndexPath: indexPath) as! CurrentIssueArticlesTableViewCell
-//            
-//            if let currentIssueArticleObject = currentIssueObjects.objectAtIndex(indexPath.row) as? IssueElement {
-//                
-//                let title = currentIssueArticleObject.title ?? ""
-//                
-//                let timeStampDateObject = NSDate(timeIntervalSince1970: NSTimeInterval(currentIssueArticleObject.timeStamp))
-//                let timeStampDateString = dateFormatter.stringFromDate(timeStampDateObject)
-//                
-//                let author = currentIssueArticleObject.author ?? ""
-//                
-//                let issueNumber = currentIssueArticleObject.issueNumber ?? ""
-//                let volumeNumber = currentIssueArticleObject.volumeNumber ?? ""
-//                
-//                let articleContent = currentIssueArticleObject.articleContent ?? ""
-//                
-//                let nodeID = currentIssueArticleObject.nodeID ?? 0
-//                
-//                
-//                cellWithoutCoverImage.currentIssueArticlesHeadlineLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleHeadline)
-//                cellWithoutCoverImage.currentIssueArticlesHeadlineLabel.text = title
-//                
-//                cellWithoutCoverImage.currentIssueArticlesAuthorLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-//                cellWithoutCoverImage.currentIssueArticlesAuthorLabel.text = author
-//                
-//                cellWithoutCoverImage.currentIssueArticlesPublishDateLabel.font = UIFont.preferredFontForTextStyle(UIFontTextStyleSubheadline)
-//                cellWithoutCoverImage.currentIssueArticlesPublishDateLabel.text = timeStampDateString
-//                
-//                return cellWithoutCoverImage
-//                
-//            } else {
-//                
-//                let emptyCell = UITableViewCell()
-//                
-//                return emptyCell
-//            }
-//        }
-//        
-//        let emptyCell = UITableViewCell()
-//        
-//        return emptyCell
-//        
-//    }
     
     
     
@@ -591,6 +399,8 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
             let myIndexPath = self.tableView.indexPathForSelectedRow
             let row = myIndexPath?.row
             
+            tableView.deselectRowAtIndexPath(myIndexPath!, animated: true)
+            
             detailViewController.currentIssueArticleTitleThroughSegue = currentIssueObjects.objectAtIndex((myIndexPath?.row)!).title
             detailViewController.currentIssueTimeStampThroughSegue = currentIssueObjects.objectAtIndex((myIndexPath?.row)!).timeStamp
             detailViewController.currentIssueAuthorThroughSegue = currentIssueObjects.objectAtIndex((myIndexPath?.row)!).author
@@ -600,6 +410,16 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
             detailViewController.currentIssueVolumeIndexThroughSegue = currentIssueObjects.objectAtIndex((myIndexPath?.row)!).volumeNumber
             
         }
+        
+        if segue.identifier == "ShowCoverImageInImageViewer" {
+            
+            let detailViewController = segue.destinationViewController as! PhotoViewerViewController
+            
+            detailViewController.imageURLForViewerController = coverImageURL
+            
+            
+        }
+        
     }
     
     func populateCurrentIssue() {
@@ -611,7 +431,9 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
         
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         
-        self.cellLoadingIndicator.startAnimating()
+        if handleRefreshCalled == false {
+            self.cellLoadingIndicator.startAnimating()
+        }
         
         Alamofire.request(GWNetworking.Router.Issue).responseJSON() { response in
             if let JSON = response.result.value {
@@ -640,11 +462,9 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
                                 if let imageURL = node.1["image_url"] as? String {
                                     issueElement.imageURL = imageURL
                                 }
-                                
                                 if let author = node.1["author"] as? String {
                                     issueElement.author = author
                                 }
-//                                issueElement.author = String(node.1["author"])
                                 if let issueNumber = node.1["issue_int"] as? String {
                                     issueElement.issueNumber = issueNumber
                                 }
@@ -655,30 +475,69 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
                                 if let articleContent = node.1["html_content"] as? String {
                                     issueElement.articleContent = articleContent
                                 }
-//
-//                                if let coverImageInteger = node.1["cover_image"] as? String {
-//                                    issueElement.coverImageInteger = coverImageInteger
-//                                }
-//                                issueElement.coverImageInteger = String(node.1["cover_image"]) // addition specific to the Current Issue View Controller
+
+                                if let coverImageInteger = node.1["cover_image"] as? String {
+                                    issueElement.coverImageInteger = coverImageInteger
+                                    
+                                    if issueElement.coverImageInteger == "1" {
+                                        
+                                        self.coverImageURL = issueElement.imageURL
+                                        
+                                        self.coverImage.image = nil
+                                        self.coverImage.request?.cancel()
+                                        
+                                        self.coverImage.request = Alamofire.request(.GET, issueElement.imageURL).responseImage() { response in
+                                            
+                                            if let image = response.result.value {
+                                                if self.coverImage.image == nil {
+                                                    self.coverImage.image = image
+                                                }
+                                            }
+                                        }
+                                        
+                                        
+                                        
+//                                        cell.request?.cancel()
+//                                        
+//                                        if let image = self.imageCache.objectForKey(thumbnailURL) as? UIImage {
+//                                            
+//                                            cell.videoThumbnailImage.image = image
+//                                            
+//                                        } else {
+//                                            
+//                                            cell.videoThumbnailImage.image = nil
+//                                            cell.request = Alamofire.request(.GET, thumbnailURL).responseImage() { response in
+//                                                if let image = response.result.value {
+//                                                    self.imageCache.setObject(response.result.value!, forKey: thumbnailURL)
+//                                                    if cell.videoThumbnailImage.image == nil {
+//                                                        cell.videoThumbnailImage.image = image
+//                                                    }
+//                                                }
+//                                            }
+//                                        }
+                                        
+                                    }
+                                }
                                 
                                 if issueElement.articleContent.characters.count > 50 {
                                     lastItem = self.temporaryCurrentIssueObjects.count
                                     self.temporaryCurrentIssueObjects.addObject(issueElement)
-                                    // print(issueElement.nodeID)
                                 }
 
                                 let indexPaths = (lastItem..<self.temporaryCurrentIssueObjects.count).map {
                                     NSIndexPath(forItem: $0, inSection: 0) }
                                 }
                             }
+
                         
-//                            let coverImageSortDescriptor = NSSortDescriptor(key: "coverImageInteger", ascending: false)
-//                            self.temporaryCurrentIssueObjects.sortUsingDescriptors([coverImageSortDescriptor])
+                        // Sorting with decreasing timestamp from top to bottom.
+                        let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
+                        self.temporaryCurrentIssueObjects.sortUsingDescriptors([timestampSortDescriptor])
                         
-                            // Sorting with decreasing timestamp from top to bottom.
-                            let timestampSortDescriptor = NSSortDescriptor(key: "timeStamp", ascending: false)
-                            self.temporaryCurrentIssueObjects.sortUsingDescriptors([timestampSortDescriptor])
-                            
+//                        let coverImageSortDescriptor = NSSortDescriptor(key: "coverImageInteger", ascending: false)
+//                        self.temporaryCurrentIssueObjects.sortUsingDescriptors([coverImageSortDescriptor])
+
+                        
                         }
                     
                     dispatch_async(dispatch_get_main_queue()) {
@@ -688,11 +547,18 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
                         UIApplication.sharedApplication().networkActivityIndicatorVisible = false
                 
                         self.cellLoadingIndicator.stopAnimating()
+//                        self.cellLoadingIndicator.stopLoading()
                         
                         self.populatingCurrentIssue = false
+                    }
                 }
-            }
             } else {
+                
+//                self.tableView.gestureRecognizers = nil
+                
+//                self.refreshControl?.hidden = true
+                
+                if self.downloadErrorAlertViewCount < 1 {
                 
                 let customIcon = UIImage(named: "Danger")
                 let downloadErrorAlertView = JSSAlertView().show(self, title: "Download failed", text: "Please connect to the Internet and try again.", buttonText:  "OK", color: UIColor.redColor(), iconImage: customIcon)
@@ -702,11 +568,17 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
                 downloadErrorAlertView.setButtonFont("ClearSans-Light")
                 downloadErrorAlertView.setTextTheme(.Light)
                 
+                self.downloadErrorAlertViewCount++
+                    
+                }
+                
                 UIApplication.sharedApplication().networkActivityIndicatorVisible = false
                 
                 self.cellLoadingIndicator.stopAnimating()
+//                self.cellLoadingIndicator.stopLoading()
                 
                 self.populatingCurrentIssue = false
+                self.handleRefreshCalled = false
                 
             }
     }
@@ -714,18 +586,17 @@ class CurrentIssueTableViewController: UITableViewController, UIViewControllerPr
    
     func handleRefresh() {
         
-//        goldenWordsRefreshControl.beginRefreshing()
+        handleRefreshCalled = true
         
-//        self.cellLoadingIndicator.startAnimating()
+        goldenWordsRefreshControl.beginRefreshing()
+        
 //        self.currentIssueTableView.bringSubviewToFront(cellLoadingIndicator)
         
         self.populatingCurrentIssue = false
         
         populateCurrentIssue()
         
-//        self.cellLoadingIndicator.stopAnimating()
-        
-//        goldenWordsRefreshControl.endRefreshing()
+        goldenWordsRefreshControl.endRefreshing()
         
     }
     

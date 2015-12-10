@@ -9,7 +9,11 @@
         <attribute name="articleTitle" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="articleVolumeNumber" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="Indicator" representedClassName=".Indicator" syncable="YES">
+        <attribute name="someAttribute" optional="YES" attributeType="Boolean" syncable="YES"/>
+    </entity>
     <elements>
         <element name="Article" positionX="-27" positionY="18" width="128" height="150"/>
+        <element name="Indicator" positionX="171" positionY="48" width="153" height="58"/>
     </elements>
 </model>

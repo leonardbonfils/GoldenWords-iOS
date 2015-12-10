@@ -44,7 +44,6 @@ class MenuController: UITableViewController {
         
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -94,7 +93,7 @@ class MenuController: UITableViewController {
             
             // Producing a JSSAlertView() to notify the user of the easter egg
             let customIcon = UIImage(named: "Demon")
-            let stupidEasterEggAlertView = JSSAlertView().show(self, title: "HEY!", text: "This is iOS! Stop tapping that button like an idiot!", buttonText:  "Fine...", color: UIColor.redColor(), iconImage: customIcon)
+            let stupidEasterEggAlertView = JSSAlertView().show(self, title: "HEY!", text: "This is iOS! Stop tapping that button like a traitor!", buttonText:  "Fine...", color: UIColor.redColor(), iconImage: customIcon)
 //            stupidEasterEggAlertView.addAction(self.closeCallback)
             stupidEasterEggAlertView.setTitleFont("ClearSans-Bold")
             stupidEasterEggAlertView.setTextFont("ClearSans")

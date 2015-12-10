@@ -112,6 +112,14 @@ class IssueArchiveViewController: UIViewController, iCarouselDataSource, iCarous
         // Dispose of any resources that can be recreated.
     }
     
+    func closeCallback() {
+        
+    }
+    
+    func cancelCallback() {
+        
+    }
+    
     // MARK: - Populating objects from JSON
     
     func populateVolumeAndIssueNumbers() {
@@ -148,12 +156,14 @@ class IssueArchiveViewController: UIViewController, iCarouselDataSource, iCarous
                                         
                                         issueArrayIndex = 0
                                         
-                                        if let issueNumber = JSON[topLevelArrayIndex]["Issues"]!![issueArrayIndex] as? String {
-                                            volumeAndIssueNumbersObject.volumeNumber = volumeNumber
-                                            volumeAndIssueNumbersObject.issueNumber = issueNumber
-                                            
-                                            issueArrayIndex = issueArrayIndex+1
+                                        if let issuesObject = JSON[topLevelArrayIndex]["Issues"] as? [String] {
+                                            if let issueNumber = issuesObject[issueArrayIndex] as? String {
+                                                volumeAndIssueNumbersObject.volumeNumber = volumeNumber
+                                                volumeAndIssueNumbersObject.issueNumber = issueNumber
+                                                
+                                                issueArrayIndex = issueArrayIndex+1
                                                 self.volumeAndIssueNumbersObjects.addObject(volumeAndIssueNumbersObject)
+                                                }
                                             }
                                         }
                                     }
@@ -166,6 +176,16 @@ class IssueArchiveViewController: UIViewController, iCarouselDataSource, iCarous
                     
                     self.populatingVolumeAndIssueNumbers = false
                 }
+            } else {
+                
+                let customIcon = UIImage(named: "Danger")
+                let downloadErrorAlertView = JSSAlertView().show(self, title: "Download failed", text: "Please connect to the Internet and try again.", buttonText:  "OK", color: UIColor.redColor(), iconImage: customIcon)
+                downloadErrorAlertView.addAction(self.closeCallback)
+                downloadErrorAlertView.setTitleFont("ClearSans-Bold")
+                downloadErrorAlertView.setTextFont("ClearSans")
+                downloadErrorAlertView.setButtonFont("ClearSans-Light")
+                downloadErrorAlertView.setTextTheme(.Light)
+                
             }
         }
         // Indicate that we are done populating the volume and issue numbers into the volumeAndIssueNumbersObjects array
@@ -263,6 +283,16 @@ class IssueArchiveViewController: UIViewController, iCarouselDataSource, iCarous
                             UIApplication.sharedApplication().networkActivityIndicatorVisible = false
                         }
                     }
+                } else {
+                    
+                    let customIcon = UIImage(named: "Danger")
+                    let downloadErrorAlertView = JSSAlertView().show(self, title: "Download failed", text: "Please connect to the Internet and try again.", buttonText:  "OK", color: UIColor.redColor(), iconImage: customIcon)
+                    downloadErrorAlertView.addAction(self.closeCallback)
+                    downloadErrorAlertView.setTitleFont("ClearSans-Bold")
+                    downloadErrorAlertView.setTextFont("ClearSans")
+                    downloadErrorAlertView.setButtonFont("ClearSans-Light")
+                    downloadErrorAlertView.setTextTheme(.Light)
+                    
                 }
             }
         }

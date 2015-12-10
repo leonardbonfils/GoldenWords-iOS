@@ -138,6 +138,14 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         // Dispose of any resources that can be recreated.
     }
     
+    func closeCallback() {
+        
+    }
+    
+    func cancelCallback() {
+        
+    }
+    
     func populateMapObjects() {
     
         if populatingMapObjects {
@@ -173,13 +181,17 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                                 if let locationName = JSON[index]["name"] as? String {
                                     issueLocation.locationName = locationName
                                 }
-
-                                if let latitude = JSON[index]["coordinates"]!![1] as? Double {
-                                    issueLocation.latitude = latitude
-                                }
                                 
-                                if let longitude = JSON[index]["coordinates"]!![0] as? Double {
-                                    issueLocation.longitude = longitude
+                                // I changed this part right here and now the map isn't work. Investigate this later
+                                if let coordinatesObject = JSON[index]["coordinates"] as? [Double] {
+                                    if let longitude = coordinatesObject[0] as? Double {
+                                        issueLocation.longitude = longitude
+                                    }
+                                    
+                                    if let latitude = coordinatesObject[1] as? Double {
+                                        issueLocation.latitude = latitude
+                                    }
+                                    
                                 }
                                 
                                 issueLocation.coordinate = CLLocationCoordinate2D(latitude: issueLocation.latitude, longitude: issueLocation.longitude)
@@ -210,7 +222,17 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
                         }
                 }
             }
-        }
+            } else {
+                
+                let customIcon = UIImage(named: "Danger")
+                let downloadErrorAlertView = JSSAlertView().show(self, title: "Download failed", text: "Please connect to the Internet and try again.", buttonText:  "OK", color: UIColor.redColor(), iconImage: customIcon)
+                downloadErrorAlertView.addAction(self.closeCallback)
+                downloadErrorAlertView.setTitleFont("ClearSans-Bold")
+                downloadErrorAlertView.setTextFont("ClearSans")
+                downloadErrorAlertView.setButtonFont("ClearSans-Light")
+                downloadErrorAlertView.setTextTheme(.Light)
+                
+            }
     }
 }
     

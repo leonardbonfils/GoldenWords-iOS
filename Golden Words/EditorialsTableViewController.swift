@@ -50,8 +50,16 @@ class EditorialsTableViewController: UITableViewController, UIViewControllerPrev
     
     var cellLoadingIndicator = UIActivityIndicatorView()
     
+    var handleRefreshCalled = false
+    
+    var downloadErrorAlertViewCount = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        downloadErrorAlertViewCount = 0
+        
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         
         // Hamburger button configuration
         if self.revealViewController() != nil {
@@ -59,14 +67,13 @@ class EditorialsTableViewController: UITableViewController, UIViewControllerPrev
             menuButton.target = self.revealViewController()
             menuButton.action = "revealToggle:"
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-            
         }
         
         self.revealViewController().rearViewRevealWidth = 280
         
         // Preliminary refresh control "set up"
-        editorialsTableView.delegate = self
-        editorialsTableView.dataSource = self
+        tableView.delegate = self
+        tableView.dataSource = self
         
         // Creating and configuring the goldenWordsRefreshControl subview
         goldenWordsRefreshControl = UIRefreshControl()
@@ -90,6 +97,7 @@ class EditorialsTableViewController: UITableViewController, UIViewControllerPrev
 //        let updateString = "Last updated at " + self.dateFormatter.stringFromDate(currentDateAndTime]
 //        self.goldenWordsRefreshControl.attributedTitle = NSAttributedString(string: updateString]
         
+//        tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 50
         
         self.cellLoadingIndicator.backgroundColor = UIColor.goldenWordsYellow()
@@ -133,7 +141,7 @@ class EditorialsTableViewController: UITableViewController, UIViewControllerPrev
     }
     
     func holdRefreshControl() {
-        timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(MyGlobalVariables.holdRefreshControlTime, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
     }
     
     // MARK: - Table view data source
@@ -178,6 +186,8 @@ class EditorialsTableViewController: UITableViewController, UIViewControllerPrev
             
             cell.editorialPublishDateLabel.text = timeStampDateString
             
+//            cell.view.updateSize()
+            
         } else {
             
             cell.editorialHeadlineLabel.text = nil
@@ -194,9 +204,12 @@ class EditorialsTableViewController: UITableViewController, UIViewControllerPrev
         
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let row = indexPath.row
-        tableView.cellForRowAtIndexPath(indexPath)?.setSelected(false, animated: true)
+    func closeCallback() {
+        
+    }
+    
+    func cancelCallback() {
+        
     }
     
     func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
@@ -292,12 +305,16 @@ class EditorialsTableViewController: UITableViewController, UIViewControllerPrev
             let myIndexPath = self.tableView.indexPathForSelectedRow
             let row = myIndexPath?.row
             
+            tableView.deselectRowAtIndexPath(myIndexPath!, animated: true)
+            
             // Passing the article information through the segue
             detailViewController.editorialTitleThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).title
             detailViewController.editorialVolumeIndexThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).volumeNumber
             detailViewController.editorialIssueIndexThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).issueNumber
             detailViewController.editorialAuthorThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).author
             detailViewController.editorialArticleContentThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).articleContent
+            detailViewController.editorialNodeIDThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).nodeID
+            detailViewController.editorialTimeStampThroughSegue = editorialObjects.objectAtIndex((myIndexPath?.row)!).timeStamp
             
         }
     }
@@ -317,7 +334,9 @@ class EditorialsTableViewController: UITableViewController, UIViewControllerPrev
         
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
         
-        self.cellLoadingIndicator.startAnimating()
+        if handleRefreshCalled == false {
+            self.cellLoadingIndicator.startAnimating()
+        }
         
         Alamofire.request(GWNetworking.Router.Editorials(self.currentPage)).responseJSON() { response in
             if let JSON = response.result.value {
@@ -394,44 +413,43 @@ class EditorialsTableViewController: UITableViewController, UIViewControllerPrev
                         
                         self.currentPage++
                         self.populatingEditorials = false
+                        self.handleRefreshCalled = false
 
+                    }
                 }
+            } else {
+                
+//                self.tableView.gestureRecognizers = nil
+                
+                if self.downloadErrorAlertViewCount < 1 {
+                
+                let customIcon = UIImage(named: "Danger")
+                let downloadErrorAlertView = JSSAlertView().show(self, title: "Download failed", text: "Please connect to the Internet and try again.", buttonText:  "OK", color: UIColor.redColor(), iconImage: customIcon)
+                downloadErrorAlertView.addAction(self.closeCallback)
+                downloadErrorAlertView.setTitleFont("ClearSans-Bold")
+                downloadErrorAlertView.setTextFont("ClearSans")
+                downloadErrorAlertView.setButtonFont("ClearSans-Light")
+                downloadErrorAlertView.setTextTheme(.Light)
+                    
+                self.downloadErrorAlertViewCount++
+                    
+                }
+                
             }
-        }
     }
 }
 
     func handleRefresh() {
+        
+            handleRefreshCalled = true
             
             goldenWordsRefreshControl.beginRefreshing()
             
-/*            let currentNumberOfPages = self.currentPage
-            
-            self.editorialObjects.removeAllObjects() */
-            
             self.currentPage = 0 // switched from 1
-            
-            self.cellLoadingIndicator.startAnimating()
-            self.editorialsTableView.bringSubviewToFront(cellLoadingIndicator)
-            
-           /* 
-            repeat {
-            
-                populateEditorials()
-// I initially thought I would need to add 1 to the currentPage everytime, but this is already done in the populateEditorials function.
-            
-            }
-            
-                while (self.currentPage < currentNumberOfPages) // the program runs through the "repeat" statement before even considering the "while" condition.
-*/
-            
+        
             self.populatingEditorials = false
             populateEditorials()
-            
-/*            self.editorialsTableView!.reloadData() */
-            
-            self.cellLoadingIndicator.stopAnimating()
-            
+        
             goldenWordsRefreshControl.endRefreshing()
             
         }

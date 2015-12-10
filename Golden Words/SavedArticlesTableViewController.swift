@@ -9,6 +9,8 @@
 import UIKit
 import CoreData
 
+//var savedArticleObjects = NSMutableOrderedSet(capacity: 1000)
+
 class SavedArticlesTableViewController: UITableViewController, UIViewControllerPreviewingDelegate {
     
     @IBOutlet weak var menuButton: UIBarButtonItem!
@@ -24,25 +26,42 @@ class SavedArticlesTableViewController: UITableViewController, UIViewControllerP
     
     var cellLoadingIndicator = UIActivityIndicatorView()
     
+    var downloadErrorAlertViewCount = 0
+    
     override func viewWillAppear(animated: Bool) {
         
-        // Populate the saved articles set from the Core Data database.
         populateSavedArticlesFromCoreData()
+        
+        // Populate the saved articles set from the Core Data database.
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+//        populateSavedArticlesFromCoreData()
+        
+        downloadErrorAlertViewCount = 0
+        
+//        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.None
+        
         // Hamburger button configuration
-        if self.revealViewController() != nil {
+        if let revealViewControllerInstance = self.revealViewController()
+        {
             revealViewControllerIndicator = 1
-            menuButton.target = self.revealViewController()
+            menuButton.target = revealViewControllerInstance
             menuButton.action = "revealToggle:"
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+            revealViewControllerInstance.rearViewRevealWidth = 280
         }
         
-        self.revealViewController().rearViewRevealWidth = 280
-
+//        if self.revealViewController() != nil {
+//            menuButton.target = self.revealViewController()
+//            menuButton.action = "revealToggle:"
+//            self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+//            self.revealViewController().rearViewRevealWidth = 280
+//            
+//        }
+        
         tableView.delegate = self
         tableView.dataSource = self
         
@@ -52,6 +71,7 @@ class SavedArticlesTableViewController: UITableViewController, UIViewControllerP
         
         self.dateFormatter.dateFormat = "dd/MM/yy"
         
+//        tableView.rowHeight = UITableViewAutomaticDimension
         tableView.estimatedRowHeight = 50
         
         self.cellLoadingIndicator.backgroundColor = UIColor.goldenWordsYellow()
@@ -67,13 +87,19 @@ class SavedArticlesTableViewController: UITableViewController, UIViewControllerP
             registerForPreviewingWithDelegate(self, sourceView: view)
         }
         
+        tableView.reloadData()
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
-
+    
+//    override func viewDidAppear(animated: Bool) {
+//        tableView.reloadData()
+//    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -144,7 +170,19 @@ class SavedArticlesTableViewController: UITableViewController, UIViewControllerP
             if let articleContent = savedArticleObject.valueForKey("articleArticleContent") as? String {
                 detailViewController.savedArticleArticleContentThroughSegue = articleContent
             }
-                        
+            
+            if let issueNumber = savedArticleObject.valueForKey("articleIssueNumber") as? String {
+                detailViewController.savedArticleIssueIndexThroughSegue = issueNumber
+            }
+            
+            if let volumeNumber = savedArticleObject.valueForKey("articleVolumeNumber") as? String {
+                detailViewController.savedArticleVolumeIndexThroughSegue = volumeNumber
+            }
+            
+            if let row = indexPath.row as? Int {
+                detailViewController.savedArticleRowIndexThroughSegue = row
+            }
+            
             detailViewController.preferredContentSize = CGSize(width: 0.0, height: 600)
             
             previewingContext.sourceRect = cell.frame
@@ -191,6 +229,10 @@ class SavedArticlesTableViewController: UITableViewController, UIViewControllerP
                 } else {
                     
                     dispatch_async(dispatch_get_main_queue()){
+                        
+//                    self.tableView.gestureRecognizers = nil
+                        
+                        if self.downloadErrorAlertViewCount < 1 {
                     
                     let customIcon = UIImage(named: "Danger")
                     let noSavedArticlesAlertView = JSSAlertView().show(self, title: "No saved articles", text: "Press the cloud-shaped button in the top-right corner to save an article.", buttonText:  "OK", color: UIColor.opaqueGoldenWordsYellow(), iconImage: customIcon)
@@ -199,6 +241,10 @@ class SavedArticlesTableViewController: UITableViewController, UIViewControllerP
                     noSavedArticlesAlertView.setTextFont("ClearSans")
                     noSavedArticlesAlertView.setButtonFont("ClearSans-Light")
                     noSavedArticlesAlertView.setTextTheme(.Light)
+                         
+                    self.downloadErrorAlertViewCount++
+                            
+                        }
                     
                     print("There was an error while populating the NSMutableOrderedSet 'savedArticleObjects' from the CoreData database")
                     }
@@ -220,15 +266,21 @@ class SavedArticlesTableViewController: UITableViewController, UIViewControllerP
             
             abort()
         }
+            
+            self.tableView.reloadData()
+            
     }
         
-        
+ 
         
         dispatch_async(dispatch_get_main_queue()) {
             
-            self.tableView.reloadData()
+//            self.tableView.reloadData()
             self.cellLoadingIndicator.stopAnimating()
     }
+        
+//        self.tableView.reloadData()
+
 }
     
     func closeCallback() {
@@ -260,8 +312,8 @@ class SavedArticlesTableViewController: UITableViewController, UIViewControllerP
             let managedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
             let entityDescription = NSEntityDescription.entityForName("Article", inManagedObjectContext: managedObjectContext)
             
-            managedObjectContext.deleteObject(self.savedArticleObjects.objectAtIndex(indexPath.row) as! NSManagedObject)
-            self.savedArticleObjects.removeObjectAtIndex(indexPath.row)
+            managedObjectContext.deleteObject(savedArticleObjects.objectAtIndex(indexPath.row) as! NSManagedObject)
+            savedArticleObjects.removeObjectAtIndex(indexPath.row)
             do {
                 try managedObjectContext.save()
             } catch {
@@ -284,15 +336,46 @@ class SavedArticlesTableViewController: UITableViewController, UIViewControllerP
     
     @IBAction func deleteAllSavedArticles(sender: AnyObject) {
         
-        let customIcon = UIImage(named: "Thin Cross")
-        let deleteSavedArticlesAlertView = JSSAlertView().show(self, title: "Delete all saved articles?", text: "Are you sure you want to delete all of your saved articles?", buttonText: "Yup!", cancelButtonText: "Nope", color: UIColor.redColor(), iconImage: customIcon)
-        deleteSavedArticlesAlertView.addAction(deleteSavedArticlesCloseCallback)
-        deleteSavedArticlesAlertView.addCancelAction(deleteSavedArticlesCancelCallback)
-        deleteSavedArticlesAlertView.setTitleFont("ClearSans-Bold")
-        deleteSavedArticlesAlertView.setTextFont("ClearSans")
-        deleteSavedArticlesAlertView.setButtonFont("ClearSans-Light")
-        deleteSavedArticlesAlertView.setTextTheme(.Light)
+        do {
+            // Setting up Core Data variables
+            let managedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+            let entityDescription = NSEntityDescription.entityForName("Article", inManagedObjectContext: managedObjectContext)
+            
+            let request = NSFetchRequest()
+            request.entity = entityDescription
+            
+            var objects = try managedObjectContext.executeFetchRequest(request)
+            
+            if objects.count > 0 {
         
+                let customIcon = UIImage(named: "Thin Cross")
+                let deleteSavedArticlesAlertView = JSSAlertView().show(self, title: "Delete all saved articles?", text: "Are you sure you want to delete all of your saved articles?", buttonText: "Yup!", cancelButtonText: "Nope", color: UIColor.redColor(), iconImage: customIcon)
+                deleteSavedArticlesAlertView.addAction(deleteSavedArticlesCloseCallback)
+                deleteSavedArticlesAlertView.addCancelAction(deleteSavedArticlesCancelCallback)
+                deleteSavedArticlesAlertView.setTitleFont("ClearSans-Bold")
+                deleteSavedArticlesAlertView.setTextFont("ClearSans")
+                deleteSavedArticlesAlertView.setButtonFont("ClearSans-Light")
+                deleteSavedArticlesAlertView.setTextTheme(.Light)
+                
+            } else {
+                
+                let customIcon = UIImage(named: "Danger")
+                let savedArticlesCannotDeleteAlertView = JSSAlertView().show(self, title: "No saved articles", text: "There are no saved articles to delete.", buttonText:  "OK", color: UIColor.opaqueGoldenWordsYellow(), iconImage: customIcon)
+                savedArticlesCannotDeleteAlertView.addAction(self.closeCallback)
+                savedArticlesCannotDeleteAlertView.setTitleFont("ClearSans-Bold")
+                savedArticlesCannotDeleteAlertView.setTextFont("ClearSans")
+                savedArticlesCannotDeleteAlertView.setButtonFont("ClearSans-Light")
+                savedArticlesCannotDeleteAlertView.setTextTheme(.Light)
+                
+            }
+        }
+            
+        catch {
+            
+            print("CoreData fetch request failed.")
+            abort()
+            
+        }
     }
     
     func deleteSavedArticlesCloseCallback() {
@@ -322,7 +405,7 @@ class SavedArticlesTableViewController: UITableViewController, UIViewControllerP
         print("Time to delete all saved articles with batch request: \(NSDate().timeIntervalSinceDate(startTimeDeleteRequest))")
         
         // Deleting all objects from the NSMutableOrderedSet
-        self.savedArticleObjects.removeAllObjects()
+        savedArticleObjects.removeAllObjects()
         
         // Deleting all rows from the tableView
         self.tableView.reloadData()
@@ -339,12 +422,17 @@ class SavedArticlesTableViewController: UITableViewController, UIViewControllerP
     }
     
     
-
-    
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-        // Write code for rearranging table view
-    }
+//    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+//        return true
+//    }
+//
+//    
+//    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
+//        
+//        var itemToMove = savedArticleObjects.objectAtIndex(fromIndexPath.row)
+//        savedArticleObjects.removeObjectAtIndex(fromIndexPath.row)
+//        savedArticleObjects.insertObject(itemToMove, atIndex: toIndexPath.row)
+//    }
 
 
     /*
@@ -367,6 +455,8 @@ class SavedArticlesTableViewController: UITableViewController, UIViewControllerP
             let myIndexPath = self.tableView.indexPathForSelectedRow
             let row = myIndexPath?.row
             
+            tableView.deselectRowAtIndexPath(myIndexPath!, animated: true)
+            
             if let title = savedArticleObjects.objectAtIndex(row!).valueForKey("articleTitle") as? String {
                 detailViewController.savedArticleTitleThroughSegue = title
             }
@@ -386,6 +476,11 @@ class SavedArticlesTableViewController: UITableViewController, UIViewControllerP
             if let articleContent = savedArticleObjects.objectAtIndex(row!).valueForKey("articleArticleContent") as? String {
                 detailViewController.savedArticleArticleContentThroughSegue = articleContent
             }
+            
+            if let timeStamp = savedArticleObjects.objectAtIndex(row!).valueForKey("articleTimeStamp") as? Int {
+                detailViewController.savedArticleTimeStampThroughSegue = timeStamp
+            }
+
         }
     }
 }

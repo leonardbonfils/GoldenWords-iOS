@@ -59,6 +59,14 @@ class AboutViewController: UIViewController, MFMailComposeViewControllerDelegate
         // Dispose of any resources that can be recreated.
     }
     
+    func closeCallback() {
+        
+    }
+    
+    func cancelCallback() {
+        
+    }
+    
     func loadLatestSummary() {
         
         UIApplication.sharedApplication().networkActivityIndicatorVisible = true
@@ -87,6 +95,16 @@ class AboutViewController: UIViewController, MFMailComposeViewControllerDelegate
                     
                     
                 }
+                
+            } else {
+                                
+                let customIcon = UIImage(named: "Danger")
+                let downloadErrorAlertView = JSSAlertView().show(self, title: "Download failed", text: "Please connect to the Internet and try again.", buttonText:  "OK", color: UIColor.redColor(), iconImage: customIcon)
+                downloadErrorAlertView.addAction(self.closeCallback)
+                downloadErrorAlertView.setTitleFont("ClearSans-Bold")
+                downloadErrorAlertView.setTextFont("ClearSans")
+                downloadErrorAlertView.setButtonFont("ClearSans-Light")
+                downloadErrorAlertView.setTextTheme(.Light)
                 
             }
         }

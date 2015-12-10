@@ -49,9 +49,15 @@ class RandomTableViewController: UITableViewController, UIViewControllerPreviewi
     var timeStampDateString : String!
     
     var cellLoadingIndicator = UIActivityIndicatorView()
+    
+    var downloadErrorAlertViewCount = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        downloadErrorAlertViewCount = 0
+        
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         
         self.cellLoadingIndicator.backgroundColor = UIColor.goldenWordsYellow()
         self.cellLoadingIndicator.hidesWhenStopped = true
@@ -67,15 +73,15 @@ class RandomTableViewController: UITableViewController, UIViewControllerPreviewi
         self.revealViewController().rearViewRevealWidth = 280
         
         // Preliminary refresh control "set up"
-        randomTableView.delegate = self
-        randomTableView.dataSource = self
+        tableView.delegate = self
+        tableView.dataSource = self
         
         // Creating and configuring the goldenWordsRefreshControl subview
         goldenWordsRefreshControl = UIRefreshControl()
        goldenWordsRefreshControl.backgroundColor = UIColor.goldenWordsYellow()
         goldenWordsRefreshControl.tintColor = UIColor.whiteColor()
 //        goldenWordsRefreshControl.addTarget(self, action: "handleRefresh", forControlEvents: .ValueChanged)
-        randomTableView.addSubview(goldenWordsRefreshControl)
+        tableView.addSubview(goldenWordsRefreshControl)
         
         // Navigation set up
         navigationController?.setNavigationBarHidden(false, animated: true)
@@ -99,10 +105,10 @@ class RandomTableViewController: UITableViewController, UIViewControllerPreviewi
         
         self.cellLoadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
         self.cellLoadingIndicator.color = UIColor.goldenWordsYellow()
-        let indicatorCenter = CGPoint(x: self.randomTableView.center.x, y: self.randomTableView.center.y - 50)
+        let indicatorCenter = CGPoint(x: self.tableView.center.x, y: self.tableView.center.y - 50)
         self.cellLoadingIndicator.center = indicatorCenter
-        self.randomTableView.addSubview(cellLoadingIndicator)
-        self.randomTableView.bringSubviewToFront(cellLoadingIndicator)
+        self.tableView.addSubview(cellLoadingIndicator)
+        self.tableView.bringSubviewToFront(cellLoadingIndicator)
         
         // Checking for 3D Touch Support
         if (traitCollection.forceTouchCapability == .Available){
@@ -135,7 +141,7 @@ class RandomTableViewController: UITableViewController, UIViewControllerPreviewi
     }
     
     func holdRefreshControl() {
-        timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(MyGlobalVariables.holdRefreshControlTime, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
     }
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -191,9 +197,12 @@ class RandomTableViewController: UITableViewController, UIViewControllerPreviewi
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let row = indexPath.row
-        tableView.cellForRowAtIndexPath(indexPath)?.setSelected(false, animated: true)
+    func closeCallback() {
+        
+    }
+    
+    func cancelCallback() {
+        
     }
     
     func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
@@ -286,6 +295,8 @@ class RandomTableViewController: UITableViewController, UIViewControllerPreviewi
             let myIndexPath = self.tableView.indexPathForSelectedRow
             let row = myIndexPath?.row
             
+            tableView.deselectRowAtIndexPath(myIndexPath!, animated: true)
+            
             // Passing the article information through the segue
             detailViewController.randomArticleTitleThroughSegue = randomObjects.objectAtIndex((myIndexPath?.row)!).title
 //            detailViewController.randomArticlePublishDateThroughSegue = timeStampDateString
@@ -293,6 +304,8 @@ class RandomTableViewController: UITableViewController, UIViewControllerPreviewi
             detailViewController.randomArticleIssueIndexThroughSegue = randomObjects.objectAtIndex((myIndexPath?.row)!).issueNumber
             detailViewController.randomArticleAuthorThroughSegue = randomObjects.objectAtIndex((myIndexPath?.row)!).author
             detailViewController.randomArticleArticleContentThroughSegue = randomObjects.objectAtIndex((myIndexPath?.row)!).articleContent
+            detailViewController.randomArticleNodeIDThroughSegue = randomObjects.objectAtIndex((myIndexPath?.row)!).nodeID
+            detailViewController.randomArticleTimeStampThroughSegue = randomObjects.objectAtIndex((myIndexPath?.row)!).timeStamp
             
 //            detailViewController.randomArticleTitleThroughSegue = randomHeadline[row]
             
@@ -381,7 +394,7 @@ class RandomTableViewController: UITableViewController, UIViewControllerPreviewi
                     dispatch_async(dispatch_get_main_queue()) {
                         
                         self.randomObjects = self.temporaryRandomObjects
-                        self.randomTableView.reloadData()
+                        self.tableView.reloadData()
                         
                         UIApplication.sharedApplication().networkActivityIndicatorVisible = false
                         
@@ -391,6 +404,24 @@ class RandomTableViewController: UITableViewController, UIViewControllerPreviewi
                         self.populatingRandomArticles = false
                     }
                 }
+            } else {
+                
+//                self.tableView.gestureRecognizers = nil
+                
+                if self.downloadErrorAlertViewCount < 1 {
+                
+                let customIcon = UIImage(named: "Danger")
+                let downloadErrorAlertView = JSSAlertView().show(self, title: "Download failed", text: "Please connect to the Internet and try again.", buttonText:  "OK", color: UIColor.redColor(), iconImage: customIcon)
+                downloadErrorAlertView.addAction(self.closeCallback)
+                downloadErrorAlertView.setTitleFont("ClearSans-Bold")
+                downloadErrorAlertView.setTextFont("ClearSans")
+                downloadErrorAlertView.setButtonFont("ClearSans-Light")
+                downloadErrorAlertView.setTextTheme(.Light)
+                 
+                self.downloadErrorAlertViewCount++
+                    
+                }
+                
             }
         }
     }
@@ -406,7 +437,7 @@ class RandomTableViewController: UITableViewController, UIViewControllerPreviewi
         self.currentPage = 0
         
         self.cellLoadingIndicator.startAnimating()
-        self.randomTableView.bringSubviewToFront(cellLoadingIndicator)
+        self.tableView.bringSubviewToFront(cellLoadingIndicator)
         
         /*
         repeat {
@@ -428,7 +459,7 @@ class RandomTableViewController: UITableViewController, UIViewControllerPreviewi
         self.cellLoadingIndicator.stopAnimating()
         self.cellLoadingIndicator.hidesWhenStopped = true
         
-/*        self.randomTableView!.reloadData() */
+/*        self.tableView!.reloadData() */
         
         goldenWordsRefreshControl.endRefreshing()
         

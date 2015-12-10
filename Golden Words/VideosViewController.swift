@@ -54,20 +54,28 @@ class VideosViewController: UITableViewController {
     
     var cellLoadingIndicator = UIActivityIndicatorView()
     
+    var downloadErrorAlertViewCount = 0
+    
     // Variables for refresh control - end
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        downloadErrorAlertViewCount = 0
+        
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.None
 
         // Hamburger button configuration
-        if self.revealViewController() != nil {
+        if let revealViewControllerInstance = self.revealViewController()
+        {
+            revealViewControllerIndicator = 1
             menuButton.target = self.revealViewController()
             menuButton.action = "revealToggle:"
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+            
+            revealViewControllerInstance.rearViewRevealWidth = 280
         }
-        
-        self.revealViewController().rearViewRevealWidth = 280
-        
+                
         // Preliminary refresh control "set up"
         videosTableView.delegate = self
         videosTableView.dataSource = self
@@ -110,7 +118,7 @@ class VideosViewController: UITableViewController {
     }
     
     func holdRefreshControl() {
-        timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(MyGlobalVariables.holdRefreshControlTime, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -195,118 +203,15 @@ class VideosViewController: UITableViewController {
             
         }
     }
-/*
-    func loadCustomRefreshContents() {
-        let refreshContents = NSBundle.mainBundle().loadNibNamed("RefreshContents", owner: self, options: nil)
+    
+    func closeCallback() {
         
-        customView = refreshContents[0] as! UIView
-        customView.frame = goldenWordsRefreshControl!.bounds
-        
-        for (var i=0; i < customView.subviews.count; i++) {
-            labelsArray.append(customView.viewWithTag(i+1) as! UILabel)
-            
-            goldenWordsRefreshControl!.addSubview(customView)
-        }
     }
     
-    func animateRefreshStep1() {
-        isAnimating = true
-        
-        UIView.animateWithDuration(0.1, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: { () -> Void in
-            
-            // Selecting the UILabel object in the labelsArray array, and applying the animation
-            self.labelsArray[self.currentLabelIndex].transform = CGAffineTransformMakeRotation(CGFloat(M_PI_4))
-            self.labelsArray[self.currentLabelIndex].textColor = self.getNextColor()
-            
-            }, completion: { (finished) -> Void in
-                
-                UIView.animateWithDuration(0.05, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: { () -> Void in
-                    
-                    self.labelsArray[self.currentLabelIndex].transform = CGAffineTransformIdentity
-                    self.labelsArray[self.currentLabelIndex].textColor = UIColor.blackColor()
-                    
-                    }, completion: { (finished) -> Void in
-                        ++self.currentLabelIndex
-                        
-                        if self.currentLabelIndex < self.labelsArray.count {
-                            self.animateRefreshStep1()
-                        }
-                        else {
-                            self.animateRefreshStep2()
-                        }
-                })
-        })
-    }
-    
-    func animateRefreshStep2() {
-        UIView.animateWithDuration(0.35, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: { () -> Void in
-            self.labelsArray[0].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[1].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[2].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[3].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[4].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[5].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[6].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[7].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[8].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[9].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.labelsArray[10].transform = CGAffineTransformMakeScale(1.5, 1.5)
-            
-            
-            }, completion: { (finished) -> Void in
-                UIView.animateWithDuration(0.25, delay: 0.0, options: UIViewAnimationOptions.CurveLinear, animations: { () -> Void in
-                    self.labelsArray[0].transform = CGAffineTransformIdentity
-                    self.labelsArray[1].transform = CGAffineTransformIdentity
-                    self.labelsArray[2].transform = CGAffineTransformIdentity
-                    self.labelsArray[3].transform = CGAffineTransformIdentity
-                    self.labelsArray[4].transform = CGAffineTransformIdentity
-                    self.labelsArray[5].transform = CGAffineTransformIdentity
-                    self.labelsArray[6].transform = CGAffineTransformIdentity
-                    self.labelsArray[7].transform = CGAffineTransformIdentity
-                    self.labelsArray[8].transform = CGAffineTransformIdentity
-                    self.labelsArray[9].transform = CGAffineTransformIdentity
-                    self.labelsArray[10].transform = CGAffineTransformIdentity
-                    
-                    
-                    }, completion: { (finished) -> Void in
-                        if self.goldenWordsRefreshControl!.refreshing {
-                            self.currentLabelIndex = 0
-                            self.animateRefreshStep1()
-                        } else {
-                            self.isAnimating = false
-                            self.currentLabelIndex = 0
-                            for var i=0; i<self.labelsArray.count; i++ {
-                                self.labelsArray[i].textColor = UIColor.blackColor()
-                                self.labelsArray[i].transform = CGAffineTransformIdentity
-                            }
-                        }
-                })
-        })
+    func cancelCallback() {
         
     }
-    */
-    
-    /*
-    func getNextColor() -> UIColor {
-        var colorsArray: [UIColor] = [goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow, goldenWordsYellow]
-        
-        if currentColorIndex == colorsArray.count {
-            currentColorIndex = 0
-        }
-        
-        let returnColor = colorsArray[currentColorIndex]
-        ++currentColorIndex
-        
-        return returnColor
-    }
-    
-    func endOfWork() {
-        goldenWordsRefreshControl!.endRefreshing()
-        
-        timer.invalidate()
-        timer = nil
-    }
-*/
+
     /*
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         
@@ -420,6 +325,23 @@ class VideosViewController: UITableViewController {
                         
                     }
                 }
+            } else {
+                
+//                self.tableView.gestureRecognizers = nil
+                
+                if self.downloadErrorAlertViewCount < 1 {
+                
+                let customIcon = UIImage(named: "Danger")
+                let downloadErrorAlertView = JSSAlertView().show(self, title: "Download failed", text: "Please connect to the Internet and try again.", buttonText:  "OK", color: UIColor.redColor(), iconImage: customIcon)
+                downloadErrorAlertView.addAction(self.closeCallback)
+                downloadErrorAlertView.setTitleFont("ClearSans-Bold")
+                downloadErrorAlertView.setTextFont("ClearSans")
+                downloadErrorAlertView.setButtonFont("ClearSans-Light")
+                downloadErrorAlertView.setTextTheme(.Light)
+                
+                self.downloadErrorAlertViewCount++
+                    
+                }
             }
         }
     }
@@ -442,10 +364,4 @@ class VideosViewController: UITableViewController {
         
         
     }
-    
-    
-    
-    
-    
-    
 }

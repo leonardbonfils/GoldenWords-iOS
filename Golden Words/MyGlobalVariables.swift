@@ -14,6 +14,7 @@ struct MyGlobalVariables {
     static var baseURL = "http://goldenwords.ca/api/get"
     static var loadingIndicatorColor = UIColor.opaqueGoldenWordsYellow()
     static var viewControllerToDisplay = ""
+    static var holdRefreshControlTime = 1.0
 
 }
 

@@ -14,7 +14,6 @@ class CurrentIssueArticlesTableViewCell: UITableViewCell {
     @IBOutlet weak var currentIssueArticlesHeadlineLabel: UILabel!
     @IBOutlet weak var currentIssueArticlesAuthorLabel: UILabel!
 //    @IBOutlet weak var currentIssueArticlesPublishDateLabel: UILabel!
-    @IBOutlet weak var currentIssueArticlesBackgroundImageView: UIImageView!
     var request: Alamofire.Request?
     
     required init?(coder aDecoder: NSCoder!) {
@@ -26,9 +25,9 @@ class CurrentIssueArticlesTableViewCell: UITableViewCell {
         addSubview(currentIssueArticlesHeadlineLabel)
         addSubview(currentIssueArticlesAuthorLabel)
 //        addSubview(currentIssueArticlesPublishDateLabel)
-        addSubview(currentIssueArticlesBackgroundImageView)
+//        addSubview(currentIssueArticlesBackgroundImageView)
         
-        bringSubviewToFront(currentIssueArticlesBackgroundImageView)
+//        bringSubviewToFront(currentIssueArticlesBackgroundImageView)
     }
     
     override func awakeFromNib() {

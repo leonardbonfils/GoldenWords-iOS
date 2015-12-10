@@ -50,10 +50,16 @@ class NewsTableViewController: UITableViewController, UIViewControllerPreviewing
     
     var cellLoadingIndicator = UIActivityIndicatorView()
     
+    var downloadErrorAlertViewCount = 0
+    
     // Refresh control variables - end
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        downloadErrorAlertViewCount = 0
+        
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyle.None
         
         self.cellLoadingIndicator.backgroundColor = UIColor.yellowColor()
         self.cellLoadingIndicator.hidesWhenStopped = true
@@ -134,7 +140,7 @@ class NewsTableViewController: UITableViewController, UIViewControllerPreviewing
     }
     
     func holdRefreshControl() {
-        timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(MyGlobalVariables.holdRefreshControlTime, target: self, selector: "handleRefresh", userInfo: nil, repeats: true)
     }
 
     // MARK: - Table view data source
@@ -194,12 +200,14 @@ class NewsTableViewController: UITableViewController, UIViewControllerPreviewing
         }
         
         return cell
+    }
 
+    func closeCallback() {
+        
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let row = indexPath.row
-        tableView.cellForRowAtIndexPath(indexPath)?.setSelected(false, animated: true)
+    func cancelCallback() {
+        
     }
     
     func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
@@ -294,6 +302,8 @@ class NewsTableViewController: UITableViewController, UIViewControllerPreviewing
             let myIndexPath = self.tableView.indexPathForSelectedRow
             let row = myIndexPath?.row
             
+            tableView.deselectRowAtIndexPath(myIndexPath!, animated: true)
+            
             // Passing the article information through the segue
             detailViewController.newsArticleTitleThroughSegue = newsObjects.objectAtIndex((myIndexPath?.row)!).title
 //            detailViewController.newsArticlePublishDateThroughSegue = timeStampDateString
@@ -301,7 +311,8 @@ class NewsTableViewController: UITableViewController, UIViewControllerPreviewing
             detailViewController.newsArticleIssueIndexThroughSegue = newsObjects.objectAtIndex((myIndexPath?.row)!).issueNumber
             detailViewController.newsArticleAuthorThroughSegue = newsObjects.objectAtIndex((myIndexPath?.row)!).author
             detailViewController.newsArticleArticleContentThroughSegue = newsObjects.objectAtIndex((myIndexPath?.row)!).articleContent
-
+            detailViewController.newsArticleNodeIDThroughSegue = newsObjects.objectAtIndex((myIndexPath?.row)!).nodeID
+            detailViewController.newsArticleTimeStampThroughSegue = newsObjects.objectAtIndex((myIndexPath?.row)!).timeStamp
             
 //            detailViewController.newsArticleTitleThroughSegue = newsHeadline[row!]
             
@@ -404,6 +415,24 @@ class NewsTableViewController: UITableViewController, UIViewControllerPreviewing
 
                     }
                 }
+            } else {
+                
+//                self.tableView.gestureRecognizers = nil
+                
+                if self.downloadErrorAlertViewCount < 1 {
+                
+                let customIcon = UIImage(named: "Danger")
+                let downloadErrorAlertView = JSSAlertView().show(self, title: "Download failed", text: "Please connect to the Internet and try again.", buttonText:  "OK", color: UIColor.redColor(), iconImage: customIcon)
+                downloadErrorAlertView.addAction(self.closeCallback)
+                downloadErrorAlertView.setTitleFont("ClearSans-Bold")
+                downloadErrorAlertView.setTextFont("ClearSans")
+                downloadErrorAlertView.setButtonFont("ClearSans-Light")
+                downloadErrorAlertView.setTextTheme(.Light)
+                 
+                self.downloadErrorAlertViewCount++
+                    
+                }
+                
             }
         }
     }

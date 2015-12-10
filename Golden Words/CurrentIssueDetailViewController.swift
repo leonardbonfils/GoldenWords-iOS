@@ -15,6 +15,8 @@ class CurrentIssueDetailViewController: UIViewController {
     
     @IBOutlet weak var currentIssueDetailWebView: UIWebView!
     
+    @IBOutlet weak var currentIssueDetailScrollView: UIScrollView!
+    
     var currentIssueArticleTitleThroughSegue: String?
     var currentIssueAuthorThroughSegue: String?
     var currentIssueTimeStampThroughSegue: Int?
@@ -26,16 +28,26 @@ class CurrentIssueDetailViewController: UIViewController {
     @IBOutlet weak var currentIssueDetailHeadlineLabel: UILabel!
     @IBOutlet weak var currentIssueDetailAuthorLabel: UILabel!
     @IBOutlet weak var currentIssueDetailPublishDateLabel: UILabel!
+        
+    @IBOutlet weak var showCommentsBarButtonItem: UIBarButtonItem!
+    @IBOutlet weak var showCommentsButton: UIView!
+
+    @IBOutlet weak var currentIssueWebViewHeightConstraint: NSLayoutConstraint!
+    
+    var observing = false
     
     var dateFormatter = NSDateFormatter()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        currentIssueDetailWebView.scrollView.scrollEnabled = false
+        currentIssueDetailWebView.delegate = self
+        
         self.dateFormatter.dateFormat = "dd/MM/yy"
         
         // Inserting the selected currentIssue's title
-        currentIssueNavigationItem.title = "Article"
+        currentIssueNavigationItem.title = ""
         
         // "Swipe from left edge" recognizer
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: Selector("handleSwipes:"))
@@ -58,10 +70,11 @@ class CurrentIssueDetailViewController: UIViewController {
         // Allowing webView link previews
         currentIssueDetailWebView.allowsLinkPreview = true
         
+//        let URL = NSURL(string: "http://www.apple.com")
+//        currentIssueDetailWebView.loadRequest(NSURLRequest(URL: URL!))
+        
         currentIssueDetailWebView.dataDetectorTypes = UIDataDetectorTypes.None
         currentIssueDetailWebView.loadHTMLString(currentIssueArticleContentThroughSegue!, baseURL: nil)
-        
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
@@ -69,33 +82,50 @@ class CurrentIssueDetailViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    deinit {
+        stopObservingHeight()
+    }
+    
+    func startObservingHeight() {
+        let options = NSKeyValueObservingOptions([.New])
+        currentIssueDetailWebView.scrollView.addObserver(self, forKeyPath: "contentSize", options: options, context: &MyObservationContext)
+        observing = true
+    }
+    
+    func stopObservingHeight() {
+        currentIssueDetailWebView.scrollView.removeObserver(self, forKeyPath: "contentSize", context: &MyObservationContext)
+        observing = false
+    }
+    
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        guard let keyPath = keyPath else {
+            super.observeValueForKeyPath(nil, ofObject: object, change: change, context: context)
+            return
+        }
+        
+        switch (keyPath, context) {
+        case ("contentSize", &MyObservationContext):
+            currentIssueWebViewHeightConstraint.constant = currentIssueDetailWebView.scrollView.contentSize.height
+        default:
+            super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+        }
+    }
 
     override func previewActionItems() -> [UIPreviewActionItem] {
         
-        enum usedAction {
-            case Save
-            case Share
-        }
-        
-        var actionType = usedAction.Save // initializing a variable that will tell us which action was used. Initial value is Save.
-        
         let saveArticleAction = UIPreviewAction(title: "Save", style: .Default) { (action, viewController) -> Void in
-            /* Save the article to the device's storage permanently */
+            
+            self.saveArticleMethod()
             
         }
         
         let shareArticleAction = UIPreviewAction(title: "Share", style: .Default) { (action, viewController) -> Void in
-            actionType = usedAction.Share
+            
+            self.shareArticleMethod()
             
         }
         
-        if actionType == usedAction.Save {
-//            self.saveArticle(saveArticleAction)
-        } else if actionType == usedAction.Share {
-            // Share the article, open the share UIActivityViewController view.
-        }
-
-        return [saveArticleAction, shareArticleAction]
+        return [saveArticleAction]
         
     }
     
@@ -113,38 +143,44 @@ class CurrentIssueDetailViewController: UIViewController {
     
     @IBAction func saveArticle(sender: UIBarButtonItem) {
         
-            // Setting up the entity description
-            let managedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
-            let entityDescription = NSEntityDescription.entityForName("Article", inManagedObjectContext: managedObjectContext)
-            
-            let articleToSave = Article(entity: entityDescription!, insertIntoManagedObjectContext: managedObjectContext)
-            
-            articleToSave.articleArticleContent = self.currentIssueArticleContentThroughSegue
-            articleToSave.articleAuthor = self.currentIssueAuthorThroughSegue
-            articleToSave.articleImageURL = "" // Make sure I include the imageURL once I get the picture view working in Current Issue
-            articleToSave.articleIssueNumber = self.currentIssueIssueIndexThroughSegue
-            articleToSave.articleTimeStamp = self.currentIssueTimeStampThroughSegue
-            articleToSave.articleTitle = self.currentIssueArticleTitleThroughSegue
-            articleToSave.articleVolumeNumber = self.currentIssueVolumeIndexThroughSegue
-            
-//            var error: NSError?
+            saveArticleMethod()
         
-//            try! managedObjectContext.save()
-//            
-//            if let err = error {
-//                print(err.localizedFailureReason)
-//            } else {
-//                print("The article was successfully saved")
-//            }
+    }
+    
+    func saveArticleMethod() {
+        
+        // Setting up the entity description
+        let managedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+        let entityDescription = NSEntityDescription.entityForName("Article", inManagedObjectContext: managedObjectContext)
+        
+        let articleToSave = Article(entity: entityDescription!, insertIntoManagedObjectContext: managedObjectContext)
+        
+        articleToSave.articleArticleContent = self.currentIssueArticleContentThroughSegue
+        articleToSave.articleAuthor = self.currentIssueAuthorThroughSegue
+        articleToSave.articleImageURL = "" // Make sure I include the imageURL once I get the picture view working in Current Issue
+        articleToSave.articleIssueNumber = self.currentIssueIssueIndexThroughSegue
+        articleToSave.articleTimeStamp = self.currentIssueTimeStampThroughSegue
+        articleToSave.articleTitle = self.currentIssueArticleTitleThroughSegue
+        articleToSave.articleVolumeNumber = self.currentIssueVolumeIndexThroughSegue
+        
+        //            var error: NSError?
+        
+        //            try! managedObjectContext.save()
+        //
+        //            if let err = error {
+        //                print(err.localizedFailureReason)
+        //            } else {
+        //                print("The article was successfully saved")
+        //            }
         
         
-            do {
-                try managedObjectContext.save()
-                NSLog("The article \(articleToSave.articleTitle) was properly saved.")
-            } catch {
-                NSLog("The article could not be saved.")
-                abort()
-            }
+        do {
+            try managedObjectContext.save()
+            NSLog("The article \(articleToSave.articleTitle) was properly saved.")
+        } catch {
+            NSLog("The article could not be saved.")
+            abort()
+        }
         
         
         let customIcon = UIImage(named: "Download")
@@ -154,6 +190,7 @@ class CurrentIssueDetailViewController: UIViewController {
         articleSavedAlertView.setTextFont("ClearSans")
         articleSavedAlertView.setButtonFont("ClearSans-Light")
         articleSavedAlertView.setTextTheme(.Light)
+        
     }
     
     func closeCallback() {
@@ -166,22 +203,58 @@ class CurrentIssueDetailViewController: UIViewController {
 
     // Configuring the sharing action with a UIActivityViewController
     @IBAction func shareArticle(sender: UIBarButtonItem) {
+    
+            shareArticleMethod()
+        
+    }
+    
+    func shareArticleMethod() {
         
         let shareActionText = "Check out this awesome article from Golden Words!"
         
-            if let correspondingURL = NSURL(string: "http://www.goldenwords.ca/node/\(currentIssueNodeIDThroughSegue!)") {
+        if let correspondingURL = NSURL(string: "http://www.goldenwords.ca/node/\(currentIssueNodeIDThroughSegue!)") {
+            
+            let objectsToShare = [shareActionText, correspondingURL]
+            let activityViewController = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
+            
+            activityViewController.excludedActivityTypes = [UIActivityTypeAddToReadingList, UIActivityTypeAirDrop, UIActivityTypeAssignToContact, UIActivityTypeOpenInIBooks, UIActivityTypePostToFlickr, UIActivityTypePostToTencentWeibo, UIActivityTypePostToVimeo, UIActivityTypePostToWeibo, UIActivityTypePrint, UIActivityTypeSaveToCameraRoll]
                 
-                let objectsToShare = [shareActionText, correspondingURL]
-                let activityViewController = UIActivityViewController(activityItems: objectsToShare, applicationActivities: nil)
-                
-                activityViewController.excludedActivityTypes = [UIActivityTypeAddToReadingList, UIActivityTypeAirDrop, UIActivityTypeAssignToContact, UIActivityTypeOpenInIBooks, UIActivityTypePostToFlickr, UIActivityTypePostToTencentWeibo, UIActivityTypePostToVimeo, UIActivityTypePostToWeibo, UIActivityTypePrint, UIActivityTypeSaveToCameraRoll]
-                
-                self.presentViewController(activityViewController, animated: true, completion: nil)
-                
+            self.presentViewController(activityViewController, animated: true, completion: nil)
+            
         }
     }
     
+    @IBAction func showCommentsView(sender: AnyObject) {
+        
+        self.showCommentsButton.tintColor = UIColor.goldenWordsYellow()
+        
+        let startPoint = CGPoint(x: self.view.frame.width - 128, y: 59)
+        let width = self.view.frame.width
+//        let height = self.view.frame.height * 0.903
+        let height = self.view.frame.height - startPoint.y - 12
+        let commentsView = UIView(frame: CGRect(x:0, y: 0, width: width, height: height))
+        
+        // Configure my commentsView to be a disqusView.
+        
+        let options = [
+            .Type(.Down),
+            .CornerRadius(width / 20),
+            .AnimationIn(0.3),
+            .BlackOverlayColor(UIColor(white: 0.0, alpha: 0.6)),
+            .OverlayBlur(UIBlurEffectStyle.Dark),
+            .ArrowSize(CGSize(width: 10, height: 10))
+        ] as [PopoverOption]
+        var popover = Popover(options: options, showHandler: {
+            print("showHandler was just activated")
+            // Activate
+            }, dismissHandler: {
+                print("dismissHandler was just activated")
+            })
+        popover.show(commentsView, point: startPoint)
+        self.showCommentsButton.tintColor = UIColor.whiteColor()
+    }
     
+
     
 
     /*
@@ -194,4 +267,14 @@ class CurrentIssueDetailViewController: UIViewController {
     }
     */
 
+}
+
+extension CurrentIssueDetailViewController: UIWebViewDelegate {
+    func webViewDidFinishLoad(webView: UIWebView) {
+        print(webView.request?.URLString)
+        currentIssueWebViewHeightConstraint.constant = currentIssueDetailWebView.scrollView.contentSize.height
+        if (!observing) {
+            startObservingHeight()
+        }
+    }
 }

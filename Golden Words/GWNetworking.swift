@@ -70,6 +70,7 @@ enum Router : URLRequestConvertible {
     case Videos(Int)
     case MapObjects
     case SpecificIssue(Int, Int)
+    case SpecificArticle(Int)
     
     var URLRequest: NSMutableURLRequest {
         let path : String
@@ -94,6 +95,8 @@ enum Router : URLRequestConvertible {
                 return ("/locations")
             case .SpecificIssue(let volume, let issue):
                 return ("/issue/\(volume)/\(issue)")
+            case .SpecificArticle(let nodeID):
+                return ("/article/\(nodeID)")
             }
         }()
         
