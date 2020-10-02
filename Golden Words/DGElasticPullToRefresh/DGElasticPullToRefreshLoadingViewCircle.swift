@@ -122,7 +122,6 @@ public class DGElasticPullToRefreshLoadingViewCircle: DGElasticPullToRefreshLoad
         shapeLayer.strokeColor = tintColor.CGColor
     }
     
-    // MARK: -
     // MARK: Layout
     
     override public func layoutSubviews() {

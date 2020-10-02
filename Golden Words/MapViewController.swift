@@ -25,7 +25,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
     var loadingIndicator = UIActivityIndicatorView()
 
     var mapObjects = [IssueLocation]()
-    
     var locationManager: CLLocationManager?
     
     override func viewDidLoad() {
@@ -53,9 +52,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate, MKMapViewD
         let latitudeDelta:CLLocationDegrees = 0.015
         let longitudeDelta:CLLocationDegrees = 0.015
         let span = MKCoordinateSpanMake(latitudeDelta, longitudeDelta)
-        
         let coordinateRegion = MKCoordinateRegionMake(initialLocation, span)
-        
         mapView.setRegion(coordinateRegion, animated: true)
         
         self.loadingIndicator.backgroundColor = UIColor.goldenWordsYellow()

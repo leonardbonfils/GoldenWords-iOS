@@ -434,7 +434,6 @@ class EditorialsTableViewController: UITableViewController, UIViewControllerPrev
                 self.downloadErrorAlertViewCount++
                     
                 }
-                
             }
     }
 }

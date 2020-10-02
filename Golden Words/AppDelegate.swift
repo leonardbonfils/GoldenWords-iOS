@@ -31,15 +31,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().titleTextAttributes = [NSFontAttributeName: UIFont(name: "AvenirNext-Regular", size: 22 )!, NSForegroundColorAttributeName: UIColor.whiteColor()]
 //      UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName : UIColor.whiteColor()]
 
-        if let shortcutItem = launchOptions?[UIApplicationLaunchOptionsShortcutItemKey] as? UIApplicationShortcutItem {
-            
-            performShortcutDelegate = false
-            handleShortcut(shortcutItem)
-        }
+        performShortcutDelegate = false
+        handleShortcut(shortcutItem)
         
         return performShortcutDelegate
-        
-        // Override point for customization after application launch.
     }
     
     // Code to directly show the right view when opening a specific article's URL from www.goldenwords.ca. Still can't figure out how to correctly parse the JSON.
