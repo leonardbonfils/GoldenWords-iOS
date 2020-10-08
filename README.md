@@ -14,3 +14,7 @@ Features include:
 Videos:
 
 [![Current Issue](https://img.youtube.com/vi/W8kzBIWR0Rk/0.jpg)](https://www.youtube.com/watch?v=W8kzBIWR0Rk)
+[![3D Touch + Pictures](https://img.youtube.com/vi/ZftbULV_l6A/0.jpg)](https://www.youtube.com/watch?v=ZftbULV_l6A)
+[![Videos](https://img.youtube.com/vi/T2AJVd50Cs8/0.jpg)](https://www.youtube.com/watch?v=T2AJVd50Cs8)
+[![Saved Articles (Core Data)](https://img.youtube.com/vi/8sVV9TX8sZk/0.jpg)](https://www.youtube.com/watch?v=8sVV9TX8sZk)
+[![Find a Paper Issue](https://img.youtube.com/vi/qpjPXsFi_kQ/0.jpg)](https://www.youtube.com/watch?v=qpjPXsFi_kQ)
