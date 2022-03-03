@@ -1,5 +1,7 @@
 # The Golden Words iOS Application
 
+![image](https://user-images.githubusercontent.com/6782987/156588990-5b5b388e-44c5-4439-aa4b-4a80acf26e92.png)
+
 Written exclusively in Swift, this app was built for the student-run newspaper "Golden Words". Any Objective-C code is from 3rd-party libraries.
 
 ## Features
