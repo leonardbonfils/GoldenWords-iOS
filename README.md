@@ -11,7 +11,7 @@ Features include:
   - MapKit integration to show paper issue locations on a map of Queen's campus.
   - JSSAlertViews
 
-## Videos (click on picture to open video)
+## Video demos
 
 [![Current Issue](https://img.youtube.com/vi/W8kzBIWR0Rk/0.jpg)](https://www.youtube.com/watch?v=W8kzBIWR0Rk)
 
