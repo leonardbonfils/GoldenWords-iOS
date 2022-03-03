@@ -14,12 +14,22 @@ Written exclusively in Swift, this app was built for the student-run newspaper "
 
 ## Video demos
 
-[![Current Issue](https://img.youtube.com/vi/W8kzBIWR0Rk/0.jpg)](https://www.youtube.com/watch?v=W8kzBIWR0Rk)
+### Latest Issue
 
-[![3D Touch + Pictures](https://img.youtube.com/vi/ZftbULV_l6A/0.jpg)](https://www.youtube.com/watch?v=ZftbULV_l6A)
+https://user-images.githubusercontent.com/6782987/156588103-a0903281-c849-4530-a9b6-5aa821201347.mp4
 
-[![Videos](https://img.youtube.com/vi/T2AJVd50Cs8/0.jpg)](https://www.youtube.com/watch?v=T2AJVd50Cs8)
+### Pictures
 
-[![Saved Articles (Core Data)](https://img.youtube.com/vi/8sVV9TX8sZk/0.jpg)](https://www.youtube.com/watch?v=8sVV9TX8sZk)
+https://user-images.githubusercontent.com/6782987/156588429-78cd2046-2a43-4e74-b58c-302ea1e45368.mp4
 
-[![Find a Paper Issue](https://img.youtube.com/vi/qpjPXsFi_kQ/0.jpg)](https://www.youtube.com/watch?v=qpjPXsFi_kQ)
+### Videos
+
+https://user-images.githubusercontent.com/6782987/156588189-d1012bf5-1b8b-414a-b78d-fd13e2d862bd.mp4
+
+### Saved Articles (Core Data)
+
+https://user-images.githubusercontent.com/6782987/156588223-aed525c0-b4d1-4ff0-a14b-7750b22e0306.mp4
+
+### Find a Paper Issue
+
+https://user-images.githubusercontent.com/6782987/156588265-78366527-bac6-4594-915f-f9165a91dd05.mp4
